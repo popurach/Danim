@@ -3,11 +3,11 @@
 이벤트 시간: 2023년 2월 26일 오전 6:00
 최종 편집자: hojune
 
-[제목 없음](https://www.notion.so/45aed40582124cf2a00bde3d9e488bc7)
+[데이터베이스 설계](https://www.notion.so/45aed40582124cf2a00bde3d9e488bc7)
 
 ### 네이버 oauth 정보
 
-![Image Pasted at 2023-3-6 15-31.png](DataBase%20%E1%84%90%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%87%E1%85%B3%E1%86%AF%20%E1%84%89%E1%85%A5%E1%86%AF%E1%84%80%E1%85%A8%20(Maria%20DB)%209af193b7d1b842078c01ad2f264bdf09/Image_Pasted_at_2023-3-6_15-31.png)
+![Image Pasted at 2023-3-6 15-31.png](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/-/raw/feature/docs/docs/DataBase%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%84%A4%EA%B3%84/Image_Pasted_at_2023-3-6_15-31.png)
 
 [Spring - Google Login API 연동 (No Library)](https://gdtbgl93.tistory.com/182)
 
@@ -17,9 +17,9 @@
 
 [Kakao Developers](https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api)
 
-![Untitled](DataBase%20%E1%84%90%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%87%E1%85%B3%E1%86%AF%20%E1%84%89%E1%85%A5%E1%86%AF%E1%84%80%E1%85%A8%20(Maria%20DB)%209af193b7d1b842078c01ad2f264bdf09/Untitled.png)
+![Untitled](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/-/raw/feature/docs/docs/DataBase%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%84%A4%EA%B3%84/Untitled%201.png)
 
-![Untitled](DataBase%20%E1%84%90%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%87%E1%85%B3%E1%86%AF%20%E1%84%89%E1%85%A5%E1%86%AF%E1%84%80%E1%85%A8%20(Maria%20DB)%209af193b7d1b842078c01ad2f264bdf09/Untitled%201.png)
+![Untitled](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/-/raw/feature/docs/docs/DataBase%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%84%A4%EA%B3%84/Untitled.png)
 
 ## lat, lng을 이용하여 nation 정보 api 참고
 
