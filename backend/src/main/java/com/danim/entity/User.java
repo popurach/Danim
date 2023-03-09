@@ -19,13 +19,13 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_uid")
+    @Column(name = "user_uid")
     private Long user_uid;
 
-    @Column(unique=true)
+    @Column(unique = true)
     String nickname;
 
-    @Column(unique=true , nullable = false)
+    @Column(unique = true, nullable = false)
     String client_id;
 
     //@ApiModelProperty(hidden = true)

@@ -17,17 +17,14 @@ import java.time.LocalDateTime;
 public class Timeline {
 
 
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long timeline_id;
 
-    @Column(name = "title",nullable = false)
+    @Column(name = "title", nullable = false)
     //@ColumnDefault("journey") //@ColumnDefault사용
-    private String title="여행중";
+    private String title = "여행중";
 
 
     @CreationTimestamp
@@ -40,13 +37,13 @@ public class Timeline {
     private LocalDateTime finish_time;
 
 
-    private Boolean complete=false;
+    private Boolean complete = false;
 
 
-    private Boolean t_public=true;
+    private Boolean t_public = true;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name="user_uid")
+    @JoinColumn(name = "user_uid")
     @ToString.Exclude
     private Long user_uid;
 
