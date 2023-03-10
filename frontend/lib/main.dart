@@ -1,4 +1,5 @@
 import 'package:danim/views/app_bar.dart';
+import 'package:danim/views/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -40,6 +41,16 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
         ),
       ),
+      floatingActionButton: SizedBox(
+          height: 80.0,
+          width: 80.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              onPressed: () {},
+            ),
+          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }
