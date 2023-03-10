@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 public abstract class BaseTime {
 
     @CreatedDate
-    private LocalDateTime created_time;//생성시간
+    private LocalDateTime createTime;//생성시간
 
     @LastModifiedDate
-    private LocalDateTime modify_time;//수정시간
+    private LocalDateTime modifyTime;//수정시간
 
 
     @CreatedDate
-    private LocalDateTime finish_time;//완료시간
+    private LocalDateTime finishTime;//완료시간
 
 }

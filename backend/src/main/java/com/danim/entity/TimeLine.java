@@ -18,7 +18,7 @@ public class TimeLine extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long timeline_id;
+    private Long timelineId;
 
     //@Column(name = "title", nullable = false, columnDefinition = "varchar(255) default '여행중' ")
 //    @Builder.Default
@@ -37,14 +37,15 @@ public class TimeLine extends BaseTime {
     //@Column(name = "timeline_public",columnDefinition ="TINYINT(1) default 1 ")
     @Builder.Default
     @ColumnDefault("1")
-    private Boolean timeline_public = true;
+    private Boolean timelinePublic = true;
 
 
     //not null그대로 가져와야함.....
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_uid", nullable = false)
     @ToString.Exclude
-    private Long user_uid;
+    private User userUid;
 
 
 }
+
