@@ -28,5 +28,7 @@ public class Photo {
     @ColumnDefault("0")
     private Boolean isLive = false;
 
-
+    @ManyToOne
+    @JoinColumn(name="post_id")
+    private Post postId;
 }

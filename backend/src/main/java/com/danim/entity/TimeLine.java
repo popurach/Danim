@@ -20,21 +20,17 @@ public class TimeLine extends BaseTime {
     @Column(nullable = false)
     private Long timelineId;
 
-    //@Column(name = "title", nullable = false, columnDefinition = "varchar(255) default '여행중' ")
-//    @Builder.Default
-//    @ColumnDefault("'여행중'")
-
-    @Column(name = "title", nullable = false, columnDefinition = "varchar(255) default '여행중' ")
+    @Column(name = "title", nullable = false)
+    @Builder.Default
+    @ColumnDefault("'여행중'")
     private String title = "여행중";
 
-
-    //@Column(name = "complete",columnDefinition ="TINYINT(1) default 0 ")
+ 
     @Builder.Default
     @ColumnDefault("0")
     private Boolean complete = false;
 
 
-    //@Column(name = "timeline_public",columnDefinition ="TINYINT(1) default 1 ")
     @Builder.Default
     @ColumnDefault("1")
     private Boolean timelinePublic = true;
