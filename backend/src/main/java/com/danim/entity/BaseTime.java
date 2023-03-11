@@ -20,4 +20,5 @@ public abstract class BaseTime {
     @LastModifiedDate
     private LocalDateTime modifyTime;//수정시간
 
+    
 }

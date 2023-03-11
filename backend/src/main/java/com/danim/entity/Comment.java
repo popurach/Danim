@@ -1,9 +1,6 @@
 package com.danim.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class Comment extends BaseTime {
 
     @Id
@@ -22,5 +19,13 @@ public class Comment extends BaseTime {
 
 
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name="post_id")
+    private Post postId;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User userUid;
 
 }

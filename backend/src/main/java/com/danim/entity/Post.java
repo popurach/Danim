@@ -30,38 +30,33 @@ public class Post extends BaseTime{
 	@Column(name = "post_id", nullable = false)
 	private Long postId;
 	
-	@Column(name = "voice_url")
 	private String voiceUrl;
 	
-	@Column(name = "voice_length")
 	private Long voiceLength;
 	
-	@Column(name = "nation_url")
 	private String nationUrl;
 	
 	private String address;
 	
 	private String text;
 
+	// Post 테이블과 TimeLine 테이블 FK
 	@ManyToOne
 	@JoinColumn(name="timeline_id")
 	@ToString.Exclude
 	private Post timelineId;
 
-//	@ManyToOne
-//	@JoinColumn(name="nation_id")
-//	@ToString.Exclude
-//	private Nation nationid;
+	// Post 테이블과 Nation 테이블 FK
+	@ManyToOne
+	@JoinColumn(name="nation_id")
+	@ToString.Exclude
+	private Nation nationid;
 
-	@OneToMany(
-			mappedBy = "postId"
-	)
-	@Builder.Default //
+	@OneToMany(mappedBy = "postId")
+	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 
-	@OneToMany(
-			mappedBy = "postId"
-	)
+	@OneToMany(mappedBy = "postId")
 	@Builder.Default
 	private List<Image> imageList = new ArrayList<>(); // image 리스트
 }

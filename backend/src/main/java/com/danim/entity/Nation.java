@@ -12,18 +12,13 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Text extends BaseTime {
-
-
+public class Nation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long textId;
+    private Long nationId;
 
-    private String record;
+    private String nationUrl;
 
-    @ManyToOne
-    @JoinColumn(name="post_id")
-    private Post postId;
+    private String name;
 }

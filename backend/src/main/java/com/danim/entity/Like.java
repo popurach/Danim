@@ -1,9 +1,6 @@
 package com.danim.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,18 +9,18 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Text extends BaseTime {
-
-
+@Builder
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long textId;
-
-    private String record;
+    private Long likeId;
 
     @ManyToOne
     @JoinColumn(name="post_id")
     private Post postId;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User userUid;
 }
