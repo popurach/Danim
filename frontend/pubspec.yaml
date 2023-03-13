@@ -38,6 +38,20 @@ dependencies:
   provider: ^6.0.1
   animated_bottom_navigation_bar: ^1.2.0
 
+  # camera
+  camera:
+  path_provider:
+  video_player: ^2.2.5
+  permission_handler: ^8.3.0
+  file: ^6.1.4
+  path:
+
+  # Carousel
+  carousel_slider:
+
+  # logger
+  logger:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
