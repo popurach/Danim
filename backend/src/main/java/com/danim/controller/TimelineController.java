@@ -26,11 +26,11 @@ public class TimelineController {
 //        Account auth = (Account) authentication.getPrincipal();
 //        Long tt = auth.getUid();
 //        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
-        List<TimeLine>timelinelist=service.searchTimelineOrderBylatest(1L);
+        List<TimeLine> timelinelist = service.searchTimelineOrderBylatest(1L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "모든 최신 타임라인 리스트 얻어오기 성공");
-            put("data",timelinelist);
+            put("data", timelinelist);
         }}, HttpStatus.OK);
     }
 
@@ -39,11 +39,23 @@ public class TimelineController {
     @GetMapping("/mine")
     public ResponseEntity<?> getMyTimelineList() throws Exception {
 
-        List<TimeLine>timelinelist=service.searchMyTimeline(2L);
+        List<TimeLine> timelinelist = service.searchMyTimeline(1L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "멤버 가입성공");
-            put("data",timelinelist);
+            put("data", timelinelist);
+        }}, HttpStatus.OK);
+    }
+
+    //다른 유저의 피드에서 타임라인 조회
+    @GetMapping("/user/{uid}")
+    public ResponseEntity<?> getAnotherTimelineList(@PathVariable Long uid) throws Exception {
+
+        List<TimeLine> timelinelist = service.searchTimelineNotPublic(1L);
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "타멤버 Timeline얻어오기 성공");
+            put("data", timelinelist);
         }}, HttpStatus.OK);
     }
 
@@ -87,7 +99,7 @@ public class TimelineController {
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.changePublic(1L);
+        service.changePublic(3L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "Timeline Public 변경 성공");
