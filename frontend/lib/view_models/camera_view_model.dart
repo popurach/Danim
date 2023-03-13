@@ -4,12 +4,14 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
+var logger = Logger();
 
 class CameraViewModel extends ChangeNotifier {
 
@@ -23,6 +25,7 @@ class CameraViewModel extends ChangeNotifier {
   Future<void> initializeCamera() async {
     await Permission.camera.request();
     await Permission.storage.request();
+    await Permission.location.request();
 
     var cameras = await availableCameras();
     _cameras = cameras;
@@ -39,26 +42,31 @@ class CameraViewModel extends ChangeNotifier {
 
       if (allFileList.length < 9) {
         allFileList.add(file);
+
         // 현재 위치 불러오기
-        // final currentPosition = await Geolocator.getCurrentPosition();
+        final currentPosition = await Geolocator.getCurrentPosition();
 
-        // 사진의 EXIF 메타 데이터에 정보 저장
+        // 파일의 exif 데이터 불러와서 작성하기
+        final exif = await Exif.fromPath(file.path);
+        await exif.writeAttributes({
+          'GPSLatitude': currentPosition.latitude,
+          'GPSLatitudeRef': 'N',
+          'GPSLongitude': currentPosition.longitude,
+          'GPSLongitudeRef': 'W',
+        });
 
-        // final exif = await Exif.fromPath(file.path);
-        //
-        // final dateFormat = DateFormat('yyyy:MM:dd HH:mm:ss');
-        // await exif.writeAttribute('DateTimeOriginal', dateFormat.format(DateTime.now()));
-        // await exif.writeAttribute('GPSLatitude', currentPosition.latitude);
-        // await exif.writeAttribute('GPSLongitude', currentPosition.longitude);
+        // 파일 저장할 위치 지정
+        Directory externalDirectory = Directory('/storage/emulated/0/Documents');
+
+        final List<int> imageBytes = await file.readAsBytes();
 
 
-        Uint8List bytes = await file.readAsBytes();
+        String dir = externalDirectory.path;
+        final savePath = "$dir/${file.name}";
 
-        await ImageGallerySaver.saveImage(
-            bytes,
-            quality: 100,
-            name: file.name,
-        );
+        final File imageFile = File(savePath);
+        await imageFile.writeAsBytes(imageBytes);
+
       }
 
       notifyListeners();
