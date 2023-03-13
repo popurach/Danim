@@ -18,6 +18,8 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
 
     Optional<List<TimeLine>> findAllByUserUidOrderByCreateTimeDesc(User u);
 
+    Optional<List<TimeLine>> findAllByUserUidAndTimelinePublic(User u,Boolean flag);
+
     Optional<List<TimeLine>> findAllByUserUid(User u);
 
 

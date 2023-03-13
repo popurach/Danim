@@ -57,6 +57,21 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
+    public List<TimeLine> searchTimelineNotPublic(Long uid) throws Exception {
+        Optional<User> now = userRepository.findById(uid);
+        if(!now.isPresent()) {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
+            throw new Exception("존재 하지 않는 유저");
+        }
+        Optional<List<TimeLine>> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(now.get(),true);
+        if (timeline.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
+            return timeline.get();
+        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
+            //에러 던져야 할곳임
+            throw new Exception("타임라인 얻어오기 실패");
+        }
+    }
+
+    @Override
     public TimeLine searchOneTimeline(Long uid) throws Exception {
 
         TimeLine timeline = new TimeLine();
@@ -68,7 +83,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             return timeline;
         } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
             //에러 던져야 할곳임
-            throw new Exception("타임라인 생성시 애러임");
+            throw new Exception("존재하지 않는 유저");
         }
     }
 
@@ -83,7 +98,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             timeLineRepository.save(timeline);
         } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
             //에러 던져야 할곳임
-            throw new Exception("타임라인 생성시 애러임");
+            throw new Exception("존재하지 않는 유저");
         }
     }
 
@@ -98,7 +113,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             timeLineRepository.save(timeline);
         } else {//그렇지 않다면 찾은 timeline이 존재 하지 않으므로 Exception을 던져준다
             //에러 던져야 할곳임
-            throw new Exception("타임라인 생성시 애러임");
+            throw new Exception("존재하지 않는 타임라인 입니다");
         }
 
     }
@@ -112,7 +127,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             timeLineRepository.delete(timeline);
         } else {//그렇지 않다면 찾은 timeline이 존재 하지 않으므로 Exception을 던져준다
             //에러 던져야 할곳임
-            throw new Exception("타임라인 삭제시 애러임");
+            throw new Exception("존재하지 않는 타임라인 입니다");
         }
     }
 

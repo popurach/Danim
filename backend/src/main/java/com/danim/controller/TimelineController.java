@@ -35,14 +35,14 @@ public class TimelineController {
     }
 
 
-    //내 피드에서 내 타임라인 리스트 조회 , 다른 유저의 피드에서 타임라인 조회
+    //내 피드에서 내 타임라인 리스트 조회
     @GetMapping("/mine")
     public ResponseEntity<?> getMyTimelineList() throws Exception {
 
         List<TimeLine> timelinelist = service.searchMyTimeline(1L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "멤버 가입성공");
+            put("msg", "내 피드에서 타임라인 리스트 조회 성공");
             put("data", timelinelist);
         }}, HttpStatus.OK);
     }
@@ -54,7 +54,7 @@ public class TimelineController {
         List<TimeLine> timelinelist = service.searchTimelineNotPublic(1L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "타멤버 Timeline얻어오기 성공");
+            put("msg", "다른유저 Timeline얻어오기 성공");
             put("data", timelinelist);
         }}, HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class TimelineController {
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", timeline);
-            put("msg", "Timeline 완료 성공");
+            put("msg", "Timeline 한개 조회 성공");
         }}, HttpStatus.OK);
     }
 
@@ -91,7 +91,7 @@ public class TimelineController {
         service.finishTimeline(4L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "Timeline 완료 성공");
+            put("msg", "Timeline 종료 성공");
         }}, HttpStatus.OK);
     }
 
