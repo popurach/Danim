@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:native_exif/native_exif.dart';
+import 'package:intl/intl.dart';
 
 
 class CameraViewModel extends ChangeNotifier {
@@ -14,10 +17,13 @@ class CameraViewModel extends ChangeNotifier {
   late CameraController _controller;
   late String _imagePath;
 
+
   List<XFile> allFileList = [];
 
   Future<void> initializeCamera() async {
     await Permission.camera.request();
+    await Permission.storage.request();
+
     var cameras = await availableCameras();
     _cameras = cameras;
     if (_cameras.isNotEmpty) {
@@ -33,6 +39,26 @@ class CameraViewModel extends ChangeNotifier {
 
       if (allFileList.length < 9) {
         allFileList.add(file);
+        // 현재 위치 불러오기
+        // final currentPosition = await Geolocator.getCurrentPosition();
+
+        // 사진의 EXIF 메타 데이터에 정보 저장
+
+        // final exif = await Exif.fromPath(file.path);
+        //
+        // final dateFormat = DateFormat('yyyy:MM:dd HH:mm:ss');
+        // await exif.writeAttribute('DateTimeOriginal', dateFormat.format(DateTime.now()));
+        // await exif.writeAttribute('GPSLatitude', currentPosition.latitude);
+        // await exif.writeAttribute('GPSLongitude', currentPosition.longitude);
+
+
+        Uint8List bytes = await file.readAsBytes();
+
+        await ImageGallerySaver.saveImage(
+            bytes,
+            quality: 100,
+            name: file.name,
+        );
       }
 
       notifyListeners();
