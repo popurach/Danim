@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
           width: 80.0,
           child: FittedBox(
             child: FloatingActionButton(
+              child: const Icon(Icons.camera),
               onPressed: () {},
             ),
           )),
