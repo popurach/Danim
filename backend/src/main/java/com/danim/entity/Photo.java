@@ -20,6 +20,9 @@ public class Photo {
     @Column(name = "photoId", nullable = false)
     private Long photoId;
 
+    @Column(unique = true, nullable = false)
+    private String photoUrl;
+
     private double lat;
 
     private double lng;

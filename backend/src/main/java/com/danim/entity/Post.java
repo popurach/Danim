@@ -44,7 +44,7 @@ public class Post extends BaseTime{
 	@ManyToOne
 	@JoinColumn(name="timeline_id")
 	@ToString.Exclude
-	private Post timelineId;
+	private TimeLine timelineId;
 
 	// Post 테이블과 Nation 테이블 FK
 	@ManyToOne
@@ -56,7 +56,4 @@ public class Post extends BaseTime{
 	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 
-	@OneToMany(mappedBy = "postId")
-	@Builder.Default
-	private List<Image> imageList = new ArrayList<>(); // image 리스트
 }
