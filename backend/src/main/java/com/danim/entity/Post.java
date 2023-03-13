@@ -50,7 +50,7 @@ public class Post extends BaseTime{
 	@ManyToOne
 	@JoinColumn(name="nation_id")
 	@ToString.Exclude
-	private Nation nationid;
+	private Nation nationId;
 
 	@OneToMany(mappedBy = "postId")
 	@Builder.Default
