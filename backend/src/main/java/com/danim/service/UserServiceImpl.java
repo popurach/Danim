@@ -19,5 +19,6 @@ public class UserServiceImpl implements UserService {
         User u=new User();
         u.setClientId("22");
         userRepository.save(u);
+
     }
 }
