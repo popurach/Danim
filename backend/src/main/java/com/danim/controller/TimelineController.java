@@ -64,7 +64,7 @@ public class TimelineController {
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        TimeLine timeline = service.searchOneTimeline(1L);
+        TimeLine timeline = service.searchOneTimeline(100L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", timeline);

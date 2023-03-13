@@ -2,17 +2,15 @@ package com.danim.service;
 
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.danim.repository.TimeLineRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,55 +18,29 @@ import java.util.Optional;
 @Slf4j
 public class TimeLineServiceImpl implements TimeLineService {
 
-    @Autowired
     private final TimeLineRepository timeLineRepository;
-    @Autowired
     private final UserRepository userRepository;
 
     @Override
     public List<TimeLine> searchTimelineOrderBylatest(Long uid) throws Exception {
-        Optional<User> now = userRepository.findById(uid);
-        if(!now.isPresent()) {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재 하지 않는 유저");
-        }
-        Optional<List<TimeLine>> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now.get());
-        if (timeline.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            return timeline.get();
-        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("모든 최신 타임라인 얻어오기 실패");
-        }
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        List<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now).orElseThrow(() -> new Exception("모든 최신 타임라인 얻어오기 실패"));
+        return timeline;
+
     }
 
     @Override
     public List<TimeLine> searchMyTimeline(Long uid) throws Exception {
-        Optional<User> now = userRepository.findById(uid);
-        if(!now.isPresent()) {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            throw new Exception("존재 하지 않는 유저");
-        }
-        Optional<List<TimeLine>> timeline = timeLineRepository.findAllByUserUid(now.get());
-        if (timeline.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            return timeline.get();
-        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("타임라인 얻어오기 실패");
-        }
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        List<TimeLine> timeline = timeLineRepository.findAllByUserUid(now).orElseThrow(() -> new Exception("타임라인 얻어오기 실패"));
+        return timeline;
     }
 
     @Override
     public List<TimeLine> searchTimelineNotPublic(Long uid) throws Exception {
-        Optional<User> now = userRepository.findById(uid);
-        if(!now.isPresent()) {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            throw new Exception("존재 하지 않는 유저");
-        }
-        Optional<List<TimeLine>> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(now.get(),true);
-        if (timeline.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            return timeline.get();
-        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("타임라인 얻어오기 실패");
-        }
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        List<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(now, true).orElseThrow(() -> new Exception("타임라인 얻어오기 실패"));
+        return timeline;
     }
 
     @Override
@@ -76,15 +48,13 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         TimeLine timeline = new TimeLine();
         //이렇게 해서 User를 찾아옴
-        Optional<User> now = userRepository.findById(uid);
-        if (now.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            timeline.setUserUid(now.get());
-            timeLineRepository.save(timeline);
-            return timeline;
-        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재하지 않는 유저");
-        }
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+
+        //timeline 변경 사항 반영하는 과정
+        timeline.setUserUid(now);
+        timeLineRepository.save(timeline);
+        return timeline;
+
     }
 
     @Override
@@ -92,62 +62,53 @@ public class TimeLineServiceImpl implements TimeLineService {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
         //이렇게 해서 User를 찾아옴
-        Optional<User> now = userRepository.findById(uid);
-        if (now.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            timeline.setUserUid(now.get());
-            timeLineRepository.save(timeline);
-        } else {//그렇지 않다면 찾은 User가 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재하지 않는 유저");
-        }
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+
+        //새로운 타임라인 생성이 가능한다
+        timeline.setUserUid(now);
+        timeLineRepository.save(timeline);
+
     }
 
     @Override
     public void finishTimeline(Long uid) throws Exception {
 
-        Optional<TimeLine> now = timeLineRepository.findById(uid);
-        if (now.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            TimeLine timeline = now.get();
-            timeline.setComplete(Boolean.TRUE);
-            timeline.setFinishTime(LocalDateTime.now());
-            timeLineRepository.save(timeline);
-        } else {//그렇지 않다면 찾은 timeline이 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재하지 않는 타임라인 입니다");
-        }
+        TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다."));
+
+        //타임라인 완료 변경 작업 진행
+        TimeLine timeline = now;
+        timeline.setComplete(Boolean.TRUE);
+        timeline.setFinishTime(LocalDateTime.now());
+        timeLineRepository.save(timeline);
 
     }
 
     @Override
     public void deleteTimeline(Long uid) throws Exception {
 
-        Optional<TimeLine> now = timeLineRepository.findById(uid);
-        if (now.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            TimeLine timeline = now.get();
-            timeLineRepository.delete(timeline);
-        } else {//그렇지 않다면 찾은 timeline이 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재하지 않는 타임라인 입니다");
-        }
+        TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+
+
+        TimeLine timeline = now;
+        timeLineRepository.delete(timeline);
+
     }
 
     @Override
     public void changePublic(Long uid) throws Exception {
-        Optional<TimeLine> now = timeLineRepository.findById(uid);
-        if (now.isPresent()) {//Optional임으로 존재한다면 새로운 타임라인 생성이 가능한다
-            TimeLine timeline = now.get();
-            Boolean temp = timeline.getTimelinePublic();
-            if (temp) {
-                timeline.setTimelinePublic(false);
+        TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다"));
 
-            } else {
-                timeline.setTimelinePublic(true);
-            }
-            timeLineRepository.save(timeline);
-        } else {//그렇지 않다면 찾은 timeline이 존재 하지 않으므로 Exception을 던져준다
-            //에러 던져야 할곳임
-            throw new Exception("존재 하지 않는 타임라인 입니다");
+        TimeLine timeline = now;
+        Boolean temp = timeline.getTimelinePublic();
+
+        //완료->비완료 , 비완료->완료 로 변경하는 작업
+        if (temp) {
+            timeline.setTimelinePublic(false);
+
+        } else {
+            timeline.setTimelinePublic(true);
         }
+        timeLineRepository.save(timeline);
     }
 
 }
