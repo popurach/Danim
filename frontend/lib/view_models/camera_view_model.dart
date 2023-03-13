@@ -5,12 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:logger/logger.dart';
 
 
 
 class CameraViewModel extends ChangeNotifier {
-  var logger = Logger();
 
   List<CameraDescription> _cameras = [];
   late CameraController _controller;
@@ -35,10 +33,8 @@ class CameraViewModel extends ChangeNotifier {
 
       if (allFileList.length < 9) {
         allFileList.add(file);
-      } else {
-        allFileList = [];
       }
-      logger.d(allFileList.last.path);
+
       notifyListeners();
   }
 
