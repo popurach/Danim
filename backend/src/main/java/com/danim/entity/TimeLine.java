@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -35,6 +36,9 @@ public class TimeLine extends BaseTime {
     @ColumnDefault("1")
     private Boolean timelinePublic = true;
 
+
+
+    private LocalDateTime finishTime;//수정시간
 
     //not null그대로 가져와야함.....
     @ManyToOne( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

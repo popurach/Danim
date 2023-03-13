@@ -1,13 +1,12 @@
 package com.danim.controller;
 
-import com.danim.entity.TimeLine;
-import com.danim.entity.User;
-import com.danim.service.TimeLineService;
+import com.danim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 
@@ -18,19 +17,17 @@ import java.util.HashMap;
 public class UserController {
 
 
-    private final TimeLineService service;
+    private final UserService service;
 
     //메인피드 최신순 타임라인 조회
-    @GetMapping("/main")
-    public ResponseEntity<?> getTimelineLatest(@RequestBody TimeLine timeline, final Authentication authentication) throws Exception {
+    @PostMapping("")
+    public ResponseEntity<?> makenewuser() throws Exception {
 
-//        Account auth = (Account) authentication.getPrincipal();
-//        Long tt = auth.getUid();
-//        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
+        service.makeUser();
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
-            put("msg", "멤버 가입성공");
+            put("msg", "User 가입성공");
         }}, HttpStatus.OK);
     }
 
