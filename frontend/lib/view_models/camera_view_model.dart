@@ -17,6 +17,7 @@ class CameraViewModel extends ChangeNotifier {
 
   List<CameraDescription> _cameras = [];
   late CameraController _controller;
+
   late String _imagePath;
 
 
@@ -70,7 +71,6 @@ class CameraViewModel extends ChangeNotifier {
         await imageFile.writeAsBytes(imageBytes);
 
       }
-
       notifyListeners();
   }
 
