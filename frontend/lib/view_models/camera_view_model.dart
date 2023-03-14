@@ -60,11 +60,13 @@ class CameraViewModel extends ChangeNotifier {
 
         final List<int> imageBytes = await file.readAsBytes();
 
-
         String dir = externalDirectory.path;
         final savePath = "$dir/${file.name}";
 
+        // 파일 생성
         final File imageFile = File(savePath);
+
+        // 파일에 이미지 저장
         await imageFile.writeAsBytes(imageBytes);
 
       }
