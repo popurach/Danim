@@ -1,12 +1,16 @@
 // Timeline DTO
+import 'dart:ui';
+
 class Timeline {
   final int timelineId;
   final int userId;
   final String title;
-  final DateTime createTime;
-  final DateTime modifyTime;
+  final String createTime;
+  final String modifyTime;
   final bool complete;
   final bool timelinePublic;
+  final String imageUrl;
+  Color? color;
 
   Timeline(
       {required this.timelineId,
@@ -15,6 +19,7 @@ class Timeline {
       required this.createTime,
       required this.modifyTime,
       required this.complete,
+      required this.imageUrl,
       required this.timelinePublic});
 
   // Serialize(직렬화) Timeline객체 -> JSON객체
@@ -25,6 +30,7 @@ class Timeline {
         'createTime': createTime,
         'modifyTime': modifyTime,
         'complete': complete,
+        'imageUrl': imageUrl,
         'timelinePublic': timelinePublic,
       };
 
@@ -37,6 +43,7 @@ class Timeline {
         createTime: json['createTime'],
         modifyTime: json['modifyTime'],
         complete: json['complete'],
+        imageUrl: json['imageUrl'],
         timelinePublic: json['timelinePublic']);
   }
 }

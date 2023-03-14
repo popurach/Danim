@@ -1,5 +1,6 @@
 import 'package:danim/views/app_bar.dart';
 import 'package:danim/views/bottom_navigation.dart';
+import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -36,11 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: const MyCustomAppBar(
         key: Key("value"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-      ),
+      body: const TimeLineList(),
       floatingActionButton: SizedBox(
           height: 80.0,
           width: 80.0,
