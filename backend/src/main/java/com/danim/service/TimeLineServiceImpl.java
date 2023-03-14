@@ -42,6 +42,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         return timeline;
     }
 
+    //찾고자 하는 상대 유저의 public이지 않은 타임라인 탐색 하는 메서드
     @Override
     public List<TimeLine> searchTimelineNotPublic(Long uid) throws Exception {
         User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
@@ -51,14 +52,14 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     @Override
     public TimeLine searchOneTimeline(Long uid) throws Exception {
-
         TimeLine timeline = new TimeLine();
         //이렇게 해서 User를 찾아옴
         User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
 
-        //timeline 변경 사항 반영하는 과정
-        timeline.setUserUid(now);
-        timeLineRepository.save(timeline);
+//          이부분은 필요한지 테스트 시에 참고 해보도록 하자
+//        //timeline 변경 사항 반영하는 과정
+//        timeline.setUserUid(now);
+//        timeLineRepository.save(timeline);
         return timeline;
 
     }
@@ -131,6 +132,17 @@ public class TimeLineServiceImpl implements TimeLineService {
     public List<TimeLine> searchMyTimelineWithPaging(Long uid, Pageable pageable) throws Exception {
         User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
         Page<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now, pageable);
+        if (timeline.getContent().size() == 0) {
+            throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
+        }
+        return timeline.getContent();
+    }
+
+    //상대 타임라인 조회시 with Paging
+    @Override
+    public List<TimeLine> searchTimelineNotPublicWithPaging(Long uid, Pageable pageable) throws Exception {
+        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        Page<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(now,true,pageable);
         if (timeline.getContent().size() == 0) {
             throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
         }

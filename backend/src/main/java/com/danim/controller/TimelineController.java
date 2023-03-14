@@ -138,6 +138,7 @@ public class TimelineController {
     }
 
 
+    //내 피드에서 내 타임라인 리스트 조회 with paging
     @GetMapping("/mine/test")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size=3) Pageable pageable) throws Exception {
 
@@ -150,5 +151,17 @@ public class TimelineController {
 
     }
 
+
+    //다른 유저의 피드에서 타임라인 조회 with Paging
+    @GetMapping("/other/text/{uid}")
+    public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid,@PageableDefault(size=3) Pageable pageable) throws Exception {
+
+        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(1L,pageable);
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "다른유저 Timeline얻어오기 성공");
+            put("data", timelinelist);
+        }}, HttpStatus.OK);
+    }
 
 }

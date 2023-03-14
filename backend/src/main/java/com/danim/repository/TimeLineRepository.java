@@ -30,6 +30,8 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
 
     Page<TimeLine> findAllByUserUidOrderByCreateTimeDesc(User u,Pageable pageable);
 
+    Page<TimeLine> findAllByUserUidAndTimelinePublic(User u,Boolean flag,Pageable pageable);
+
 
 
 }

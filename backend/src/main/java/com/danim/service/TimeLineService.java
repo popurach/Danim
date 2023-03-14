@@ -38,4 +38,7 @@ public interface TimeLineService {
     //내타임라인 페이징 처리해서 조회
     List<TimeLine> searchMyTimelineWithPaging(Long uid,Pageable pageable) throws Exception;
 
+    //다른 유저의 피드에서 타임라인 조회 with Paging
+    List<TimeLine> searchTimelineNotPublicWithPaging(Long uid,Pageable pageable) throws Exception;
+
 }
