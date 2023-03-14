@@ -41,7 +41,7 @@ public class TimeLine extends BaseTime {
     private LocalDateTime finishTime;//완료시간
 
     //not null그대로 가져와야함.....
-    @ManyToOne( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_uid", nullable = false)
     @ToString.Exclude
     private User userUid;

@@ -2,6 +2,8 @@ package com.danim.repository;
 
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +23,13 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
     Optional<List<TimeLine>> findAllByUserUidAndTimelinePublic(User u,Boolean flag);
 
     Optional<List<TimeLine>> findAllByUserUid(User u);
+
+
+
+    Page<TimeLine> findAll(Pageable pageable);
+
+    Page<TimeLine> findAllByUserUidOrderByCreateTimeDesc(User u,Pageable pageable);
+
 
 
 }

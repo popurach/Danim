@@ -3,6 +3,9 @@ package com.danim.controller;
 import com.danim.entity.TimeLine;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -115,6 +118,36 @@ public class TimelineController {
             put("result", true);
             put("msg", "Timeline 삭제 성공");
         }}, HttpStatus.OK);
+    }
+
+    /*paging  하는 메서드들*/
+
+
+    //메인피드 최신순 타임라인 조회 with paging + 
+    //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
+    //sort="id", direction = Sort.Direction.DESC
+    @GetMapping("/main/test")
+    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 2) Pageable pageable) throws Exception {
+
+        List<TimeLine> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "모든 최신 타임라인 리스트 with paging 얻어오기 성공");
+            put("data", timelinelist);
+        }}, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/mine/test")
+    public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size=3) Pageable pageable) throws Exception {
+
+        List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L,pageable);
+        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
+            put("result", true);
+            put("msg", "내 피드에서 타임라인 리스트 조회 성공");
+            put("data", timelinelist);
+        }}, HttpStatus.OK);
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.danim.service;
 
 import com.danim.entity.TimeLine;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -30,5 +31,11 @@ public interface TimeLineService {
     //타임라인 공개 <->비공개 변경 => 완료
     void changePublic(Long uid) throws Exception;
 
+
+    //메인 피드상에서 타임라인 페이징 처리해서 조회하는 메서드
+    List<TimeLine> searchTimelineOrderBylatestPaging(Pageable pageable)throws Exception;
+
+    //내타임라인 페이징 처리해서 조회
+    List<TimeLine> searchMyTimelineWithPaging(Long uid,Pageable pageable) throws Exception;
 
 }
