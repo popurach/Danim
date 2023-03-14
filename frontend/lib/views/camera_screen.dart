@@ -8,10 +8,6 @@ import '../view_models/camera_view_model.dart';
 import './record_screen.dart';
 
 class CameraView extends StatelessWidget {
-  late bool _duringProcess = false;
-  bool get duringProcess => _duringProcess;
-  set setDuring(bool boolean) => _duringProcess = !duringProcess;
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +103,7 @@ class CameraView extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) => ChangeNotifierProvider(
                                                 create: (_) => CameraViewModel(),
-                                                child: PictureView(viewModel.allFileList),
+                                                child: RecordView(viewModel.allFileList),
                                               ),
                                             ),
                                           );

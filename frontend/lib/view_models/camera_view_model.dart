@@ -57,7 +57,11 @@ class CameraViewModel extends ChangeNotifier {
         });
 
         // 파일 저장할 위치 지정
-        Directory externalDirectory = Directory('/storage/emulated/0/Documents');
+        Directory externalDirectory = Directory('/storage/emulated/0/Documents/photos');
+        if (!await externalDirectory.exists()) {
+          await externalDirectory.create(recursive: true);
+        }
+
 
         final List<int> imageBytes = await file.readAsBytes();
 
