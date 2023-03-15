@@ -42,6 +42,27 @@ dependencies:
   palette_generator: ^0.3.3+2
   logger: ^1.3.0
 
+  # camera
+  camera:
+  path_provider:
+  video_player: ^2.2.5
+  permission_handler: ^8.3.0
+  file: ^6.1.4
+  path:
+  geolocator:
+  intl:
+  image_gallery_saver: ^1.7.1
+  native_exif:
+
+  # audio
+  record:
+
+  # Carousel
+  carousel_slider:
+
+  # logger
+  logger:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
