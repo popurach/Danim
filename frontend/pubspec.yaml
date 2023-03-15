@@ -53,6 +53,7 @@ dependencies:
   intl:
   image_gallery_saver: ^1.7.1
   native_exif:
+  multiple_images_picker:
 
   # audio
   record:

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -102,8 +103,8 @@ class CameraView extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => ChangeNotifierProvider(
-                                                create: (_) => CameraViewModel(),
-                                                child: RecordView(viewModel.allFileList),
+                                                create: (_) => RecordViewModel(viewModel.allFileList),
+                                                child: RecordView(),
                                               ),
                                             ),
                                           );

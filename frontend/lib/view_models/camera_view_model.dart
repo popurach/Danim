@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -73,7 +74,6 @@ class CameraViewModel extends ChangeNotifier {
 
         // 파일에 이미지 저장
         await imageFile.writeAsBytes(imageBytes);
-
       }
       notifyListeners();
   }

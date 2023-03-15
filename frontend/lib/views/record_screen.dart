@@ -3,18 +3,15 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 import '../view_models/record_view_model.dart';
 
 class RecordView extends StatelessWidget {
-  final List<XFile> images;
-
-  const RecordView(this.images);
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -22,33 +19,37 @@ class RecordView extends StatelessWidget {
         ),
         body: Column (
           children: [
-                    // 캐러셀
+            // 캐러셀
             Container(
               height: MediaQuery.of(context).size.height * 0.60,
-              child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.width * 1.20,
-                    enableInfiniteScroll: false,
-                    viewportFraction: 0.70,
-                    enlargeCenterPage: true,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                  ),
-                  items: images.map((file) {
-                    return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            margin: const EdgeInsets.all(4),
-                            child: Image.file(
-                              File(file.path),
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        }
+              child: Consumer<RecordViewModel>(
+                builder: (context, viewModel, child) {
+                  return CarouselSlider(
+                      options: CarouselOptions(
+                        height: MediaQuery.of(context).size.width * 1.20,
+                        enableInfiniteScroll: false,
+                        viewportFraction: 0.70,
+                        enlargeCenterPage: true,
+                        enlargeStrategy: CenterPageEnlargeStrategy.height,
+                      ),
+                      items: viewModel.imageList.map((file) {
+                        return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                margin: const EdgeInsets.all(4),
+                                child: Image.file(
+                                  File(file.path),
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }
                         );
-                  }).toList()
+                      }).toList()
+                  );
+                },
+
               ),
             ),
-
                     // 녹음 실행 관련 컨테이너
             Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -61,11 +62,9 @@ class RecordView extends StatelessWidget {
                                 },
                         icon: const Icon(Icons.play_arrow)
                             ),
-
                           ],
                         )
                     ),
-
                     // 버튼 컨테이너
             Expanded(
               child: Row(
@@ -81,29 +80,37 @@ class RecordView extends StatelessWidget {
                     ),
 
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<RecordViewModel>(context, listen: false).uploadFileFromGallery();
+
+                      },
                       icon: const Icon(Icons.photo_outlined),
                       color: Colors.white,
                     ),
                   ),
-                  Container(
-                    width: 70,
-                    height: 70,
-                    child: ColoredContainer(
-                      defaultColor: Colors.redAccent,
-                      highlightColor: Colors.greenAccent,
-                      onTapDown: () {
-                        RecordViewModel().startRecording();
-                      },
-                      onTapUp: () {
-                        RecordViewModel().stopRecording();
-                      },
-                      child: const Icon(
-                        Icons.multitrack_audio,
-                        color: Colors.white,
-                        size:50,
-                      ),
-                    ),
+                  Consumer<RecordViewModel>(
+                    builder: (context, viewModel, child) {
+                      return Container(
+                        width: 70,
+                        height: 70,
+                        child: ColoredContainer(
+                          defaultColor: Colors.redAccent,
+                          highlightColor: Colors.greenAccent,
+                          onTapDown: () {
+                            viewModel.startRecording();
+                          },
+                          onTapUp: () {
+                            viewModel.stopRecording();
+                          },
+                          child: const Icon(
+                            Icons.multitrack_audio,
+                            color: Colors.white,
+                            size:50,
+                          ),
+                        ),
+                      );
+                    }
+
                   ),
                   Container(
                     margin: const EdgeInsets.only(right: 50),
