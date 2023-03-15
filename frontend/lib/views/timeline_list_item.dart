@@ -10,12 +10,12 @@ class TimelineListItem extends StatelessWidget {
     const cardHeight = 140.0;
 
     return Container(
-      margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
+      margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
       height: cardHeight,
       child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            side: const BorderSide(color: Colors.black, width: 1.5),
+            side: const BorderSide(color: Colors.black45, width: 1.5),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: GestureDetector(
@@ -85,7 +85,7 @@ class TimelineListItem extends StatelessWidget {
                                         const SizedBox(
                                           width: 90,
                                           child: Text(
-                                            "T   I  T  L  E: ",
+                                            "T   I  T  L  E",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -99,7 +99,7 @@ class TimelineListItem extends StatelessWidget {
                                         const SizedBox(
                                           width: 90,
                                           child: Text(
-                                            "TRAVELER: ",
+                                            "TRAVELER",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -114,7 +114,7 @@ class TimelineListItem extends StatelessWidget {
                                       children: [
                                         const SizedBox(
                                           width: 90,
-                                          child: Text("DURATION: ",
+                                          child: Text("DURATION",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
                                         ),
