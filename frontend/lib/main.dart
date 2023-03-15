@@ -1,7 +1,15 @@
+import 'package:flutter/material.dart';
+
 import 'package:danim/views/app_bar.dart';
 import 'package:danim/views/bottom_navigation.dart';
+
 import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
+
+import 'package:danim/views/camera_screen.dart';
+import 'package:danim/view_models/camera_view_model.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: FittedBox(
             child: FloatingActionButton(
               child: const Icon(Icons.camera),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+                        create: (_) => CameraViewModel(),
+                        child: CameraView()
+                    ))
+                );
+              },
             ),
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
