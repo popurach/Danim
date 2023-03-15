@@ -45,6 +45,13 @@ dependencies:
   permission_handler: ^8.3.0
   file: ^6.1.4
   path:
+  geolocator:
+  intl:
+  image_gallery_saver: ^1.7.1
+  native_exif:
+
+  # audio
+  record:
 
   # Carousel
   carousel_slider:

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/camera_view_model.dart';
-import './picture.dart';
+import './record_screen.dart';
 
 class CameraView extends StatelessWidget {
 
@@ -32,8 +32,12 @@ class CameraView extends StatelessWidget {
                     height: double.infinity,
                     child: Stack(
                       children: [
+                        // 카메라 화면
                         CameraPreview(viewModel.controller),
+
+                        // 버튼들
                         Positioned(
+                          // 위치 지정
                           left: 0,
                           right: 0,
                           bottom: 0,
@@ -42,7 +46,7 @@ class CameraView extends StatelessWidget {
                             color: Colors.black38,
                             child: Column(
                               children: [
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -59,7 +63,7 @@ class CameraView extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(45)
                                       ),
                                       child: IconButton(
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.camera,
                                           color: Colors.white,
                                           size: 70,
@@ -67,6 +71,7 @@ class CameraView extends StatelessWidget {
                                         onPressed: () {
                                           if (viewModel.allFileList.length < 9) {
                                             viewModel.takePhoto();
+
                                             } else {
                                               viewModel.showAlert(context);
                                             }
@@ -98,7 +103,7 @@ class CameraView extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) => ChangeNotifierProvider(
                                                 create: (_) => CameraViewModel(),
-                                                child: PictureView(viewModel.allFileList),
+                                                child: RecordView(viewModel.allFileList),
                                               ),
                                             ),
                                           );
