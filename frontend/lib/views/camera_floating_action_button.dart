@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/camera_view_model.dart';
 import 'camera_screen.dart';
 
 class CameraFloatingActionButton extends StatelessWidget {
+  const CameraFloatingActionButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
