@@ -26,7 +26,7 @@ public class TimeLine extends BaseTime {
     @ColumnDefault("'여행중'")
     private String title = "여행중";
 
- 
+
     @Builder.Default
     @ColumnDefault("0")
     private Boolean complete = false;
@@ -37,11 +37,10 @@ public class TimeLine extends BaseTime {
     private Boolean timelinePublic = true;
 
 
-
     private LocalDateTime finishTime;//완료시간
 
     //not null그대로 가져와야함.....
-    @ManyToOne( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_uid", nullable = false)
     @ToString.Exclude
     private User userUid;
