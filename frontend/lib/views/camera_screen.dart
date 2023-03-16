@@ -12,8 +12,10 @@ class CameraView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of로 viewModel 지정
     final viewModel = Provider.of<CameraViewModel>(context, listen: false);
     return Scaffold(
+      // FutureBuilder를 사용할 필요가 있는지 검토
       body: FutureBuilder(
         future: viewModel.initializeCamera(),
         builder: (context, snapshot) {
@@ -87,13 +89,8 @@ class CameraView extends StatelessWidget {
                                         color: Colors.black54,
                                           borderRadius: BorderRadius.circular(25),
                                       ),
+                                      // 녹음 화면으로 이동하는 버튼
                                       child: IconButton(
-                                        // icon:  viewModel.allFileList.isNotEmpty ?
-                                        //         Image.file(File(viewModel.allFileList.last))
-                                        //     : const Icon(
-                                        //         Icons.folder,
-                                        //       color: Colors.white,
-                                        //     ),
                                         icon: const Icon(
                                                 Icons.folder,
                                                 color: Colors.white

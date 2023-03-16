@@ -22,6 +22,7 @@ class RecordView extends StatelessWidget {
             // 캐러셀
             Container(
               height: MediaQuery.of(context).size.height * 0.60,
+              // 컨슈머로 변화 감지
               child: Consumer<RecordViewModel>(
                 builder: (context, viewModel, child) {
                   return CarouselSlider(
@@ -50,7 +51,7 @@ class RecordView extends StatelessWidget {
 
               ),
             ),
-                    // 녹음 실행 관련 컨테이너
+            // 녹음 실행 관련 컨테이너
             Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 padding: const EdgeInsets.only(left: 20, right: 20),
@@ -81,13 +82,18 @@ class RecordView extends StatelessWidget {
 
                     child: IconButton(
                       onPressed: () {
-                        Provider.of<RecordViewModel>(context, listen: false).uploadFileFromGallery();
-
+                        if(Provider.of<RecordViewModel>(context, listen: false).imageList.length >= 9){
+                          Provider.of<RecordViewModel>(context, listen: false).showAlert(context);
+                        } else {
+                          Provider.of<RecordViewModel>(context, listen: false).uploadFileFromGallery();
+                        }
                       },
                       icon: const Icon(Icons.photo_outlined),
                       color: Colors.white,
                     ),
                   ),
+
+                  // 녹음 버튼
                   Consumer<RecordViewModel>(
                     builder: (context, viewModel, child) {
                       return Container(
@@ -136,6 +142,7 @@ class RecordView extends StatelessWidget {
   }
 }
 
+// 버튼을 클릭하고 있을 때에 색상이 바뀌는 컨테이너
 class ColoredContainer extends StatefulWidget {
   final Widget child;
   final Color defaultColor;
@@ -161,6 +168,7 @@ class _ColoredContainerState extends State<ColoredContainer> {
 
   @override
   Widget build(BuildContext context) {
+    // GestureDetector로 감지
     return GestureDetector(
       onTapDown: (_) {
         if (widget.onTapDown != null) {
