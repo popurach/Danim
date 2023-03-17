@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/view_models/camera_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
@@ -23,25 +23,12 @@ class RecordViewModel extends ChangeNotifier {
   late File recordedVoice;
   late bool playStarted = false;
   late bool isPlaying = false;
-  late Duration duration;
+  late Future<Duration?> duration;
+  late String test;
 
-  RecordViewModel(this.imageList) {
-    // Listen to player state changes and update the isPlaying variable
-    audioPlayer.playerStateStream.listen((playerState) {
-      if (playerState.playing) {
-        isPlaying = true;
-      } else if (playerState.playing == false) {
-        isPlaying = false;
-      } else if (playerState.processingState == ProcessingState.completed) {
-        isPlaying = false;
-        // Audio has finished playing, update the icon
-        notifyListeners();
-      }
-      notifyListeners();
-    });
-  }
+  RecordViewModel(this.imageList);
 
-  final audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer = AudioPlayer();
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -70,18 +57,37 @@ class RecordViewModel extends ChangeNotifier {
     final directory = Directory('/storage/emulated/0/Documents/records');
 
     recordedFilePath = '${directory.path}/$recordedFileName.m4a';
-    duration = await audioPlayer.setUrl(recordedFilePath) as Duration;
-    playStarted = false;
+    await audioPlayer.setSourceUrl(recordedFilePath);
+    duration = audioPlayer.getDuration();
     notifyListeners();
   }
 
   Future<void> playRecordedFile() async {
-    audioPlayer.play();
+    await audioPlayer.play(DeviceFileSource(recordedFilePath));
+    isPlaying = true;
     notifyListeners();
+
+    audioPlayer.onPlayerComplete.listen((event) {
+      isPlaying = false;
+      notifyListeners();
+    });
   }
 
   Future<void> pauseRecordedFile() async {
     audioPlayer.pause();
+    isPlaying = false;
+    notifyListeners();
+  }
+
+  Future<void> resumeRecordedFile() async {
+    audioPlayer.resume();
+    isPlaying = true;
+    notifyListeners();
+  }
+
+  Future<void> stopRecordedFile() async {
+    audioPlayer.stop();
+    isPlaying = false;
     notifyListeners();
   }
 

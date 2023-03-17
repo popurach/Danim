@@ -57,7 +57,7 @@ dependencies:
 
   # audio
   record: ^4.4.4
-  just_audio: ^0.9.31
+  audioplayers: ^3.0.1
 
   # Carousel
   carousel_slider:  ^4.2.1

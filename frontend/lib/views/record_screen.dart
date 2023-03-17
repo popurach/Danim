@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class RecordView extends StatelessWidget {
                             }
                             },
                           icon: Icon(
-                              viewModel.isPlaying ?
+                              viewModel.isPlaying?
                                   Icons.pause
                                   : Icons.play_arrow,
                               color: Colors.black,
@@ -82,7 +83,7 @@ class RecordView extends StatelessWidget {
                         ),
                         // 프로그레스 바
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
+                          width: MediaQuery.of(context).size.width * 0.3,
                           // child: Slider(
                           //   value: viewModel.position.inSeconds.toDouble(),
                           //   max: viewModel.duration.inSeconds.toDouble(),
@@ -91,7 +92,7 @@ class RecordView extends StatelessWidget {
                           //     },
                           // ),
                         ),
-                        Text('${viewModel.audioPlayer.playerState.playing}')
+                        Text('test')
                       ],
                     );
                   }
