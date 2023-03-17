@@ -17,10 +17,12 @@ public class Favorite {
     private Long favoriteId;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     private Post postId;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User userUid;
+
+
 }
