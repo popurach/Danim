@@ -23,12 +23,15 @@ class RecordViewModel extends ChangeNotifier {
   late File recordedVoice;
   late bool playStarted = false;
   late bool isPlaying = false;
-  late Future<Duration?> duration;
+  late Duration? duration = Duration(seconds: 0);
   late String test;
 
   RecordViewModel(this.imageList);
 
   AudioPlayer audioPlayer = AudioPlayer();
+
+  Duration _audioPosition = Duration.zero;
+  Duration get audioPositon => _audioPosition;
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -58,7 +61,7 @@ class RecordViewModel extends ChangeNotifier {
 
     recordedFilePath = '${directory.path}/$recordedFileName.m4a';
     await audioPlayer.setSourceUrl(recordedFilePath);
-    duration = audioPlayer.getDuration();
+    duration = audioPlayer.getDuration() as Duration;
     notifyListeners();
   }
 
@@ -71,6 +74,16 @@ class RecordViewModel extends ChangeNotifier {
       isPlaying = false;
       notifyListeners();
     });
+
+    audioPlayer.onPositionChanged.listen((curPos) {
+      _audioPosition = curPos;
+    });
+
+    audioPlayer.onDurationChanged.listen((duration) {
+      this.duration = duration ?? Duration(seconds: 0);
+      notifyListeners();
+    });
+
   }
 
   Future<void> pauseRecordedFile() async {
@@ -89,6 +102,16 @@ class RecordViewModel extends ChangeNotifier {
     audioPlayer.stop();
     isPlaying = false;
     notifyListeners();
+  }
+
+  void updateAudioPosition(Duration position) {
+    _audioPosition = position;
+    notifyListeners();
+  }
+
+  Future<void> seekTo(Duration position) async {
+    await audioPlayer.seek(position);
+    updateAudioPosition(position);
   }
 
 

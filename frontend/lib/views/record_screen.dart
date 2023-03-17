@@ -83,16 +83,25 @@ class RecordView extends StatelessWidget {
                         ),
                         // 프로그레스 바
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          // child: Slider(
-                          //   value: viewModel.position.inSeconds.toDouble(),
-                          //   max: viewModel.duration.inSeconds.toDouble(),
-                          //   onChanged: (value) {
-                          //     viewModel.seek(Duration(seconds: value.toInt()));
-                          //     },
-                          // ),
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: viewModel.duration != Duration(seconds: 0) ? Slider(
+                            value: viewModel.audioPositon.inSeconds.toDouble(),
+                            max: viewModel.duration!.inSeconds.toDouble(),
+                            onChanged: (value) {
+                              final position = Duration(seconds: value.toInt());
+                              viewModel.seekTo(position);
+                              },
+                          ) : Slider(
+                              value: 0,
+                              max: 0,
+                              onChanged: (double value) {  },
+                          ),
                         ),
-                        Text('test')
+                        viewModel.duration != Duration(seconds: 0) ?
+                        viewModel.duration!.inSeconds.toInt() <= 9 ?
+                        Text('00:0${viewModel.duration!.inSeconds.toInt()}')
+                            : Text('00${viewModel.duration!.inSeconds.toInt()}')
+                            : Text('00:00')
                       ],
                     );
                   }
