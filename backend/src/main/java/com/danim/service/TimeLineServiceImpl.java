@@ -26,8 +26,8 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     @Override
     //모든 최신 타임라인 얻어옴 , 페이징 x
-    public List<TimeLine> searchTimelineOrderBylatest(Long uid) throws Exception {
-        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+    public List<TimeLine> searchTimelineOrderBylatest() throws Exception {
+        //User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
         //List<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now).orElseThrow(() -> new Exception("모든 최신 타임라인 얻어오기 실패"));
         List<TimeLine> timeline = timeLineRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
         return timeline;
@@ -52,7 +52,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     @Override
     public TimeLine searchOneTimeline(Long uid) throws Exception {
-        
+
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다."));
         return now;
     }
@@ -76,10 +76,10 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다."));
         //타임라인 완료 변경 작업 진행
-        TimeLine timeline = now;
-        timeline.setComplete(Boolean.TRUE);
-        timeline.setFinishTime(LocalDateTime.now());
-        timeLineRepository.save(timeline);
+
+        now.setComplete(Boolean.TRUE);
+        now.setFinishTime(LocalDateTime.now());
+        timeLineRepository.save(now);
 
     }
 
@@ -88,25 +88,25 @@ public class TimeLineServiceImpl implements TimeLineService {
     public void deleteTimeline(Long uid) throws Exception {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
-        TimeLine timeline = now;
-        timeLineRepository.delete(timeline);
+
+        timeLineRepository.delete(now);
 
     }
 
     @Override
     public void changePublic(Long uid) throws Exception {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다"));
-        TimeLine timeline = now;
-        Boolean temp = timeline.getTimelinePublic();
+
+        Boolean temp = now.getTimelinePublic();
 
         //완료->비완료 , 비완료->완료 로 변경하는 작업
         if (temp) {
-            timeline.setTimelinePublic(false);
+            now.setTimelinePublic(false);
 
         } else {
-            timeline.setTimelinePublic(true);
+            now.setTimelinePublic(true);
         }
-        timeLineRepository.save(timeline);
+        timeLineRepository.save(now);
     }
 
     //모든 타임라인 얻어옴, with paging

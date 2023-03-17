@@ -23,13 +23,13 @@ public class TimelineController {
     private final TimeLineService service;
 
     //메인피드 최신순 타임라인 조회
-    @GetMapping("/main/{uid}")
-    public ResponseEntity<?> getTimelineLatest(@PathVariable Long uid) throws Exception {
+    @GetMapping("/main")
+    public ResponseEntity<?> getTimelineLatest() throws Exception {
 
 //        Account auth = (Account) authentication.getPrincipal();
 //        Long tt = auth.getUid();
 //        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
-        List<TimeLine> timelinelist = service.searchTimelineOrderBylatest(1L);
+        List<TimeLine> timelinelist = service.searchTimelineOrderBylatest();
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "모든 최신 타임라인 리스트 얻어오기 성공");
@@ -40,10 +40,10 @@ public class TimelineController {
 
 
     //내 피드에서 내 타임라인 리스트 조회
-    @GetMapping("/mine")
-    public ResponseEntity<?> getMyTimelineList() throws Exception {
+    @GetMapping("/mine/{uid}")
+    public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchMyTimeline(1L);
+        List<TimeLine> timelinelist = service.searchMyTimeline(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "내 피드에서 타임라인 리스트 조회 성공");
@@ -55,7 +55,7 @@ public class TimelineController {
     @GetMapping("/user/{uid}")
     public ResponseEntity<?> getAnotherTimelineList(@PathVariable Long uid) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchTimelineNotPublic(1L);
+        List<TimeLine> timelinelist = service.searchTimelineNotPublic(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "다른유저 Timeline얻어오기 성공");
@@ -67,8 +67,7 @@ public class TimelineController {
     //타임라인 한개 조회
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
-        //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        TimeLine timeline = service.searchOneTimeline(2L);
+        TimeLine timeline = service.searchOneTimeline(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", timeline);
@@ -77,7 +76,7 @@ public class TimelineController {
 
     }
 
-    //여행시작
+    //여행시작 , 여기에는 사용자 를 구분할수 있는 requestbody가 필요하다
     @PostMapping("")
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
@@ -92,8 +91,8 @@ public class TimelineController {
     //여행끝
     @PutMapping("/{uid}")
     public ResponseEntity<?> finishTimeLine(@PathVariable Long uid) throws Exception {
-        //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.finishTimeline(4L);
+
+        service.finishTimeline(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "Timeline 종료 성공");
@@ -103,8 +102,8 @@ public class TimelineController {
     //타임라인 공개 <->비공개 변경
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
-        //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.changePublic(3L);
+
+        service.changePublic(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "Timeline Public 변경 성공");
@@ -114,8 +113,7 @@ public class TimelineController {
     //타임라인삭제
     @DeleteMapping("/{uid}")
     public ResponseEntity<?> deleteTimeLine(@PathVariable Long uid) throws Exception {
-        //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.deleteTimeline(1L);
+        service.deleteTimeline(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "Timeline 삭제 성공");
@@ -158,7 +156,7 @@ public class TimelineController {
     @GetMapping("/other/text/{uid}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(1L, pageable);
+        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "다른유저 Timeline얻어오기 성공");
