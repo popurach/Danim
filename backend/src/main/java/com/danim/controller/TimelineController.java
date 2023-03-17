@@ -35,6 +35,7 @@ public class TimelineController {
             put("msg", "모든 최신 타임라인 리스트 얻어오기 성공");
             put("data", timelinelist);
         }}, HttpStatus.OK);
+
     }
 
 
@@ -67,12 +68,13 @@ public class TimelineController {
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        TimeLine timeline = service.searchOneTimeline(100L);
+        TimeLine timeline = service.searchOneTimeline(2L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("data", timeline);
             put("msg", "Timeline 한개 조회 성공");
         }}, HttpStatus.OK);
+
     }
 
     //여행시작
@@ -140,9 +142,9 @@ public class TimelineController {
 
     //내 피드에서 내 타임라인 리스트 조회 with paging
     @GetMapping("/mine/test")
-    public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size=3) Pageable pageable) throws Exception {
+    public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L,pageable);
+        List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "내 피드에서 타임라인 리스트 조회 성공");
@@ -154,9 +156,9 @@ public class TimelineController {
 
     //다른 유저의 피드에서 타임라인 조회 with Paging
     @GetMapping("/other/text/{uid}")
-    public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid,@PageableDefault(size=3) Pageable pageable) throws Exception {
+    public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(1L,pageable);
+        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(1L, pageable);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "다른유저 Timeline얻어오기 성공");
