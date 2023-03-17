@@ -5,6 +5,8 @@
 
 [데이터베이스 설계](https://www.notion.so/45aed40582124cf2a00bde3d9e488bc7)
 
+## ERD
+![ERD](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/-/raw/main/docs/DataBase%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%84%A4%EA%B3%84/ERD.png)
 ### 네이버 oauth 정보
 
 ![Image Pasted at 2023-3-6 15-31.png](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/-/raw/main/docs/DataBase%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%84%A4%EA%B3%84/Image_Pasted_at_2023-3-6_15-31.png)

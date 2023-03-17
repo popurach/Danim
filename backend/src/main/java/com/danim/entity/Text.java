@@ -13,17 +13,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Image {
+public class Text extends BaseTime {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
-    private Long image_id;
+    @Column(nullable = false)
+    private Long textId;
 
+    private String record;
 
-    @Column(unique = true, nullable = false)
-    private String image_url;
-
-
+    @ManyToOne
+    @JoinColumn(name="post_id")
+    private Post postId;
 }
