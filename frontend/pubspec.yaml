@@ -53,6 +53,8 @@ dependencies:
   intl:
   image_gallery_saver: ^1.7.1
   native_exif:
+  # caching and lazy loading network image
+  cached_network_image: ^3.2.3
 
   # audio
   record:

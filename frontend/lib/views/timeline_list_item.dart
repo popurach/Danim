@@ -24,7 +24,7 @@ class TimelineListItem extends StatelessWidget {
                   pageBuilder: (context, animation1, animation2) =>
                       ChangeNotifierProvider(
                     create: (_) => TimelineDetailViewModel(
-                      timelineId: timeline.timelineId,
+                      timeline.timelineId,
                     ),
                     child: const TimelineDetail(),
                   ),

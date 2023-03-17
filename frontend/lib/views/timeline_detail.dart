@@ -1,6 +1,8 @@
+import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/app_bar.dart';
 import 'package:danim/views/custom_expansion_tile.dart';
+import 'package:danim/views/post_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -42,25 +44,29 @@ class TimelineDetail extends StatelessWidget {
                 ),
               ),
               children: [
-                IntrinsicHeight(
-                  child: CustomExpansionTile(
-                    title: const Text('city A'),
-                    leading: SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: TimelineTile(
-                        alignment: TimelineAlign.manual,
-                        lineXY: 0.1,
-                        indicatorStyle: const IndicatorStyle(
-                          width: 20,
-                          color: Colors.lightBlueAccent,
-                        ),
-                        endChild: Container(
-                          padding: const EdgeInsets.all(8),
-                        ),
+                CustomExpansionTile(
+                  title: const Text('city A'),
+                  leading: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: TimelineTile(
+                      alignment: TimelineAlign.manual,
+                      lineXY: 0.1,
+                      indicatorStyle: const IndicatorStyle(
+                        width: 20,
+                        color: Colors.lightBlueAccent,
+                      ),
+                      endChild: Container(
+                        padding: const EdgeInsets.all(8),
                       ),
                     ),
                   ),
+                  children: [
+                    ChangeNotifierProvider(
+                      create: (_) => PostViewModel(viewModel.timeline!.post[0]),
+                      child: PostDetail(),
+                    )
+                  ],
                 ),
                 CustomExpansionTile(
                   title: const Text('city B'),

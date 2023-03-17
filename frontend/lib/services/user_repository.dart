@@ -18,4 +18,13 @@ class UserRepository {
       throw Exception('Fail to get timeline: $error');
     }
   }
+
+  Future<Timeline> getTimelineById(int id) async {
+    try {
+      Response response = await _dio.get('api/auth/timeline/$id');
+      return Timeline.fromJson(response.data);
+    } catch (error) {
+      throw Exception('Fail to get timeline id $id : $error');
+    }
+  }
 }
