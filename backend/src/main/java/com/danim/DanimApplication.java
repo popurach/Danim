@@ -2,11 +2,12 @@ package com.danim;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.util.TimeZone;
-
+@EnableWebMvc
 @SpringBootApplication
 public class DanimApplication {
 	// 서버 실행 전 아시아/서울 시간으로 서버 시간 동기화
