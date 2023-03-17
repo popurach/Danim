@@ -1,8 +1,9 @@
 package com.danim.controller;
 
+import com.danim.entity.Photo;
 import com.danim.entity.Post;
+import com.danim.service.PhotoService;
 import com.danim.service.PostService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,18 +19,22 @@ import java.util.List;
 @RestController
 public class PostController {
     private final PostService postService;
-//    public PostController(PostService postService) {
-//        this.postService = postService;
-//    }
+    private final PhotoService photoService;
 
     //포스트 등록
     @PostMapping("")
-    public ResponseEntity<?> insertPost(@RequestParam("image") MultipartFile imageFile,
+    public ResponseEntity<?> insertPost(@RequestParam("images") List<MultipartFile> imageFiles,
                                         @RequestParam("voice") MultipartFile voiceFile,
                                         @RequestParam("timelineId") Long timelineId) throws Exception {
         try {
-            Post post = postService.insertPost(imageFile, voiceFile, timelineId);
-            return ResponseEntity.ok(post);
+            List<Photo> photoList = new ArrayList<>();
+            for (MultipartFile imageFile : imageFiles) {
+                Photo photo = photoService.createPhoto(imageFile);
+                photoList.add(photo);
+            }
+            Post savedPost = postService.insertPost(voiceFile, timelineId, photoList);
+            photoService.insertPhoto(photoList, savedPost);
+            return ResponseEntity.ok(savedPost);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

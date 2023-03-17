@@ -1,5 +1,6 @@
 package com.danim.service;
 
+import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface PostService {
     // 포스트 등록
-    Post insertPost(MultipartFile imageFile, MultipartFile voiceFile, Long timelineId) throws IOException, UnsupportedAudioFileException;
+    Post insertPost(MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws IOException, UnsupportedAudioFileException;
 
     // 포스트 삭제
     void deletePostById(Long postId) throws Exception;
