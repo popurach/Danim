@@ -27,6 +27,7 @@ class CameraViewModel extends ChangeNotifier {
   Future<void> initializeCamera() async {
     await Permission.camera.request();
     await Permission.storage.request();
+    await Permission.manageExternalStorage.request();
     await Permission.location.request();
 
     var cameras = await availableCameras();

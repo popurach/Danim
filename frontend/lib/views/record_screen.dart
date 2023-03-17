@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../view_models/record_view_model.dart';
 
 class RecordView extends StatelessWidget {
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +53,52 @@ class RecordView extends StatelessWidget {
 
               ),
             ),
+
             // 녹음 실행 관련 컨테이너
             Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                                  // playSound
-                                },
-                        icon: const Icon(Icons.play_arrow)
-                            ),
-                          ],
-                        )
-                    ),
-                    // 버튼 컨테이너
+                child: Consumer<RecordViewModel>(
+                  builder: (context, viewModel, child) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // 재생 버튼
+                        IconButton(
+                          onPressed: () {
+                            // playSound
+                            if (viewModel.isPlaying == false) {
+                              viewModel.playRecordedFile();
+                            } else {
+                              viewModel.pauseRecordedFile();
+                            }
+                            },
+                          icon: Icon(
+                              viewModel.isPlaying ?
+                                  Icons.pause
+                                  : Icons.play_arrow,
+                              color: Colors.black,
+                                )
+                        ),
+                        // 프로그레스 바
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          // child: Slider(
+                          //   value: viewModel.position.inSeconds.toDouble(),
+                          //   max: viewModel.duration.inSeconds.toDouble(),
+                          //   onChanged: (value) {
+                          //     viewModel.seek(Duration(seconds: value.toInt()));
+                          //     },
+                          // ),
+                        ),
+                        Text('${viewModel.audioPlayer.playerState.playing}')
+                      ],
+                    );
+                  }
+                  )
+            ),
+
+            // 버튼 컨테이너
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

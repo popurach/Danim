@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:danim/view_models/camera_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
@@ -13,12 +14,34 @@ import 'package:logger/logger.dart';
 import 'package:multiple_images_picker/multiple_images_picker.dart';
 import '../views/record_screen.dart';
 
+var logger = Logger();
 
 class RecordViewModel extends ChangeNotifier {
-  late final List<XFile> imageList;
+  late List<XFile> imageList;
+  late String recordedFileName;
+  late String recordedFilePath;
+  late File recordedVoice;
+  late bool playStarted = false;
+  late bool isPlaying = false;
+  late Duration duration;
 
-  RecordViewModel(this.imageList);
+  RecordViewModel(this.imageList) {
+    // Listen to player state changes and update the isPlaying variable
+    audioPlayer.playerStateStream.listen((playerState) {
+      if (playerState.playing) {
+        isPlaying = true;
+      } else if (playerState.playing == false) {
+        isPlaying = false;
+      } else if (playerState.processingState == ProcessingState.completed) {
+        isPlaying = false;
+        // Audio has finished playing, update the icon
+        notifyListeners();
+      }
+      notifyListeners();
+    });
+  }
 
+  final audioPlayer = AudioPlayer();
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -38,17 +61,33 @@ class RecordViewModel extends ChangeNotifier {
       bitRate: 128000, // by default
       samplingRate: 44100
     );
-
-
+    recordedFileName = fileName;
   }
 
+  // 녹음 끝 파일 저장
   Future<void> stopRecording() async {
     await record.stop();
+    final directory = Directory('/storage/emulated/0/Documents/records');
+
+    recordedFilePath = '${directory.path}/$recordedFileName.m4a';
+    duration = await audioPlayer.setUrl(recordedFilePath) as Duration;
+    playStarted = false;
+    notifyListeners();
   }
+
+  Future<void> playRecordedFile() async {
+    audioPlayer.play();
+    notifyListeners();
+  }
+
+  Future<void> pauseRecordedFile() async {
+    audioPlayer.pause();
+    notifyListeners();
+  }
+
 
   // 갤러리에서 파일 가져오기
   Future<void> uploadFileFromGallery() async {
-
     // 길이가 9 이상이면 작동하지 않음
     if (imageList.length >= 9) {
       return;
