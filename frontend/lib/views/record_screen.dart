@@ -1,11 +1,12 @@
 import 'dart:io';
 
 
-import 'package:audioplayers/audioplayers.dart';
-import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../module/audio_player_view.dart';
+import '../module/audio_player_view_model.dart';
 
 
 import '../view_models/record_view_model.dart';
@@ -51,62 +52,20 @@ class RecordView extends StatelessWidget {
                       }).toList()
                   );
                 },
-
               ),
             ),
 
             // 녹음 실행 관련 컨테이너
-            Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Consumer<RecordViewModel>(
-                  builder: (context, viewModel, child) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // 재생 버튼
-                        IconButton(
-                          onPressed: () {
-                            // playSound
-                            if (viewModel.isPlaying == false) {
-                              viewModel.playRecordedFile();
-                            } else {
-                              viewModel.pauseRecordedFile();
-                            }
-                            },
-                          icon: Icon(
-                              viewModel.isPlaying?
-                                  Icons.pause
-                                  : Icons.play_arrow,
-                              color: Colors.black,
-                                )
-                        ),
-                        // 프로그레스 바
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          child: viewModel.duration != Duration(seconds: 0) ? Slider(
-                            value: viewModel.audioPositon.inSeconds.toDouble(),
-                            max: viewModel.duration!.inSeconds.toDouble(),
-                            onChanged: (value) {
-                              final position = Duration(seconds: value.toInt());
-                              viewModel.seekTo(position);
-                              },
-                          ) : Slider(
-                              value: 0,
-                              max: 0,
-                              onChanged: (double value) {  },
-                          ),
-                        ),
-                        viewModel.duration != Duration(seconds: 0) ?
-                        viewModel.duration!.inSeconds.toInt() <= 9 ?
-                        Text('00:0${viewModel.duration!.inSeconds.toInt()}')
-                            : Text('00${viewModel.duration!.inSeconds.toInt()}')
-                            : Text('00:00')
-                      ],
-                    );
-                  }
-                  )
+            // ChangeNotifierProxyProvider를 통해 RecordViewModel에서 변화가 발생했을 때 AudioPlayerViewModel에도 어떤 동작을 실행시킨다.
+            ChangeNotifierProxyProvider<RecordViewModel, AudioPlayerViewModel>(
+              create: (_) => AudioPlayerViewModel(),
+              update: (context, recordViewModel, audioPlayerViewModel) {
+                audioPlayerViewModel?.audioFilePath = recordViewModel.recordedFilePath;
+                return audioPlayerViewModel!;
+              },
+              child: AudioPlayerView(),
             ),
+
 
             // 버튼 컨테이너
             Expanded(

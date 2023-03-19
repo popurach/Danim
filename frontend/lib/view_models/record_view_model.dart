@@ -19,12 +19,11 @@ var logger = Logger();
 class RecordViewModel extends ChangeNotifier {
   late List<XFile> imageList;
   late String recordedFileName;
-  late String recordedFilePath;
+  late String recordedFilePath = "";
   late File recordedVoice;
   late bool playStarted = false;
   late bool isPlaying = false;
   late Duration? duration = Duration(seconds: 0);
-  late String test;
 
   RecordViewModel(this.imageList);
 
@@ -61,7 +60,7 @@ class RecordViewModel extends ChangeNotifier {
 
     recordedFilePath = '${directory.path}/$recordedFileName.m4a';
     await audioPlayer.setSourceUrl(recordedFilePath);
-    duration = audioPlayer.getDuration() as Duration;
+    duration = await audioPlayer.getDuration();
     notifyListeners();
   }
 
