@@ -7,11 +7,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@ToString
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +29,18 @@ public class User {
 
     private String refreshToken;
 
-
     private String profileImageUrl;
 
-
+//    @Builder
+//    public User(Long userUid, String nickname, String clientId) {
+//        this.userUid = userUid;
+//        this.nickname = nickname;
+//        this.clientId = clientId;
+//    }
+//    void TestUser(Long userUid, String nickname, String clientId){
+//        this.userUid = userUid;
+//        this.nickname = nickname;
+//        this.clientId = clientId;
+//    }
 
 }

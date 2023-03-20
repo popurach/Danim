@@ -18,6 +18,8 @@ bin/
 !**/src/test/**/bin/
 # ignore applictaion.yml
 src/main/resources/application.yml
+# ignore build.gradle
+./build.gradle
 ### IntelliJ IDEA ###
 .idea
 *.iws
