@@ -118,23 +118,23 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   void uploadConfirm(BuildContext context) {
-    var alert = AlertDialog(
+    var alert = CupertinoAlertDialog(
       content: Text(
         "보내시겠습니까?",
         style: TextStyle(fontSize: 50),
       ),
       actions: [
-        FloatingActionButton(
+        CupertinoDialogAction(
             child: const Text("OK"),
             onPressed: () {
               postFiles(context);
               Navigator.of(context).pop();
             }
         ),
-        FloatingActionButton(
+        CupertinoDialogAction(
             child: const Text("No"),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop( );
             }
         )
       ],
