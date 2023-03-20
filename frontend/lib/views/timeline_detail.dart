@@ -1,7 +1,6 @@
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/app_bar.dart';
-import 'package:danim/views/custom_expansion_tile.dart';
 import 'package:danim/views/post_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,9 @@ class TimelineDetail extends StatelessWidget {
           padding: EdgeInsets.zero,
           itemCount: 3, // Number of nations
           itemBuilder: (BuildContext context, int index) {
-            return CustomExpansionTile(
+            return ExpansionTile(
+              shape: const RoundedRectangleBorder(),
+              collapsedShape: const RoundedRectangleBorder(),
               title: Text('Nation $index'),
               trailing: null,
               leading: SizedBox(
@@ -44,7 +45,9 @@ class TimelineDetail extends StatelessWidget {
                 ),
               ),
               children: [
-                CustomExpansionTile(
+                ExpansionTile(
+                  shape: const RoundedRectangleBorder(),
+                  collapsedShape: const RoundedRectangleBorder(),
                   title: const Text('city A'),
                   leading: SizedBox(
                     width: 60,
@@ -64,7 +67,9 @@ class TimelineDetail extends StatelessWidget {
                         viewModel: PostViewModel(viewModel.timeline!.post[0]))
                   ],
                 ),
-                CustomExpansionTile(
+                ExpansionTile(
+                  shape: const RoundedRectangleBorder(),
+                  collapsedShape: const RoundedRectangleBorder(),
                   title: const Text('city B'),
                   leading: SizedBox(
                     width: 60,
