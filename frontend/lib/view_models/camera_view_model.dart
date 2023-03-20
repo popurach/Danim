@@ -44,8 +44,8 @@ class CameraViewModel extends ChangeNotifier {
     if (allFileList.length < 9) {
       if (allFileList.isEmpty) {
         final currentPosition = await Geolocator.getCurrentPosition();
-        currentPosition.longitude;
-        currentPosition.latitude;
+        var curLong = currentPosition.longitude;
+        var culLat = currentPosition.latitude;
       }
       allFileList.add(file);
 
