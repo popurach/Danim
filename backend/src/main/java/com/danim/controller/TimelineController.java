@@ -80,7 +80,7 @@ public class TimelineController {
     @PostMapping("")
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.makenewTimeline(1L);
+        service.makenewTimeline(15L);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
             put("msg", "Timeline 생성성공");
