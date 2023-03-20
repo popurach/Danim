@@ -1,6 +1,7 @@
 package com.danim.service;
 
 //import com.amazonaws.services.s3.AmazonS3;
+import com.danim.conponent.AwsS3;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.repository.PhotoRepository;
@@ -20,15 +21,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
-//    private final AmazonS3 s3Client;
+    private final AwsS3 awsS3;
     private final PhotoRepository photoRepository;
     private final PostRepository postRepository;
 
     @Override
     public Photo createPhoto(MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-//        String imageKey = UUID.randomUUID().toString();
-//        String photoUrl = uploadFileToS3(imageFile, imageKey);
+        String photoUrl = awsS3.upload(imageFile,"Post");
 
         // image metadata에서 lat,lng 지역 정보 가져오기
 //        HashMap<String, Double> location = ImageUtils.extractLocationFromImage(imageFile);
@@ -39,7 +39,7 @@ public class PhotoServiceImpl implements PhotoService {
         log.info("Starting savePhoto transaction");
         Photo photo = Photo.builder()
                 .postId(savedPost)
-                .photoUrl("ㅇㄹ")
+                .photoUrl(photoUrl)
                 .lat(23.23)
                 .lng(23.23)
                 .build();

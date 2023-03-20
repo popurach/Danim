@@ -1,11 +1,15 @@
 package com.danim.service;
 
 //import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3;
+import com.danim.conponent.AwsS3;
 import com.danim.entity.Nation;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.repository.PostRepository;
+//import com.danim.utils.VoiceUtils;
+import com.danim.repository.TimeLineRepository;
 //import com.danim.utils.VoiceUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -23,41 +27,42 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
-//    private final AmazonS3 s3Client;
+    private final AwsS3 awsS3;
+//    private final VoiceUtils voiceUtils;
     private final PostRepository postRepository;
-//    private final TimelineRepository timelineRepository;
+    private final TimeLineRepository timelineRepository;
 
     // 포스트 등록
     @Override
-    public Post createPost(MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws IOException, UnsupportedAudioFileException {
+    public Post createPost(Post savedPost, String address1, String address2, String address3, String address4, MultipartFile flagFile, MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws Exception {
         // voiceFile S3에 올리고 voiceURL 가져오기
-//        String voiceKey = UUID.randomUUID().toString();
-//        String voiceUrl = uploadFileToS3(voiceFile, voiceKey);
+        String voiceUrl = awsS3.upload(voiceFile,"Voice");
 
-        // voice에서 voiceLength 가져오기
-//        Long voiceLength = VoiceUtils.extractVoiceLength(voiceFile);
+        // voiceFile에서 voiceLength 가져오기
+//        Long voiceLength = voiceUtils.extractVoiceLength(voiceFile);
 
         // voiceFile -> text 변환
 //        String text = "테스트용";
 
         // timeline 객체 가져오기
-//        TimeLine timeline = timeLineRepository.findById(timelineId).orElseThrow(() -> new Exception("존재하지 않는 타임라인"));
+        TimeLine timeline = timelineRepository.findById(timelineId).orElseThrow(() -> new Exception("존재하지 않는 타임라인"));
+
+        // flagFile S3에 올리고 voiceURL 가져오기
+        String flagUrl = awsS3.upload(flagFile,"Nation");
 
         // imageURL, voiceURL db에 저장하기
         log.info("Starting savePost transaction");
-        Post post = Post.builder()
-                .voiceUrl("ㅁㄴㅇㄹ")
-                .voiceLength(2L)
-                .nationUrl("ㅁㄴㅇㄹ")
-                .address("전주")
-                .text("ㅁㄴㅇㄹ")
-//                .timelineId(timeline)
-//                .nationId(nation)
-//                .photoList(photoList)
-                .build();
-        Post savedPost = postRepository.save(post);
+//        savedPost.setPhotoList(photoList);
+        savedPost.setVoiceUrl(voiceUrl);
+//        savedPost.setVoiceLength(voiceLength);
+        savedPost.setNationUrl(flagUrl);
+//        savedPost.setAddress1(address1);
+//        savedPost.setText(text);
+        savedPost.setTimelineId(timeline);
+//        savedPost.setNationId(nation);
+        Post resavedPost = postRepository.save(savedPost);
         log.info("Transaction complete");
-        return savedPost;
+        return resavedPost;
 
         // 파일 s3 서버에 올리는 메서드
 //    private String uploadFileToS3(MultipartFile file, String key) throws IOException {

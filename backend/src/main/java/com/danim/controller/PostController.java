@@ -25,7 +25,12 @@ public class PostController {
 
     //포스트 등록
     @PostMapping("")
-    public ResponseEntity<?> insertPost(@RequestPart List<MultipartFile> imageFiles,
+    public ResponseEntity<?> insertPost(@RequestPart String address1,
+                                        @RequestPart String address2,
+                                        @RequestPart String address3,
+                                        @RequestPart String address4,
+                                        @RequestPart MultipartFile flagFile,
+                                        @RequestPart List<MultipartFile> imageFiles,
                                         @RequestPart MultipartFile voiceFile,
                                         @RequestPart Long timelineId) throws Exception {
         Post post = new Post();
@@ -35,7 +40,7 @@ public class PostController {
             Photo savedPhoto = photoService.createPhoto(imageFile, savedPost);
             photoList.add(savedPhoto);
         }
-        Post resavedPost = postService.createPost(voiceFile, timelineId, photoList);
+        Post resavedPost = postService.createPost(savedPost, address1, address2, address3, address4, flagFile, voiceFile, timelineId, photoList);
         return ResponseEntity.ok(resavedPost);
     }
 
