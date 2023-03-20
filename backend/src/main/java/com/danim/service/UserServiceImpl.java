@@ -1,6 +1,7 @@
 package com.danim.service;
 
 import com.danim.entity.User;
+import com.danim.entity.UserDetails;
 import com.danim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,5 +21,11 @@ public class UserServiceImpl implements UserService {
         u.setClientId("22");
         userRepository.save(u);
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String clientId) throws Exception {
+//        log.info("[loadUserByUsername] loadUserByUsername 수행. username : {}", username);
+        return userRepository.getByClientId(clientId);
     }
 }
