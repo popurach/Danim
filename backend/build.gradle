@@ -1,0 +1,86 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.9'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+group = 'com.danim'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	asciidoctorExt
+}
+repositories {
+	mavenCentral()
+}
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+
+
+
+dependencies {
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.projectlombok:lombok:1.18.22'
+	testImplementation 'junit:junit:4.13.1'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	// asw setting
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+}
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+//test {
+//	outputs.dir snippetsDir
+//	useJUnitPlatform()
+//
+//}
+
+asciidoctor {
+	configurations 'asciidoctorExt'
+	sources{
+		include("**/index.adoc","**/common/*.adoc")
+	}
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+//	from file("${asciidoctor.outputDir}")
+	into file("src/main/resources/static")
+	from file("build/docs/asciidoc")
+}
+bootJar {
+	dependsOn asciidoctor
+	from("${asciidoctor.outputDir}") {
+		into "static/docs"
+	}
+}
+
+
+build {
+	dependsOn copyDocument
+}

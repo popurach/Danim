@@ -36,8 +36,11 @@ public class Post extends BaseTime{
 	
 	private String nationUrl;
 	
-	private String address;
-	
+	private String address1;
+	private String address2;
+	private String address3;
+	private String address4;
+
 	private String text;
 
 	// Post 테이블과 TimeLine 테이블 FK
@@ -52,8 +55,7 @@ public class Post extends BaseTime{
 	@ToString.Exclude
 	private Nation nationId;
 
-	@OneToMany(mappedBy = "postId")
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
-
 }

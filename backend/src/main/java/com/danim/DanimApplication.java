@@ -2,13 +2,13 @@ package com.danim;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.util.TimeZone;
-
-
+@EnableWebMvc
 @EnableJpaAuditing
 @SpringBootApplication
 public class DanimApplication {
