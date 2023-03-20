@@ -1,15 +1,8 @@
-import 'package:flutter/material.dart';
-
 import 'package:danim/views/app_bar.dart';
 import 'package:danim/views/bottom_navigation.dart';
-
+import 'package:danim/views/camera_floating_action_button.dart';
 import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
-
-import 'package:danim/views/camera_screen.dart';
-import 'package:danim/view_models/camera_view_model.dart';
-import 'package:provider/provider.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -25,43 +18,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyCustomAppBar(
-        key: Key("value"),
+        key: Key("appbar"),
       ),
       body: const TimeLineList(),
-      floatingActionButton: SizedBox(
-          height: 80.0,
-          width: 80.0,
-          child: FittedBox(
-            child: FloatingActionButton(
-              child: const Icon(Icons.camera),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-                        create: (_) => CameraViewModel(),
-                        child: CameraView()
-                    ))
-                );
-              },
-            ),
-          )),
+      floatingActionButton: CameraFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomBottomNavigationBar(),
     );

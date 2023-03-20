@@ -1,5 +1,5 @@
+import 'package:danim/models/Post.dart';
 import 'package:danim/models/Timeline.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -21,7 +21,18 @@ class TimelineListViewModel with ChangeNotifier {
           modifyTime: "21.02.28",
           complete: true,
           imageUrl: "https://picsum.photos/id/10/500/500.jpg",
-          timelinePublic: true),
+          timelinePublic: true,
+          post: [
+            Post(
+                imageUrls: [
+                  'https://picsum.photos/id/10/500/500.jpg',
+                  'https://picsum.photos/id/10/500/500.jpg'
+                ],
+                voiceUrl: 'voiceUrl',
+                voiceLength: '23:11',
+                text: '여기가 어디요..',
+                isLike: false)
+          ]),
       Timeline(
           timelineId: 1,
           userId: 1,
@@ -30,7 +41,18 @@ class TimelineListViewModel with ChangeNotifier {
           modifyTime: "21.02.28",
           complete: true,
           imageUrl: "https://picsum.photos/id/13/500/500.jpg",
-          timelinePublic: true),
+          timelinePublic: true,
+          post: [
+            Post(
+                imageUrls: [
+                  'https://picsum.photos/id/10/500/500.jpg',
+                  'https://picsum.photos/id/10/500/500.jpg'
+                ],
+                voiceUrl: 'voiceUrl',
+                voiceLength: '23:11',
+                text: '여기가 어디요..',
+                isLike: false)
+          ]),
       Timeline(
           timelineId: 2,
           userId: 2,
@@ -39,7 +61,18 @@ class TimelineListViewModel with ChangeNotifier {
           modifyTime: "21.02.28",
           complete: true,
           imageUrl: "https://picsum.photos/id/16/500/500.jpg",
-          timelinePublic: true),
+          timelinePublic: true,
+          post: [
+            Post(
+                imageUrls: [
+                  'https://picsum.photos/id/10/500/500.jpg',
+                  'https://picsum.photos/id/10/500/500.jpg'
+                ],
+                voiceUrl: 'voiceUrl',
+                voiceLength: '23:11',
+                text: '여기가 어디요..',
+                isLike: false)
+          ]),
     ];
     // for (var timeline in _timelineList) {
     //   await _generatePalette(timeline);
@@ -51,21 +84,21 @@ class TimelineListViewModel with ChangeNotifier {
     _initialize();
   }
 
-  Future<void> _generatePalette(Timeline timeline) async {
-    try {
-      final response = await Dio().get(timeline.imageUrl,
-          options: Options(responseType: ResponseType.bytes));
-      final image = Image.memory(response.data);
-      // final imageProvider = NetworkImage(timeline.imageUrl);
-      final paletteGenerator =
-          await PaletteGenerator.fromImageProvider(image.image);
-      paletteGeneratorList.add(paletteGenerator);
-      notifyListeners();
-    } catch (e) {
-      // Handle any errors thrown by PaletteGenerator.fromImageProvider
-      logger.e('Error generating palette for ${timeline.imageUrl}: $e');
-    }
-  }
+  // Future<void> _generatePalette(Timeline timeline) async {
+  //   try {
+  //     final response = await Dio().get(timeline.imageUrl,
+  //         options: Options(responseType: ResponseType.bytes));
+  //     final image = Image.memory(response.data);
+  //     // final imageProvider = NetworkImage(timeline.imageUrl);
+  //     final paletteGenerator =
+  //         await PaletteGenerator.fromImageProvider(image.image);
+  //     paletteGeneratorList.add(paletteGenerator);
+  //     notifyListeners();
+  //   } catch (e) {
+  //     // Handle any errors thrown by PaletteGenerator.fromImageProvider
+  //     logger.e('Error generating palette for ${timeline.imageUrl}: $e');
+  //   }
+  // }
 
   List<Timeline> get timelineList => _timelineList;
 
