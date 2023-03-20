@@ -2,6 +2,7 @@ package com.danim.controller;
 
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
+import com.danim.repository.PostRepository;
 import com.danim.service.PhotoService;
 import com.danim.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -20,49 +21,36 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final PhotoService photoService;
+    private final PostRepository postRepository;
 
     //포스트 등록
     @PostMapping("")
-    public ResponseEntity<?> insertPost(@RequestParam("images") List<MultipartFile> imageFiles,
-                                        @RequestParam("voice") MultipartFile voiceFile,
-                                        @RequestParam("timelineId") Long timelineId) throws Exception {
-        try {
-            List<Photo> photoList = new ArrayList<>();
-            for (MultipartFile imageFile : imageFiles) {
-                Photo photo = photoService.createPhoto(imageFile);
-                photoList.add(photo);
-            }
-            Post savedPost = postService.insertPost(voiceFile, timelineId, photoList);
-            photoService.insertPhoto(photoList, savedPost);
-            return ResponseEntity.ok(savedPost);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public ResponseEntity<?> insertPost(@RequestPart List<MultipartFile> imageFiles,
+                                        @RequestPart MultipartFile voiceFile,
+                                        @RequestPart Long timelineId) throws Exception {
+        Post post = new Post();
+        Post savedPost = postRepository.save(post);
+        List<Photo> photoList = new ArrayList<>();
+        for (MultipartFile imageFile : imageFiles) {
+            Photo savedPhoto = photoService.createPhoto(imageFile, savedPost);
+            photoList.add(savedPhoto);
         }
+        Post resavedPost = postService.createPost(voiceFile, timelineId, photoList);
+        return ResponseEntity.ok(resavedPost);
     }
 
     //포스트 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) throws Exception {
-        try {
             postService.deletePostById(postId);
             return ResponseEntity.ok().build();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     //지역명 키워드로 포스트 조회
-    @GetMapping("/{location}")
-    public ResponseEntity<?> getPost(@PathVariable String location) throws Exception {
-        try {
-            List<Post> postList = postService.findByLocation(location);
-            return ResponseEntity.ok(postList);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @GetMapping("/{location}")
+//    public ResponseEntity<?> getPost(@PathVariable String location) throws Exception {
+//            List<Post> postList = postService.findByLocation(location);
+//            return ResponseEntity.ok(postList);
+//    }
 
 }

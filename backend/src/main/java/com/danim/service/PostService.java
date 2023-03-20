@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface PostService {
     // 포스트 등록
-    Post insertPost(MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws IOException, UnsupportedAudioFileException;
+    Post createPost(MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws IOException, UnsupportedAudioFileException;
 
     // 포스트 삭제
     void deletePostById(Long postId) throws Exception;
 
     // 지역명 검색어에 따른 post 조회
-    List<Post> findByLocation(String location) throws Exception;
+//    List<Post> findByLocation(String location) throws Exception;
 }

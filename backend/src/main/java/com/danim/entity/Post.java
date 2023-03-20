@@ -52,8 +52,13 @@ public class Post extends BaseTime{
 	@ToString.Exclude
 	private Nation nationId;
 
-	@OneToMany(mappedBy = "postId")
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST)
 	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
+
+	public void addPhoto(Photo photo) {
+		this.photoList.add(photo);
+		photo.setPostId(this);
+	}
 
 }
