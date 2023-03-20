@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:multiple_images_picker/multiple_images_picker.dart';
 import '../views/record_screen.dart';
+import 'package:dio/dio.dart';
 
 var logger = Logger();
 
@@ -42,6 +43,9 @@ class RecordViewModel extends ChangeNotifier {
       await directory.create(recursive: true);
     }
     // 파일 저장 경로 지정
+    if (recordedFilePath != "") {
+      recordedFilePath = "";
+    }
     final filePath = '${directory.path}/$fileName.m4a';
     // 레코딩 시작
     await record.start(
@@ -63,56 +67,6 @@ class RecordViewModel extends ChangeNotifier {
     duration = await audioPlayer.getDuration();
     notifyListeners();
   }
-
-  Future<void> playRecordedFile() async {
-    await audioPlayer.play(DeviceFileSource(recordedFilePath));
-    isPlaying = true;
-    notifyListeners();
-
-    audioPlayer.onPlayerComplete.listen((event) {
-      isPlaying = false;
-      notifyListeners();
-    });
-
-    audioPlayer.onPositionChanged.listen((curPos) {
-      _audioPosition = curPos;
-    });
-
-    audioPlayer.onDurationChanged.listen((duration) {
-      this.duration = duration ?? Duration(seconds: 0);
-      notifyListeners();
-    });
-
-  }
-
-  Future<void> pauseRecordedFile() async {
-    audioPlayer.pause();
-    isPlaying = false;
-    notifyListeners();
-  }
-
-  Future<void> resumeRecordedFile() async {
-    audioPlayer.resume();
-    isPlaying = true;
-    notifyListeners();
-  }
-
-  Future<void> stopRecordedFile() async {
-    audioPlayer.stop();
-    isPlaying = false;
-    notifyListeners();
-  }
-
-  void updateAudioPosition(Duration position) {
-    _audioPosition = position;
-    notifyListeners();
-  }
-
-  Future<void> seekTo(Duration position) async {
-    await audioPlayer.seek(position);
-    updateAudioPosition(position);
-  }
-
 
   // 갤러리에서 파일 가져오기
   Future<void> uploadFileFromGallery() async {
@@ -141,11 +95,62 @@ class RecordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 9개 이상이면 경고창 띄움
-  void showAlert(BuildContext context) {
+
+  // 파일을 서버로 업로드하기
+  Future<void> postFiles(BuildContext context) async {
+    final dio = Dio();
+    final imageFiles = imageList.map((el) async => await MultipartFile.fromFile(el.path));
+    final audioFile = await MultipartFile.fromFile(recordedFilePath);
+
+    FormData formData = FormData.fromMap({
+      'images': imageFiles,
+      'audio': audioFile,
+    });
+
+    Response response = await dio.post(
+      "path",
+      data: formData
+    );
+
+    if (response.statusCode == 200) {
+
+    }
+  }
+
+  void uploadConfirm(BuildContext context) {
     var alert = AlertDialog(
-      content: const Text(
-        "한 포스트에 등록 가능한 사진은 최대 9개 입니다.",
+      content: Text(
+        "보내시겠습니까?",
+        style: TextStyle(fontSize: 50),
+      ),
+      actions: [
+        FloatingActionButton(
+            child: const Text("OK"),
+            onPressed: () {
+              postFiles(context);
+              Navigator.of(context).pop();
+            }
+        ),
+        FloatingActionButton(
+            child: const Text("No"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }
+        )
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  void showFeedBack(BuildContext context, String message) {
+    var alert = AlertDialog(
+      content: Text(
+        message,
         style: TextStyle(fontSize: 50),
       ),
       actions: [

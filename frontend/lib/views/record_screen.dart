@@ -61,6 +61,7 @@ class RecordView extends StatelessWidget {
               create: (_) => AudioPlayerViewModel(),
               update: (context, recordViewModel, audioPlayerViewModel) {
                 audioPlayerViewModel?.audioFilePath = recordViewModel.recordedFilePath;
+                audioPlayerViewModel?.seekTo(Duration(seconds: 0));
                 return audioPlayerViewModel!;
               },
               child: AudioPlayerView(),
@@ -84,7 +85,7 @@ class RecordView extends StatelessWidget {
                     child: IconButton(
                       onPressed: () {
                         if(Provider.of<RecordViewModel>(context, listen: false).imageList.length >= 9){
-                          Provider.of<RecordViewModel>(context, listen: false).showAlert(context);
+                          Provider.of<RecordViewModel>(context, listen: false).showFeedBack(context, "이미지는 최대 9장까지 업로드 가능합니다.");
                         } else {
                           Provider.of<RecordViewModel>(context, listen: false).uploadFileFromGallery();
                         }
@@ -117,7 +118,6 @@ class RecordView extends StatelessWidget {
                         ),
                       );
                     }
-
                   ),
                   Container(
                     margin: const EdgeInsets.only(right: 50),
@@ -128,7 +128,9 @@ class RecordView extends StatelessWidget {
                       color: Colors.blueAccent,
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<RecordViewModel>(context, listen: false).uploadConfirm(context);
+                      },
                       icon: const Icon(Icons.upload, size:28),
                       color: Colors.white,
                     ),

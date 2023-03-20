@@ -2,9 +2,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 
 
+
 class AudioPlayerViewModel extends ChangeNotifier{
   // 파일 경로
-  late String audioFilePath;
+  late String? audioFilePath;
 
   late bool playStarted = false;
   late bool isPlaying = false;
@@ -12,12 +13,18 @@ class AudioPlayerViewModel extends ChangeNotifier{
 
   AudioPlayer audioPlayer = AudioPlayer();
 
+  // optional parameter
+  AudioPlayerViewModel({this.audioFilePath});
+
   Duration _audioPosition = Duration.zero;
   Duration get audioPositon => _audioPosition;
 
   // 재생 시작
   Future<void> playRecordedFile() async {
-    await audioPlayer.play(DeviceFileSource(audioFilePath));
+    await audioPlayer.play(DeviceFileSource(audioFilePath!));
+    if (audioFilePath == null) {
+      return;
+    }
     isPlaying = true;
     notifyListeners();
 
@@ -26,6 +33,7 @@ class AudioPlayerViewModel extends ChangeNotifier{
       isPlaying = false;
       notifyListeners();
     });
+
     // 음성 파일에서의 현재 위치 갱신
     audioPlayer.onPositionChanged.listen((curPos) {
       _audioPosition = curPos;
