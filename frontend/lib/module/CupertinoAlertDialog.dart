@@ -13,8 +13,7 @@ class OneButtonCupertinoAlertDiaglog {
             child: const Text("OK"),
             onPressed: () {
               Navigator.of(context).pop();
-            }
-        )
+            })
       ],
     );
 
@@ -25,4 +24,3 @@ class OneButtonCupertinoAlertDiaglog {
         });
   }
 }
-

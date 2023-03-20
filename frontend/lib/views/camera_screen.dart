@@ -10,7 +10,6 @@ import '../view_models/camera_view_model.dart';
 import '../module/CupertinoAlertDialog.dart';
 
 class CameraView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     // Provider.of로 viewModel 지정
@@ -52,62 +51,66 @@ class CameraView extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 15),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      margin: const EdgeInsets.only(left:25.0),
+                                      margin: const EdgeInsets.only(left: 25.0),
                                       width: 60,
                                       height: 60,
                                     ),
                                     Container(
-                                      width: 90,
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black54,
-                                        borderRadius: BorderRadius.circular(45)
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.camera,
-                                          color: Colors.white,
-                                          size: 70,
-                                        ),
-                                        onPressed: () {
-                                          if (viewModel.allFileList.length < 9) {
-                                            viewModel.takePhoto();
+                                        width: 90,
+                                        height: 90,
+                                        decoration: BoxDecoration(
+                                            color: Colors.black54,
+                                            borderRadius:
+                                                BorderRadius.circular(45)),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.camera,
+                                            color: Colors.white,
+                                            size: 70,
+                                          ),
+                                          onPressed: () {
+                                            if (viewModel.allFileList.length <
+                                                9) {
+                                              viewModel.takePhoto();
                                             } else {
-                                              OneButtonCupertinoAlertDiaglog().showFeedBack(context, "이미지는 \n최대 9장까지 \n등록 가능합니다.");
+                                              OneButtonCupertinoAlertDiaglog()
+                                                  .showFeedBack(context,
+                                                      "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                             }
                                           },
-                                      )
-                                    ),
+                                        )),
                                     Container(
-                                      margin: const EdgeInsets.only(right:25.0),
+                                      margin:
+                                          const EdgeInsets.only(right: 25.0),
                                       width: 55,
                                       height: 55,
                                       decoration: BoxDecoration(
                                         color: Colors.black54,
-                                          borderRadius: BorderRadius.circular(25),
+                                        borderRadius: BorderRadius.circular(25),
                                       ),
                                       // 녹음 화면으로 이동하는 버튼
                                       child: IconButton(
-                                        icon: const Icon(
-                                                Icons.folder,
-                                                color: Colors.white
-                                          ),
+                                        icon: const Icon(Icons.folder,
+                                            color: Colors.white),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => ChangeNotifierProvider(
-                                                create: (_) => RecordViewModel(viewModel.allFileList),
+                                              builder: (context) =>
+                                                  ChangeNotifierProvider(
+                                                create: (_) => RecordViewModel(
+                                                    viewModel.allFileList),
                                                 child: RecordView(),
                                               ),
                                             ),
                                           );
                                         },
-                                          ),
-                                      )
+                                      ),
+                                    )
                                   ],
                                 )
                               ],

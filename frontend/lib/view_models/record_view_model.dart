@@ -12,35 +12,44 @@ import 'package:intl/intl.dart';
 import 'package:multiple_images_picker/multiple_images_picker.dart';
 import 'package:dio/dio.dart';
 
+import '../module/audio_player_view_model.dart';
+
 class RecordViewModel extends ChangeNotifier {
   late List<XFile> _imageList;
   late String _recordedFileName;
   String _recordedFilePath = "";
+  late AudioPlayerViewModel audioPlayerViewModel;
 
-  Duration _duration = Duration(seconds: 0);
+  Duration _duration = const Duration(seconds: 0);
   Duration _audioPosition = Duration.zero;
 
   List<XFile> get imageList => _imageList;
+
   String get recordedFileName => _recordedFileName;
+
   set recordedFileName(String newName) {
     _recordedFileName = newName;
   }
+
   String get recordedFilePath => _recordedFilePath;
+
   set recordedFilePath(String newPath) {
     _recordedFilePath = newPath;
   }
 
   Duration get duration => _duration;
+
   set duration(Duration newDuration) {
     _duration = newDuration;
   }
+
   Duration get audioPosition => _audioPosition;
 
-  RecordViewModel(this._imageList);
+  RecordViewModel(this._imageList) {
+    audioPlayerViewModel = AudioPlayerViewModel(_recordedFilePath);
+  }
 
   AudioPlayer audioPlayer = AudioPlayer();
-
-
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -58,11 +67,10 @@ class RecordViewModel extends ChangeNotifier {
     final filePath = '${directory.path}/$fileName.m4a';
     // 레코딩 시작
     await record.start(
-      path: filePath,
+        path: filePath,
         encoder: AudioEncoder.aacLc,
-      bitRate: 128000, // by default
-      samplingRate: 44100
-    );
+        bitRate: 128000, // by default
+        samplingRate: 44100);
     recordedFileName = fileName;
   }
 
@@ -74,6 +82,7 @@ class RecordViewModel extends ChangeNotifier {
     recordedFilePath = '${directory.path}/$recordedFileName.m4a';
     await audioPlayer.setSourceUrl(recordedFilePath);
     duration = (await audioPlayer.getDuration())!;
+    audioPlayerViewModel.audioFilePath = recordedFilePath;
     notifyListeners();
   }
 
@@ -86,12 +95,12 @@ class RecordViewModel extends ChangeNotifier {
 
     // multiple_images_picker 라이브러리 사용
     final images = await MultipleImagesPicker.pickImages(
-      // 개수 제한
-      maxImages: 9-imageList.length
-    );
+        // 개수 제한
+        maxImages: 9 - imageList.length);
     // Asset들을 저장해서 경로를 만들고 xFile로 불러옴
     for (Asset image in images) {
-      Directory externalDirectory = Directory('/storage/emulated/0/Documents/photos');
+      Directory externalDirectory =
+          Directory('/storage/emulated/0/Documents/photos');
       ByteData byteData = await image.getByteData();
       List<int> imageData = byteData.buffer.asUint8List();
       String? fileName = image.name;
@@ -104,11 +113,11 @@ class RecordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
     final dio = Dio();
-    final imageFiles = imageList.map((el) async => await MultipartFile.fromFile(el.path));
+    final imageFiles =
+        imageList.map((el) async => await MultipartFile.fromFile(el.path));
     final audioFile = await MultipartFile.fromFile(recordedFilePath);
 
     FormData formData = FormData.fromMap({
@@ -116,14 +125,9 @@ class RecordViewModel extends ChangeNotifier {
       'audio': audioFile,
     });
 
-    Response response = await dio.post(
-      "path",
-      data: formData
-    );
+    Response response = await dio.post("path", data: formData);
 
-    if (response.statusCode == 200) {
-
-    }
+    if (response.statusCode == 200) {}
   }
 
   void uploadConfirm(BuildContext context) {
@@ -138,14 +142,12 @@ class RecordViewModel extends ChangeNotifier {
             onPressed: () {
               postFiles(context);
               Navigator.of(context).pop();
-            }
-        ),
+            }),
         CupertinoDialogAction(
             child: const Text("거짓"),
             onPressed: () {
-              Navigator.of(context).pop( );
-            }
-        )
+              Navigator.of(context).pop();
+            })
       ],
     );
 
