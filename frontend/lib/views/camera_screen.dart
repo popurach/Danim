@@ -5,8 +5,9 @@ import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view_models/camera_view_model.dart';
 import './record_screen.dart';
+import '../view_models/camera_view_model.dart';
+import '../module/CupertinoAlertDialog.dart';
 
 class CameraView extends StatelessWidget {
 
@@ -74,9 +75,8 @@ class CameraView extends StatelessWidget {
                                         onPressed: () {
                                           if (viewModel.allFileList.length < 9) {
                                             viewModel.takePhoto();
-
                                             } else {
-                                              viewModel.showAlert(context);
+                                              OneButtonCupertinoAlertDiaglog().showFeedBack(context, "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                             }
                                           },
                                       )

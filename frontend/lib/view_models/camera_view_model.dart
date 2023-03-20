@@ -1,16 +1,15 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:danim/view_models/record_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_exif/native_exif.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+
+import '../module/CupertinoAlertDialog.dart';
 
 var logger = Logger();
 
@@ -77,29 +76,6 @@ class CameraViewModel extends ChangeNotifier {
         await imageFile.writeAsBytes(imageBytes);
       }
       notifyListeners();
-  }
-
-  void showAlert(BuildContext context) {
-    var alert = AlertDialog(
-      content: const Text(
-          "한 포스트에 등록 가능한 사진은 최대 9개 입니다.",
-          style: TextStyle(fontSize: 50),
-      ),
-      actions: [
-        FloatingActionButton(
-          child: const Text("OK"),
-            onPressed: () {
-            Navigator.of(context).pop();
-            }
-        )
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      });
   }
 
   CameraController get controller => _controller;

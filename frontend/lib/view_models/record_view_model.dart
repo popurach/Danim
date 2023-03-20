@@ -119,20 +119,20 @@ class RecordViewModel extends ChangeNotifier {
 
   void uploadConfirm(BuildContext context) {
     var alert = CupertinoAlertDialog(
-      content: Text(
-        "보내시겠습니까?",
-        style: TextStyle(fontSize: 50),
+      content: const Text(
+        "포스트를 \n등록할까요?",
+        style: TextStyle(fontSize: 30),
       ),
       actions: [
         CupertinoDialogAction(
-            child: const Text("OK"),
+            child: const Text("참"),
             onPressed: () {
               postFiles(context);
               Navigator.of(context).pop();
             }
         ),
         CupertinoDialogAction(
-            child: const Text("No"),
+            child: const Text("거짓"),
             onPressed: () {
               Navigator.of(context).pop( );
             }
@@ -146,28 +146,4 @@ class RecordViewModel extends ChangeNotifier {
           return alert;
         });
   }
-
-  void showFeedBack(BuildContext context, String message) {
-    var alert = AlertDialog(
-      content: Text(
-        message,
-        style: TextStyle(fontSize: 50),
-      ),
-      actions: [
-        FloatingActionButton(
-            child: const Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            }
-        )
-      ],
-    );
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
-  }
-
 }

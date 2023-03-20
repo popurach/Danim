@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class RecordView extends StatelessWidget {
                     child: IconButton(
                       onPressed: () {
                         if(Provider.of<RecordViewModel>(context, listen: false).imageList.length >= 9){
-                          Provider.of<RecordViewModel>(context, listen: false).showFeedBack(context, "이미지는 최대 9장까지 업로드 가능합니다.");
+                          OneButtonCupertinoAlertDiaglog().showFeedBack(context, "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                         } else {
                           Provider.of<RecordViewModel>(context, listen: false).uploadFileFromGallery();
                         }
