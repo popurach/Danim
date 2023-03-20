@@ -1,6 +1,5 @@
 import 'package:danim/models/Post.dart';
 import 'package:danim/models/Timeline.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:palette_generator/palette_generator.dart';
