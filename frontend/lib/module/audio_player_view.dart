@@ -36,7 +36,7 @@ class AudioPlayerView extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.65,
                     child: viewModel.duration != Duration(seconds: 0) ? Slider(
                       // 현재 위치
-                      value: viewModel.audioPositon.inSeconds.toDouble(),
+                      value: viewModel.audioPosition.inSeconds.toDouble(),
                       // 최대 길이 = 음성 파일 길이
                       max: viewModel.duration!.inSeconds.toDouble(),
                       onChanged: (value) {
@@ -53,7 +53,7 @@ class AudioPlayerView extends StatelessWidget {
                   viewModel.duration != Duration(seconds: 0) ?
                   viewModel.duration!.inSeconds.toInt() <= 9 ?
                   Text('00:0${viewModel.duration!.inSeconds.toInt()}')
-                      : Text('00${viewModel.duration!.inSeconds.toInt()}')
+                      : Text('00:${viewModel.duration!.inSeconds.toInt()}')
                       : Text('00:00')
                 ],
               );

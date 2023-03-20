@@ -1,37 +1,46 @@
 import 'dart:async';
+import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:danim/view_models/camera_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:multiple_images_picker/multiple_images_picker.dart';
-import '../views/record_screen.dart';
 import 'package:dio/dio.dart';
 
-var logger = Logger();
-
 class RecordViewModel extends ChangeNotifier {
-  late List<XFile> imageList;
-  late String recordedFileName;
-  late String recordedFilePath = "";
-  late File recordedVoice;
-  late bool playStarted = false;
-  late bool isPlaying = false;
-  late Duration? duration = Duration(seconds: 0);
+  late List<XFile> _imageList;
+  late String _recordedFileName;
+  String _recordedFilePath = "";
 
-  RecordViewModel(this.imageList);
+  Duration _duration = Duration(seconds: 0);
+  Duration _audioPosition = Duration.zero;
+
+  List<XFile> get imageList => _imageList;
+  String get recordedFileName => _recordedFileName;
+  set recordedFileName(String newName) {
+    _recordedFileName = newName;
+  }
+  String get recordedFilePath => _recordedFilePath;
+  set recordedFilePath(String newPath) {
+    _recordedFilePath = newPath;
+  }
+
+  Duration get duration => _duration;
+  set duration(Duration newDuration) {
+    _duration = newDuration;
+  }
+  Duration get audioPosition => _audioPosition;
+
+  RecordViewModel(this._imageList);
 
   AudioPlayer audioPlayer = AudioPlayer();
 
-  Duration _audioPosition = Duration.zero;
-  Duration get audioPositon => _audioPosition;
+
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -64,7 +73,7 @@ class RecordViewModel extends ChangeNotifier {
 
     recordedFilePath = '${directory.path}/$recordedFileName.m4a';
     await audioPlayer.setSourceUrl(recordedFilePath);
-    duration = await audioPlayer.getDuration();
+    duration = (await audioPlayer.getDuration())!;
     notifyListeners();
   }
 
@@ -76,7 +85,7 @@ class RecordViewModel extends ChangeNotifier {
     }
 
     // multiple_images_picker 라이브러리 사용
-    var images = await MultipleImagesPicker.pickImages(
+    final images = await MultipleImagesPicker.pickImages(
       // 개수 제한
       maxImages: 9-imageList.length
     );
@@ -118,7 +127,7 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   void uploadConfirm(BuildContext context) {
-    var alert = CupertinoAlertDialog(
+    final alert = CupertinoAlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
         style: TextStyle(fontSize: 30),

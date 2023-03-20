@@ -7,11 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_exif/native_exif.dart';
-import 'package:logger/logger.dart';
 
-import '../module/CupertinoAlertDialog.dart';
-
-var logger = Logger();
 
 class CameraViewModel extends ChangeNotifier {
 
@@ -21,7 +17,13 @@ class CameraViewModel extends ChangeNotifier {
   late String _imagePath;
 
 
-  List<XFile> allFileList = [];
+  List<XFile> _allFileList = [];
+
+  List<XFile> get allFileList => _allFileList;
+  CameraController get controller => _controller;
+  List<CameraDescription> get cameras => _cameras;
+  String get imagePath => _imagePath;
+
 
   Future<void> initializeCamera() async {
     await Permission.camera.request();
@@ -29,7 +31,7 @@ class CameraViewModel extends ChangeNotifier {
     await Permission.manageExternalStorage.request();
     await Permission.location.request();
 
-    var cameras = await availableCameras();
+    final cameras = await availableCameras();
     _cameras = cameras;
     if (_cameras.isNotEmpty) {
       _controller = CameraController(_cameras.first, ResolutionPreset.high);
@@ -78,9 +80,7 @@ class CameraViewModel extends ChangeNotifier {
       notifyListeners();
   }
 
-  CameraController get controller => _controller;
-  List<CameraDescription> get cameras => _cameras;
-  String get imagePath => _imagePath;
+
 
   @override
   void dispose() {

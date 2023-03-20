@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class OneButtonCupertinoAlertDiaglog {
   void showFeedBack(BuildContext context, String message) {
-    var alert = CupertinoAlertDialog(
+    final alert = CupertinoAlertDialog(
       content: Text(
         message,
         style: TextStyle(fontSize: 30),
