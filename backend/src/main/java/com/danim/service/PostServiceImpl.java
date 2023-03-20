@@ -1,6 +1,7 @@
 package com.danim.service;
 
 //import com.amazonaws.services.s3.AmazonS3;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.danim.conponent.AwsS3;
 import com.danim.entity.Nation;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Slf4j
 public class PostServiceImpl implements PostService {
     private final AwsS3 awsS3;
-//    private final VoiceUtils voiceUtils;
+    //    private final VoiceUtils voiceUtils;
     private final PostRepository postRepository;
     private final TimeLineRepository timelineRepository;
 
@@ -36,7 +37,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post createPost(Post savedPost, String address1, String address2, String address3, String address4, MultipartFile flagFile, MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws Exception {
         // voiceFile S3에 올리고 voiceURL 가져오기
-        String voiceUrl = awsS3.upload(voiceFile,"Voice");
+        String voiceUrl = awsS3.upload(voiceFile, "Voice");
 
         // voiceFile에서 voiceLength 가져오기
 //        Long voiceLength = voiceUtils.extractVoiceLength(voiceFile);
@@ -48,7 +49,7 @@ public class PostServiceImpl implements PostService {
         TimeLine timeline = timelineRepository.findById(timelineId).orElseThrow(() -> new Exception("존재하지 않는 타임라인"));
 
         // flagFile S3에 올리고 voiceURL 가져오기
-        String flagUrl = awsS3.upload(flagFile,"Nation");
+        String flagUrl = awsS3.upload(flagFile, "Nation");
 
         // imageURL, voiceURL db에 저장하기
         log.info("Starting savePost transaction");

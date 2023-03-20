@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -30,11 +29,7 @@ public class TimelineController {
 //        Long tt = auth.getUid();
 //        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
         List<TimeLine> timelinelist = service.searchTimelineOrderBylatest();
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "모든 최신 타임라인 리스트 얻어오기 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
 
     }
 
@@ -44,11 +39,8 @@ public class TimelineController {
     public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
 
         List<TimeLine> timelinelist = service.searchMyTimeline(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "내 피드에서 타임라인 리스트 조회 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
+
     }
 
     //다른 유저의 피드에서 타임라인 조회
@@ -56,24 +48,17 @@ public class TimelineController {
     public ResponseEntity<?> getAnotherTimelineList(@PathVariable Long uid) throws Exception {
 
         List<TimeLine> timelinelist = service.searchTimelineNotPublic(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "다른유저 Timeline얻어오기 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
+
     }
 
 
     //타임라인 한개 조회
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
-        TimeLine timeline = service.searchOneTimeline(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("data", timeline);
-            put("msg", "Timeline 한개 조회 성공");
-        }}, HttpStatus.OK);
 
+        TimeLine timeline = service.searchOneTimeline(uid);
+        return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
 
     //여행시작 , 여기에는 사용자 를 구분할수 있는 requestbody가 필요하다
@@ -81,10 +66,7 @@ public class TimelineController {
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
         service.makenewTimeline(15L);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "Timeline 생성성공");
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -93,10 +75,8 @@ public class TimelineController {
     public ResponseEntity<?> finishTimeLine(@PathVariable Long uid) throws Exception {
 
         service.finishTimeline(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "Timeline 종료 성공");
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     //타임라인 공개 <->비공개 변경
@@ -104,20 +84,14 @@ public class TimelineController {
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
 
         service.changePublic(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "Timeline Public 변경 성공");
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //타임라인삭제
     @DeleteMapping("/{uid}")
     public ResponseEntity<?> deleteTimeLine(@PathVariable Long uid) throws Exception {
         service.deleteTimeline(uid);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "Timeline 삭제 성공");
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /*paging  하는 메서드들*/
@@ -130,11 +104,7 @@ public class TimelineController {
     public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 2) Pageable pageable) throws Exception {
 
         List<TimeLine> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "모든 최신 타임라인 리스트 with paging 얻어오기 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
 
@@ -143,11 +113,7 @@ public class TimelineController {
     public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
 
         List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "내 피드에서 타임라인 리스트 조회 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
 
     }
 
@@ -157,11 +123,8 @@ public class TimelineController {
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
 
         List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
-        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-            put("result", true);
-            put("msg", "다른유저 Timeline얻어오기 성공");
-            put("data", timelinelist);
-        }}, HttpStatus.OK);
+
+        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
 
