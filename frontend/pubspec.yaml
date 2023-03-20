@@ -55,6 +55,8 @@ dependencies:
   native_exif:
   # caching and lazy loading network image
   cached_network_image: ^3.2.3
+  # smooth page indicator in pageView images
+  smooth_page_indicator: ^1.0.1
 
   # audio
   record:

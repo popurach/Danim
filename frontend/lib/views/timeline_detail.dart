@@ -35,7 +35,7 @@ class TimelineDetail extends StatelessWidget {
                   lineXY: 0.1,
                   // isFirst: true,
                   indicatorStyle: const IndicatorStyle(
-                    width: 20,
+                    width: 30,
                     color: Colors.purple,
                   ),
                   endChild: Container(
@@ -50,22 +50,18 @@ class TimelineDetail extends StatelessWidget {
                     width: 60,
                     height: 60,
                     child: TimelineTile(
-                      alignment: TimelineAlign.manual,
-                      lineXY: 0.1,
                       indicatorStyle: const IndicatorStyle(
-                        width: 20,
-                        color: Colors.lightBlueAccent,
-                      ),
+                          width: 20,
+                          color: Colors.lightBlueAccent,
+                          padding: EdgeInsets.only(left: 5)),
                       endChild: Container(
                         padding: const EdgeInsets.all(8),
                       ),
                     ),
                   ),
                   children: [
-                    ChangeNotifierProvider(
-                      create: (_) => PostViewModel(viewModel.timeline!.post[0]),
-                      child: PostDetail(),
-                    )
+                    PostDetail(
+                        viewModel: PostViewModel(viewModel.timeline!.post[0]))
                   ],
                 ),
                 CustomExpansionTile(
@@ -74,11 +70,10 @@ class TimelineDetail extends StatelessWidget {
                     width: 60,
                     height: 60,
                     child: TimelineTile(
-                      alignment: TimelineAlign.manual,
-                      lineXY: 0.1,
                       indicatorStyle: const IndicatorStyle(
                         width: 20,
                         color: Colors.lightBlueAccent,
+                        padding: EdgeInsets.only(left: 5),
                       ),
                       endChild: Container(
                         padding: const EdgeInsets.all(8),
