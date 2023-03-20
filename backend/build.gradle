@@ -45,8 +45,8 @@ dependencies {
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 }
 test {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
+//	outputs.dir snippetsDir
+//	useJUnitPlatform()
 }
 //test {
 //	outputs.dir snippetsDir
