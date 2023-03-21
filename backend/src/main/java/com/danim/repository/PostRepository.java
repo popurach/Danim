@@ -18,4 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findTopByTimelineIdOrderByCreateTimeAsc(TimeLine timeline)throws  Exception;
 
 
+    List<Post> findAllByTimelineIdOrderByCreateTimeAsc(TimeLine timeLine)throws Exception;
+
+
 }
