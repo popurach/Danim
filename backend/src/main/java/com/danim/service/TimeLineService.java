@@ -1,5 +1,6 @@
 package com.danim.service;
 
+import com.danim.dto.MainTimelinePhotoDto;
 import com.danim.entity.TimeLine;
 import org.springframework.data.domain.Pageable;
 
@@ -33,7 +34,7 @@ public interface TimeLineService {
 
 
     //메인 피드상에서 타임라인 페이징 처리해서 조회하는 메서드
-    List<TimeLine> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception;
+    List<MainTimelinePhotoDto> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception;
 
     //내타임라인 페이징 처리해서 조회
     List<TimeLine> searchMyTimelineWithPaging(Long uid, Pageable pageable) throws Exception;

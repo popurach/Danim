@@ -1,7 +1,12 @@
 package com.danim.service;
 
+import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.entity.Photo;
+import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.PhotoRepository;
+import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +29,11 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     private final TimeLineRepository timeLineRepository;
     private final UserRepository userRepository;
+
+    private final PostRepository postRepository;
+
+    private final PhotoRepository photoRepository;
+
 
     @Override
     //모든 최신 타임라인 얻어옴 , 페이징 x
@@ -111,13 +122,37 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     //모든 타임라인 얻어옴, with paging
     @Override
-    public List<TimeLine> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception {
+    public List<MainTimelinePhotoDto> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception {
 
         Page<TimeLine> timeline = timeLineRepository.findAll(pageable);
         if (timeline.getContent().size() == 0) {
             throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
         }
-        return timeline.getContent();
+
+        //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
+
+        List<MainTimelinePhotoDto> list = new ArrayList<>();//넘겨줄 timeline dto생성
+        //이때 타임라인에서 post가 있는 친구는 보여주고 없으면 보여 주지 않아야 할듯 하다
+
+        for (TimeLine time : timeline) {
+            System.out.println(time.toString());
+            Post post = postRepository.findByTimelineId(time);
+            //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
+
+            if (!post.equals(null)) {
+                //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+                Photo photo = photoRepository.findById(post.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new Exception("존재하지 않는 사진 입니다"));
+                User user = userRepository.findById(1L).orElseThrow(() -> new Exception("존재 하지 않는 유저입니다"));
+                MainTimelinePhotoDto temp = MainTimelinePhotoDto.builder(time, post, photo, user).build();
+
+
+            }
+
+        }
+
+
+        return list;
+
     }
 
     //나의 타임라인 검색시 페이징 처리해서 검색을 해온다
