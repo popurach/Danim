@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Post extends BaseTime{
 	
 	private String voiceUrl;
 	
-	private Long voiceLength;
+	private Double voiceLength;
 	
 	private String nationUrl;
 	

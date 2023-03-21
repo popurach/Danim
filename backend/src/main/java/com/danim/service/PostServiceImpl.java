@@ -9,7 +9,7 @@ import com.danim.entity.TimeLine;
 import com.danim.repository.NationRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
-import com.danim.utils.VoiceUtils;
+//import com.danim.utils.VoiceUtils;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,6 @@ import java.util.List;
 @Slf4j
 public class PostServiceImpl implements PostService {
     private final AwsS3 awsS3;
-//    private final VoiceUtils voiceUtils;
     private final PostRepository postRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
@@ -32,11 +31,13 @@ public class PostServiceImpl implements PostService {
     // 포스트 등록
     @Override
     public Post createPost(Post savedPost, List<Photo> photoList, String address1, String address2, String address3, String address4, MultipartFile flagFile, MultipartFile voiceFile, Long timelineId) throws Exception {
-        // voiceFile에서 voiceLength 가져오기
-//        Long voiceLength = VoiceUtils.extractVoiceLength(voiceFile);
 
         // voiceFile S3에 올리고 voiceURL 가져오기
         String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
+
+        // voiceFile에서 voiceLength 가져오기
+        // Parameter 1 of constructor in com.danim.service.PostServiceImpl required a bean of type 'com.danim.utils.VoiceUtils' that could not be found
+//        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceUrl);
 
         // voiceFile -> text 변환
 //        final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
@@ -59,9 +60,9 @@ public class PostServiceImpl implements PostService {
 
         // imageURL, voiceURL db에 저장하기
         log.info("Starting savePost transaction");
-//        savedPost.setPhotoList(photoList);
+        savedPost.setPhotoList(photoList);
         savedPost.setVoiceUrl(voiceUrl);
-//        savedPost.setVoiceLength(voiceLength);
+        savedPost.setVoiceLength(2.2);
         savedPost.setNationUrl(flagUrl);
         savedPost.setAddress1(address1);
         savedPost.setAddress2(address2);
@@ -84,7 +85,7 @@ public class PostServiceImpl implements PostService {
     // 지역명 키워드로 포스트 조회
     @Override
     public List<Post> findByLocation(String location) throws Exception {
-        List<Post> postList = postRepository.findByAddress1(location);
+        List<Post> postList = postRepository.findByAddress1OrAddress2OrAddress3OrAddress4(location, location, location, location);
         return postList;
     }
 }

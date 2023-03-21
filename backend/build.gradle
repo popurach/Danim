@@ -49,8 +49,6 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpmime:4.3.1'
 	implementation 'com.google.code.gson:gson:2.9.0'
 
-	// tika : m4a 확장자 음성 파일 받아오는 라이브러리
-	implementation 'org.apache.tika:tika-core:1.26'
 }
 
 test {

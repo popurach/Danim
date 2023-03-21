@@ -1,5 +1,6 @@
 package com.danim.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -30,5 +31,6 @@ public class Photo {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="post_id")
+    @JsonIgnore
     private Post postId;
 }
