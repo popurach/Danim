@@ -23,6 +23,7 @@ public class PostController {
     private final PhotoService photoService;
     private final PostRepository postRepository;
 
+
     //포스트 등록
     @PostMapping("")
     public ResponseEntity<?> insertPost(@RequestPart String address1,
@@ -47,8 +48,8 @@ public class PostController {
     //포스트 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) throws Exception {
-            postService.deletePostById(postId);
-            return ResponseEntity.ok().build();
+        postService.deletePostById(postId);
+        return ResponseEntity.ok().build();
     }
 
     //지역명 키워드로 포스트 조회

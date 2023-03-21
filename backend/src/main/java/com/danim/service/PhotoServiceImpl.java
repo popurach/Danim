@@ -20,10 +20,11 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository photoRepository;
     private final PostRepository postRepository;
 
+
     @Override
     public Photo createPhoto(MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-        String photoUrl = awsS3.upload(imageFile,"Post");
+        String photoUrl = awsS3.upload(imageFile, "Post");
 
         // image metadata에서 lat,lng 지역 정보 가져오기
 //        HashMap<String, Double> location = ImageUtils.extractLocationFromImage(imageFile);
@@ -41,7 +42,9 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.save(photo);
         log.info("Transaction complete");
         return photo;
-    };
+    }
+
+    ;
 
     // 파일 s3 서버에 올리는 메서드
 //    private String uploadFileToS3(MultipartFile file, String key) throws IOException {
@@ -55,8 +58,6 @@ public class PhotoServiceImpl implements PhotoService {
 //        List<Photo> photoList = photoRepository.findByPostId(postId);
 //        return photoList;
 //    }
-
-
 
 
 }
