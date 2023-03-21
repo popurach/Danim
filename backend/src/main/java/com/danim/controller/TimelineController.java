@@ -1,5 +1,6 @@
 package com.danim.controller;
 
+import com.danim.dto.MainTimelinePhotoDto;
 import com.danim.entity.TimeLine;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
@@ -95,9 +96,9 @@ public class TimelineController {
     //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
     //sort="id", direction = Sort.Direction.DESC
     @GetMapping("/main/test")
-    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 2) Pageable pageable) throws Exception {
+    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 10) Pageable pageable) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
+        List<MainTimelinePhotoDto> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
@@ -114,7 +115,6 @@ public class TimelineController {
         List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
-
 
 
 }

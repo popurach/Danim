@@ -31,6 +31,6 @@ public class Photo {
     private Boolean isLive = false;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     private Post postId;
 }
