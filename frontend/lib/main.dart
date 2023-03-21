@@ -28,14 +28,14 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MyCustomAppBar(
+    return const Scaffold(
+      appBar: MyCustomAppBar(
         key: Key("appbar"),
       ),
-      body: const TimeLineList(),
+      body: TimeLineList(),
       floatingActionButton: CameraFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }
