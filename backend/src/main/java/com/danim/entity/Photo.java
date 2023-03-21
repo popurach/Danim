@@ -12,8 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Photo {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "photoId", nullable = false)
@@ -30,7 +28,7 @@ public class Photo {
     @ColumnDefault("0")
     private Boolean isLive = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="post_id")
     private Post postId;
 }

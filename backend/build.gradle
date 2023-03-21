@@ -43,7 +43,16 @@ dependencies {
 
 	// asw setting
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
+	// stt(naver clova) api
+	implementation 'org.apache.httpcomponents:httpclient:4.5.12'
+	implementation 'org.apache.httpcomponents:httpmime:4.3.1'
+	implementation 'com.google.code.gson:gson:2.9.0'
+
+	// tika : m4a 확장자 음성 파일 받아오는 라이브러리
+	implementation 'org.apache.tika:tika-core:1.26'
 }
+
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
