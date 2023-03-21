@@ -10,6 +10,7 @@ import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +26,17 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TimeLineRepository timelineRepository;
 
+    @Value("${test1.voiceurl}")
+    private String voiceUrl;
+
+    @Value("${test1.flagurl}")
+    private String flagUrl;
+
     // 포스트 등록
     @Override
     public Post createPost(Post savedPost, String address1, String address2, String address3, String address4, MultipartFile flagFile, MultipartFile voiceFile, Long timelineId, List<Photo> photoList) throws Exception {
         // voiceFile S3에 올리고 voiceURL 가져오기
-        String voiceUrl = awsS3.upload(voiceFile, "Voice");
+//테스트용        String voiceUrl = awsS3.upload(voiceFile, "Voice");
 
         // voiceFile에서 voiceLength 가져오기
 //        Long voiceLength = voiceUtils.extractVoiceLength(voiceFile);
@@ -41,7 +48,7 @@ public class PostServiceImpl implements PostService {
         TimeLine timeline = timelineRepository.findById(timelineId).orElseThrow(() -> new Exception("존재하지 않는 타임라인"));
 
         // flagFile S3에 올리고 voiceURL 가져오기
-        String flagUrl = awsS3.upload(flagFile, "Nation");
+////테스트용         String flagUrl = awsS3.upload(flagFile, "Nation");
 
         // imageURL, voiceURL db에 저장하기
         log.info("Starting savePost transaction");
@@ -49,7 +56,7 @@ public class PostServiceImpl implements PostService {
         savedPost.setVoiceUrl(voiceUrl);
 //        savedPost.setVoiceLength(voiceLength);
         savedPost.setNationUrl(flagUrl);
-//        savedPost.setAddress1(address1);
+        savedPost.setAddress1(address1);
 //        savedPost.setText(text);
         savedPost.setTimelineId(timeline);
 //        savedPost.setNationId(nation);

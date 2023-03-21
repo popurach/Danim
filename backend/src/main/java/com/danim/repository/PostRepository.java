@@ -12,7 +12,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 지역명으로 post 조회(검색 기능)
 //    List<Post> findByLocation(String location);
 
-    Post findByTimelineId(TimeLine timeline)throws  Exception;
+    //Optional<List<TimeLine>> findAllByUserUidOrderByCreateTimeDesc(User u);
+
+    List<Post> findByTimelineIdOrderByCreateTimeAsc(TimeLine timeline)throws  Exception;
+    Post findTopByTimelineIdOrderByCreateTimeAsc(TimeLine timeline)throws  Exception;
 
 
 }

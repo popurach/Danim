@@ -25,7 +25,8 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public Photo createPhoto(MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-        String photoUrl = awsS3.upload(imageFile, "Post");
+        //String photoUrl = awsS3.upload(imageFile, "Post");
+        String photoUrl = "www.임시임시.com";
 
         // image metadata에서 lat,lng 지역 정보 가져오기
 //        HashMap<String, Double> location = ImageUtils.extractLocationFromImage(imageFile);

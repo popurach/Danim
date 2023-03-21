@@ -25,6 +25,7 @@ public class TimelineController {
     @GetMapping("/main")
     public ResponseEntity<?> getTimelineLatest() throws Exception {
 
+
 //        Account auth = (Account) authentication.getPrincipal();
 //        Long tt = auth.getUid();
 //        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
@@ -50,7 +51,7 @@ public class TimelineController {
     }
 
 
-    //타임라인 한개 조회
+    //타임라인 한개 조회 => 이제 이걸 해야함 , 넘겨줄때 여행한 국가 리스트 순서대로 해서 만들어 넘겨주면 될듯
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
         TimeLine timeline = service.searchOneTimeline(uid);
@@ -89,32 +90,38 @@ public class TimelineController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+  
+
+
+
     /*paging  하는 메서드들*/
 
 
-    //메인피드 최신순 타임라인 조회 with paging + 
+    //메인피드 최신순 타임라인 조회 with paging +  
     //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
     //sort="id", direction = Sort.Direction.DESC
-    @GetMapping("/main/test")
-    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 10) Pageable pageable) throws Exception {
+    @GetMapping("/main/test")//테스트 해보기
+    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 3) Pageable pageable) throws Exception {
 
         List<MainTimelinePhotoDto> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
-    //내 피드에서 내 타임라인 리스트 조회 with paging
+    //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
     @GetMapping("/mine/test")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
-        List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
+        List<MainTimelinePhotoDto> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
-    //다른 유저의 피드에서 타임라인 조회 with Paging
+    //다른 유저의 피드에서 타임라인 조회 with Paging => 테스트 해보기
     @GetMapping("/other/text/{uid}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
-        List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
+        List<MainTimelinePhotoDto> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
+
 
 
 }

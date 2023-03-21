@@ -5,11 +5,13 @@ import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder(builderMethodName = "MainTimelinePhotoDtoBuilder")
+@Getter
 public class MainTimelinePhotoDto {
 
     //10개 정도를 넘겨 준다고 생각 하면됨
@@ -37,21 +39,31 @@ public class MainTimelinePhotoDto {
 
     //여행 시작 장소 ~ 여행 마감 장소 =>  추후에 정해야 함
 
-    private String start_place;
+    private String startPlace;
 
-    private String finish_place;
+    private String finishPlace;
 
     public static String make(LocalDateTime date) {
-        String s3 = date.toString();
+
+        LocalDate s2 = date.toLocalDate();
+        String s3 = s2.toString();
         s3 = s3.replace("-", ".");
         return s3;
     }
 
 
-    public static MainTimelinePhotoDtoBuilder builder(TimeLine timeline, Post post, Photo photo, User user) {
+    public static MainTimelinePhotoDtoBuilder builder(TimeLine timeline, Photo photo, User user) {
 
-        String start = make(timeline.getCreateTime());
-        String finish = make(timeline.getFinishTime());
+        String start = "";
+        String finish = "";
+        if (timeline.getFinishTime() != null) {
+            start = make(timeline.getCreateTime());
+        }
+
+        if (timeline.getFinishTime() != null) {
+            finish = make(timeline.getFinishTime());
+        }
+
 
         return MainTimelinePhotoDtoBuilder().
                 timelineId(timeline.getTimelineId()).
@@ -60,8 +72,8 @@ public class MainTimelinePhotoDto {
                 .nickname(user.getNickname())
                 .createTime(start)
                 .finishTime(finish)
-                .start_place("시작이")
-                .finish_place("끝남이");
+                .startPlace("시작이")
+                .finishPlace("끝남이");
 
     }
 
