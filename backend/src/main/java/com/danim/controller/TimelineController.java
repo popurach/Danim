@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 public class TimelineController {
 
-
     private final TimeLineService service;
 
     //메인피드 최신순 타임라인 조회
@@ -33,14 +32,12 @@ public class TimelineController {
 
     }
 
-
     //내 피드에서 내 타임라인 리스트 조회
     @GetMapping("/mine/{uid}")
     public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
 
         List<TimeLine> timelinelist = service.searchMyTimeline(uid);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-
     }
 
     //다른 유저의 피드에서 타임라인 조회
@@ -49,14 +46,12 @@ public class TimelineController {
 
         List<TimeLine> timelinelist = service.searchTimelineNotPublic(uid);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-
     }
 
 
     //타임라인 한개 조회
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
-
         TimeLine timeline = service.searchOneTimeline(uid);
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
@@ -76,7 +71,6 @@ public class TimelineController {
 
         service.finishTimeline(uid);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     //타임라인 공개 <->비공개 변경
@@ -107,25 +101,24 @@ public class TimelineController {
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
-
     //내 피드에서 내 타임라인 리스트 조회 with paging
     @GetMapping("/mine/test")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
-
         List<TimeLine> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-
     }
-
 
     //다른 유저의 피드에서 타임라인 조회 with Paging
     @GetMapping("/other/text/{uid}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
-
         List<TimeLine> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
-
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
+
+
+
+
+
 
 
 }

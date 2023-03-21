@@ -2,26 +2,18 @@ package com.danim.service;
 
 //import com.amazonaws.services.s3.AmazonS3;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.danim.conponent.AwsS3;
-import com.danim.entity.Nation;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.repository.PostRepository;
-//import com.danim.utils.VoiceUtils;
 import com.danim.repository.TimeLineRepository;
-//import com.danim.utils.VoiceUtils;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 
 @Service
@@ -85,4 +77,6 @@ public class PostServiceImpl implements PostService {
 //        List<Post> postList = postRepository.finidByAddress(location);
 //        return postList;
 //    }
+
+
 }

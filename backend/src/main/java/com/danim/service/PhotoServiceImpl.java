@@ -1,21 +1,16 @@
 package com.danim.service;
 
 //import com.amazonaws.services.s3.AmazonS3;
+
 import com.danim.conponent.AwsS3;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.repository.PhotoRepository;
-//import com.danim.utils.ImageUtils;
 import com.danim.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
 @Log4j2
 @Service
@@ -60,4 +55,8 @@ public class PhotoServiceImpl implements PhotoService {
 //        List<Photo> photoList = photoRepository.findByPostId(postId);
 //        return photoList;
 //    }
+
+
+
+
 }

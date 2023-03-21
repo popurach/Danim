@@ -10,8 +10,6 @@ public interface TimeLineService {
     //메인피드에서 최신순으로 조회=>완료
     List<TimeLine> searchTimelineOrderBylatest() throws Exception;
 
-
-
     //내 피드에서 내 타임라인 리스트 조회 ,
     List<TimeLine> searchMyTimeline(Long uid) throws Exception;
 
@@ -42,6 +40,12 @@ public interface TimeLineService {
 
     //다른 유저의 피드에서 타임라인 조회 with Paging
     List<TimeLine> searchTimelineNotPublicWithPaging(Long uid, Pageable pageable) throws Exception;
+    
+    
+    
+    //타임 라인 하나 불러올시에, 썸네일, 시작 위치 끝나는 위치, 
+    
+    
 
 
 }
