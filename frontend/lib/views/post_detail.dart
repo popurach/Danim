@@ -1,9 +1,12 @@
+import 'package:danim/module/audio_player_view.dart';
 import 'package:danim/view_models/images_page_view_model.dart';
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/views/images_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+
+import '../module/audio_player_view_model.dart';
 
 class PostDetail extends StatelessWidget {
   final PostViewModel viewModel;
@@ -23,8 +26,8 @@ class PostDetail extends StatelessWidget {
               alignment: TimelineAlign.center,
             )),
         SizedBox(
+          width: MediaQuery.of(context).size.width - 72,
           height: 500,
-          width: 400,
           child: Column(
             children: [
               Expanded(
@@ -34,13 +37,11 @@ class PostDetail extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return Dialog(
+                            insetPadding: const EdgeInsets.all(5),
                             child: ChangeNotifierProvider(
                               create: (_) =>
                                   ImagesPageViewModel(viewModel.post.imageUrls),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: ImagesPageView(),
-                              ),
+                              child: ImagesPageView(),
                             ),
                           );
                         });
@@ -51,6 +52,10 @@ class PostDetail extends StatelessWidget {
                     child: const ImagesPageView(),
                   ),
                 ),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => AudioPlayerViewModel(viewModel.post.voiceUrl),
+                child: AudioPlayerView(),
               ),
               Text(viewModel.post.text)
             ],
