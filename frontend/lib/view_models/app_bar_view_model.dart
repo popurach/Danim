@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppBarViewModel with ChangeNotifier {
-  bool _isLogin = true;
+  dynamic _userInfo;
 
-  bool get isLogin => _isLogin;
+  dynamic get userInfo => _userInfo;
 
-  set isLogin(bool value) {
-    _isLogin = value;
+  bool get isLogin {
+    return _userInfo != null;
+  }
+
+  set userInfo(dynamic value) {
+    _userInfo = value;
     notifyListeners();
   }
 }

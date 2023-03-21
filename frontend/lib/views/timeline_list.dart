@@ -12,10 +12,10 @@ class TimeLineList extends StatelessWidget {
     return ChangeNotifierProvider<TimelineListViewModel>(
         create: (_) => TimelineListViewModel(),
         child: Consumer<TimelineListViewModel>(
-            builder: (context, model, child) => ListView.builder(
-                itemCount: model.timelineList.length,
+            builder: (context, viewModel, child) => ListView.builder(
+                itemCount: viewModel.timelineList.length,
                 itemBuilder: (context, index) {
-                  return TimelineListItem(model.timelineList[index]);
+                  return TimelineListItem(viewModel.timelineList[index]);
                 })));
   }
 }
