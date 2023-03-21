@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestDocController {
     @GetMapping("/")
     public String restDoc(){
-        return "/index.html";
+        return "/BOOT-INF/classes/static/index.html";
     }
 }
