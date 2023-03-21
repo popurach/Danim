@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -30,11 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
+import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 //@SpringBootTest
 //@AutoConfigureMockMvc
 @WebMvcTest({UserController.class})
+@MockBean(JpaMetamodelMappingContext.class)
 public class UserControllerTest {
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
@@ -62,9 +65,9 @@ public class UserControllerTest {
     @DisplayName("User register")
     public void insertUserTest()  throws Exception{
         // given
-        User user = User.builder().userUid(2l).nickname("Jiyul").clientId("1234").build();
+        User user = User.builder().userUid(21l).nickname("JiyulTest").clientId("1234").build();
         // when
-        mock.perform(post("/user")
+        mock.perform(post("/api/auth/user/user")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
                 .andDo(MockMvcResultHandlers.print())
@@ -80,5 +83,6 @@ public class UserControllerTest {
                                         fieldWithPath("profileImageUrl").type(JsonFieldType.NULL).description("profileImageUrl")
                                 )))
                 .andReturn();
+//        assertThat(user.getUserUid()).isEqualTo(2l);
     }
 }
