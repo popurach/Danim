@@ -58,6 +58,7 @@ dependencies:
   smooth_page_indicator: ^1.0.1
   native_exif:  ^0.4.0
   multiple_images_picker:  ^1.0.1
+  image_picker: ^0.8.7
 
   # audio
   record: ^4.4.4
