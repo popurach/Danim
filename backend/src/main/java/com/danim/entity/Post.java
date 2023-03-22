@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Post extends BaseTime{
 	
 	private String voiceUrl;
 	
-	private Long voiceLength;
+	private Double voiceLength;
 	
 	private String nationUrl;
 	
@@ -55,7 +56,7 @@ public class Post extends BaseTime{
 	@ToString.Exclude
 	private Nation nationId;
 
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 }

@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 지역명으로 post 조회(검색 기능)
-//    List<Post> findByLocation(String location);
+    List<Post> findByAddress1OrAddress2OrAddress3OrAddress4(String location1, String location2, String location3, String location4);
 }
