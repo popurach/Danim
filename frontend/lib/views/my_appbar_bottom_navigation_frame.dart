@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 
 class MyAppbarBottomNavigationFrame extends StatelessWidget {
   final Widget body;
+  final bool useBottomNavigation;
 
-  MyAppbarBottomNavigationFrame({required this.body});
+  MyAppbarBottomNavigationFrame(
+      {required this.body, this.useBottomNavigation = true});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +21,17 @@ class MyAppbarBottomNavigationFrame extends StatelessWidget {
               viewModel: viewModel.appbarViewModel,
             ),
             body: body,
-            floatingActionButton: const CameraFloatingActionButton(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: ChangeNotifierProvider(
-              create: (_) => viewModel.bottomNavigationViewModel,
-              child: CustomBottomNavigationBar(),
-            ));
+            floatingActionButton:
+                useBottomNavigation ? const CameraFloatingActionButton() : null,
+            floatingActionButtonLocation: useBottomNavigation
+                ? FloatingActionButtonLocation.centerDocked
+                : null,
+            bottomNavigationBar: useBottomNavigation
+                ? ChangeNotifierProvider(
+                    create: (_) => viewModel.bottomNavigationViewModel,
+                    child: CustomBottomNavigationBar(),
+                  )
+                : null);
       },
     );
   }
