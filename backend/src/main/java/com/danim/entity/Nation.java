@@ -14,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Nation {
 
+
     /*
      *  nation은 s3와 연관을 지어서 찾아내고자 합니다
      * -front로부터 국기와 국가이름, 도로명 주소를 넘겨 받으면
