@@ -1,10 +1,11 @@
 package com.danim.service;
 
+import com.danim.entity.User;
 import com.danim.entity.UserDetails;
 
 public interface UserService {
 
     void makeUser();
 
-    UserDetails loadUserByUsername(String clientId) throws Exception;
+    User loadUserByUsername(String clientId) throws Exception;
 }

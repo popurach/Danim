@@ -1,7 +1,7 @@
 package com.danim.config.security;
 
 import com.danim.service.UserService;
-import com.danim.entity.UserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
