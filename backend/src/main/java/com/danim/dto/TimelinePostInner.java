@@ -15,5 +15,4 @@ public class TimelinePostInner {
     private String nation;
     private List<Post> postlist;
 
-
 }

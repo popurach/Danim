@@ -2,6 +2,7 @@ package com.danim.service;
 
 import com.danim.dto.MainTimelinePhotoDto;
 import com.danim.dto.TimelinePostInner;
+import com.danim.dto.TimelinePostOuter;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
@@ -66,44 +67,50 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public TimeLine searchOneTimeline(Long uid) throws Exception {
+    public TimelinePostOuter searchOneTimeline(Long uid) throws Exception {
 
 
         //해당 되는 타임라인을 얻어 왔고
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다."));
 
-        //이제 그 다음으로 해당 되는 타임라인으 포스트를 얻어 올거임
+        //이제 그 다음으로 해당 되는 타임라인을 포스트를 얻어 올거임
         List<Post> post = postRepository.findAllByTimelineIdOrderByCreateTimeAsc(now);
         //이제 찾아 왔으므로 넘겨 줘야함
 
-        List<String> nationlist = new ArrayList<>();
-        List<Integer> nationIndex = new ArrayList<>();
+
 
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
         //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
+        TimelinePostOuter timelineouter = new TimelinePostOuter();
 
-        List<TimelinePostInner> timelineinnter = new ArrayList<>();
-        Map<String,String> temp=new HashMap<String,String>();
+        List<Post> postlist = new ArrayList<>();
+        TimelinePostInner temptimeline = new TimelinePostInner();
+        Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
+        List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
 
-        List<String> tempnow=new ArrayList<>();
+        for (Post p : post) {
+            String NationName = p.getNationId().getName();
+            if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
 
+                //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
+                timelineouter.getTimeline().add(temptimeline);
 
-        for (Post p:post) {
+                //이제 새로운 타임라인 생성을 하고 국가, 국기, post를 넣어주는 작업이다
+                temptimeline = new TimelinePostInner();
+                temptimeline.setFlag(p.getPhotoList().get(0).getPhotoUrl());
+                temptimeline.setNation(NationName);
+                tempnow.add(NationName);
+                postlist.add(p);
 
-            //if(p.get)
-
-
+            } else {
+                //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
+                postlist.add(p);
+            }
 
         }
+        timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
 
-
-
-
-
-
-
-
-        return now;
+        return timelineouter;
     }
 
     @Override

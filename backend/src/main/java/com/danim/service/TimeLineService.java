@@ -1,6 +1,7 @@
 package com.danim.service;
 
 import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.dto.TimelinePostOuter;
 import com.danim.entity.TimeLine;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +19,7 @@ public interface TimeLineService {
     List<TimeLine> searchTimelineNotPublic(Long uid) throws Exception;
 
     //타임라인 한개 조회=>완료
-    TimeLine searchOneTimeline(Long uid) throws Exception;
+    TimelinePostOuter searchOneTimeline(Long uid) throws Exception;
 
     //여행시작 =>완료
     void makenewTimeline(Long uid) throws Exception;
@@ -41,12 +42,9 @@ public interface TimeLineService {
 
     //다른 유저의 피드에서 타임라인 조회 with Paging
     List<MainTimelinePhotoDto> searchTimelineNotPublicWithPaging(Long uid, Pageable pageable) throws Exception;
-    
-    
-    
+
+
     //타임 라인 하나 불러올시에, 썸네일, 시작 위치 끝나는 위치, 
-    
-    
 
 
 }

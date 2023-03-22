@@ -1,6 +1,7 @@
 package com.danim.controller;
 
 import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.dto.TimelinePostOuter;
 import com.danim.entity.TimeLine;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class TimelineController {
     //타임라인 한개 조회 => 이제 이걸 해야함 , 넘겨줄때 여행한 국가 리스트 순서대로 해서 만들어 넘겨주면 될듯
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
-        TimeLine timeline = service.searchOneTimeline(uid);
+        TimelinePostOuter timeline = service.searchOneTimeline(uid);
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
 
@@ -70,7 +71,6 @@ public class TimelineController {
     //여행끝
     @PutMapping("/{uid}")
     public ResponseEntity<?> finishTimeLine(@PathVariable Long uid) throws Exception {
-
         service.finishTimeline(uid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -78,7 +78,6 @@ public class TimelineController {
     //타임라인 공개 <->비공개 변경
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
-
 
         service.changePublic(uid);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -90,10 +89,6 @@ public class TimelineController {
         service.deleteTimeline(uid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-  
-
 
 
     /*paging  하는 메서드들*/
@@ -122,7 +117,5 @@ public class TimelineController {
         List<MainTimelinePhotoDto> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
-
-
 
 }
