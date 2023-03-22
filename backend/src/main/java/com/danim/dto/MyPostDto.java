@@ -2,6 +2,7 @@ package com.danim.dto;
 
 import com.danim.entity.Nation;
 import com.danim.entity.Photo;
+import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,47 +18,47 @@ public class MyPostDto {
 
     private String voiceUrl;
 
-    private Long voiceLength;
+    private Double voiceLength;
 
-    private String nationUrl;
 
-    private String address1;
+    private String address2;
+    private String address3;
+    private String address4;
+
 
     private String text;
 
-    private TimeLine timelineId;
-
-    private Nation nationId;
 
     private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 
-    private List<String> nationlist;
-    private List<Integer> nationIndex;
+
+    public static MyPostDtoBuilder builder(Post post) {
+
+/*
+*       return MainTimelinePhotoDtoBuilder().
+                timelineId(timeline.getTimelineId()).
+                url(photo.getPhotoUrl())
+                .title(timeline.getTitle())
+                .nickname(user.getNickname())
+                .createTime(start)
+                .finishTime(finish)
+                .startPlace(startpost.getAddress2())
+                .finishPlace(lastpost.getAddress2());
+*
+* */
 
 
-//    public static MyPostDto builder(TimeLine timeline, Photo photo, User user) {
-//
-//        String start = "";
-//        String finish = "";
-//        if (timeline.getFinishTime() != null) {
-//            start = make(timeline.getCreateTime());
-//        }
-//
-//        if (timeline.getFinishTime() != null) {
-//            finish = make(timeline.getFinishTime());
-//        }
-//
-//
-//        return MainTimelinePhotoDtoBuilder().
-//                timelineId(timeline.getTimelineId()).
-//                url(photo.getPhotoUrl())
-//                .title(timeline.getTitle())
-//                .nickname(user.getNickname())
-//                .createTime(start)
-//                .finishTime(finish)
-//                .startPlace("시작이")
-//                .finishPlace("끝남이");
-//
-//    }
+        return MyPostDtoBuilder()
+                .postId(post.getPostId())
+                .voiceUrl(post.getVoiceUrl())
+                .voiceLength(post.getVoiceLength())
+                .address2(post.getAddress2())
+                .address3(post.getAddress3())
+                .address4(post.getAddress4())
+                .text(post.getText())
+                .photoList(post.getPhotoList())
+                ;
+
+    }
 
 }

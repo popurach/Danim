@@ -5,6 +5,7 @@ import com.danim.dto.TimelinePostOuter;
 import com.danim.entity.TimeLine;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,19 +19,22 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/timeline")
 @RestController
+@Log4j2
 public class TimelineController {
 
-    private final TimeLineService service;
+    private final TimeLineService timeLineService;
 
     //메인피드 최신순 타임라인 조회
     @GetMapping("/main")
     public ResponseEntity<?> getTimelineLatest() throws Exception {
 
+        log.info("메인피드 최신수 타임라인 조회 시작");
 
 //        Account auth = (Account) authentication.getPrincipal();
 //        Long tt = auth.getUid();
 //        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
-        List<TimeLine> timelinelist = service.searchTimelineOrderBylatest();
+        List<TimeLine> timelinelist = timeLineService.searchTimelineOrderBylatest();
+        log.info("메인피드 최신수 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
 
     }
@@ -39,15 +43,18 @@ public class TimelineController {
     @GetMapping("/mine/{uid}")
     public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
 
-        List<TimeLine> timelinelist = service.searchMyTimeline(uid);
+        log.info("내 피드에서 내 타임라인 리스트 조회");
+        List<TimeLine> timelinelist = timeLineService.searchMyTimeline(uid);
+        log.info("내 피드에서 내 타임라인 리스트 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
     //다른 유저의 피드에서 타임라인 조회
     @GetMapping("/user/{uid}")
     public ResponseEntity<?> getAnotherTimelineList(@PathVariable Long uid) throws Exception {
-
-        List<TimeLine> timelinelist = service.searchTimelineNotPublic(uid);
+        log.info("다른 유저의 피드에서 타임라인 조회 시작");
+        List<TimeLine> timelinelist = timeLineService.searchTimelineNotPublic(uid);
+        log.info("다른 유저의 피드에서 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
@@ -55,7 +62,9 @@ public class TimelineController {
     //타임라인 한개 조회 => 이제 이걸 해야함 , 넘겨줄때 여행한 국가 리스트 순서대로 해서 만들어 넘겨주면 될듯
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
-        TimelinePostOuter timeline = service.searchOneTimeline(uid);
+        log.info("타임라인 한개 조회 시작");
+        TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid);
+        log.info("타임라인 한개 조회 종료");
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
 
@@ -63,7 +72,9 @@ public class TimelineController {
     @PostMapping("")
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
-        service.makenewTimeline(15L);
+        log.info("여행 시작 기능 시작");
+        timeLineService.makenewTimeline(15L);
+        log.info("여행 시작 기능 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -71,22 +82,27 @@ public class TimelineController {
     //여행끝
     @PutMapping("/{uid}")
     public ResponseEntity<?> finishTimeLine(@PathVariable Long uid) throws Exception {
-        service.finishTimeline(uid);
+        log.info("여행종료 기능 시작");
+        timeLineService.finishTimeline(uid);
+        log.info("여행종료 기능 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //타임라인 공개 <->비공개 변경
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
-
-        service.changePublic(uid);
+        log.info("타임라인 공개<->비공개 전환 시작");
+        timeLineService.changePublic(uid);
+        log.info("타임라인 공개<->비공개 전환 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //타임라인삭제
     @DeleteMapping("/{uid}")
     public ResponseEntity<?> deleteTimeLine(@PathVariable Long uid) throws Exception {
-        service.deleteTimeline(uid);
+        log.info("타임라인 삭제 기능 시작");
+        timeLineService.deleteTimeline(uid);
+        log.info("타임라인 삭제 기능 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -99,23 +115,31 @@ public class TimelineController {
     //sort="id", direction = Sort.Direction.DESC
     @GetMapping("/main/test")//테스트 해보기
     public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 3) Pageable pageable) throws Exception {
-
-        List<MainTimelinePhotoDto> timelinelist = service.searchTimelineOrderBylatestPaging(pageable);
+        log.info("메인피드 최신순 타임라인 조회 시작");
+        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
+        log.info("메인피드 최신순 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
+
 
     //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
     @GetMapping("/mine/test")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
-        List<MainTimelinePhotoDto> timelinelist = service.searchMyTimelineWithPaging(1L, pageable);
+        log.info("내 피드에서 내 타임라인 리스트 조회 기능 시작");
+        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchMyTimelineWithPaging(1L, pageable);
+        log.info("내 피드에서 내 타임라인 리스트 조회 기능 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
+
 
     //다른 유저의 피드에서 타임라인 조회 with Paging => 테스트 해보기
     @GetMapping("/other/text/{uid}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
-        List<MainTimelinePhotoDto> timelinelist = service.searchTimelineNotPublicWithPaging(uid, pageable);
+        log.info("다른 유저의 피드에서 타임라인 조회 기능 시작");
+        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineNotPublicWithPaging(uid, pageable);
+        log.info("다른 유저의 피드에서 타임라인 조회 기능 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
+
 
 }

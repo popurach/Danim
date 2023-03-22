@@ -27,11 +27,6 @@ public class PostServiceImpl implements PostService {
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
 
-    @Value("${test1.voiceurl}")
-    private String voiceUrl;
-
-    @Value("${test1.flagurl}")
-    private String flagUrl;
 
     // 포스트 등록
     @Override
