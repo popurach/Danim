@@ -26,7 +26,7 @@ class TimelineListItem extends StatelessWidget {
                     create: (_) => TimelineDetailViewModel(
                       timeline.timelineId,
                     ),
-                    child: const TimelineDetail(),
+                    child: TimelineDetail(),
                   ),
                   transitionDuration: Duration.zero,
                 ));
