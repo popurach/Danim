@@ -1,23 +1,24 @@
 import 'dart:io';
 
 import 'package:danim/module/CupertinoAlertDialog.dart';
+import 'package:danim/views/my_appbar_bottom_navigation_frame.dart';
 import 'package:flutter/foundation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../module/audio_player_view.dart';
 import '../module/audio_player_view_model.dart';
-
 import '../view_models/record_view_model.dart';
+import '../view_models/camera_view_model.dart';
+
 
 class RecordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text('Pictures'),
-          ),
+      child: MyAppbarBottomNavigationFrame(
+          useBottomNavigation: false,
           body: Consumer<RecordViewModel>(builder: (context, viewModel, child) {
             return Column(children: [
               // 캐러셀
@@ -47,9 +48,32 @@ class RecordView extends StatelessWidget {
               // 녹음 실행 관련 컨테이너
               // ChangeNotifierProxyProvider를 통해 RecordViewModel에서 변화가 발생했을 때 AudioPlayerViewModel에도 어떤 동작을 실행시킨다.
               Container(
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                        child:
+                            viewModel.locationInfo["flagBytes"] != null ?
+                            Image.memory(viewModel.locationInfo?["flagBytes"])
+                                : Text("test")
+                    ),
+                    Expanded(
+                      flex: 5,
+                        child:
+                            viewModel.locationInfo["city"] != null ?
+                            Text(viewModel.locationInfo?["city"])
+                                : Text("test")
+
+                    )
+                  ],
+                )
+              ),
+              Container(
                   child: ChangeNotifierProvider<AudioPlayerViewModel>(
-                create: (_) => viewModel.audioPlayerViewModel,
-                child: AudioPlayerView(),
+                    create: (_) => viewModel.audioPlayerViewModel,
+                    child: AudioPlayerView(),
               )),
 
               // 버튼 컨테이너

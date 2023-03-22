@@ -16,6 +16,7 @@ import '../module/audio_player_view_model.dart';
 
 class RecordViewModel extends ChangeNotifier {
   late List<XFile> _imageList;
+  late Map _locationInfo;
   late String _recordedFileName;
   String _recordedFilePath = "";
   late AudioPlayerViewModel audioPlayerViewModel;
@@ -24,6 +25,17 @@ class RecordViewModel extends ChangeNotifier {
   Duration _audioPosition = Duration.zero;
 
   List<XFile> get imageList => _imageList;
+
+  Map get locationInfo => _locationInfo;
+  set locationInfo (Map newInfo) {
+    _locationInfo = newInfo;
+  }
+
+  void updateLocationInformation(Map<String, dynamic> locationInfo) {
+    _locationInfo = locationInfo;
+    notifyListeners();
+  }
+
 
   String get recordedFileName => _recordedFileName;
 
@@ -45,7 +57,7 @@ class RecordViewModel extends ChangeNotifier {
 
   Duration get audioPosition => _audioPosition;
 
-  RecordViewModel(this._imageList) {
+  RecordViewModel(this._imageList, this._locationInfo) {
     audioPlayerViewModel = AudioPlayerViewModel(_recordedFilePath);
   }
 
@@ -53,6 +65,9 @@ class RecordViewModel extends ChangeNotifier {
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
+
+  // 사진 위치 정보 받아오는 메서드
+
 
   // 녹음 메서드
   Future<void> startRecording() async {
@@ -116,8 +131,8 @@ class RecordViewModel extends ChangeNotifier {
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
     final dio = Dio();
-    final imageFiles =
-        imageList.map((el) async => await MultipartFile.fromFile(el.path));
+    final List<MultipartFile> imageFiles =
+        imageList.map((el) => MultipartFile.fromFileSync(el.path)).toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath);
 
     FormData formData = FormData.fromMap({
@@ -157,4 +172,5 @@ class RecordViewModel extends ChangeNotifier {
           return alert;
         });
   }
+
 }
