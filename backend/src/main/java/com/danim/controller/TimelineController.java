@@ -103,6 +103,7 @@ public class TimelineController {
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
 
+
         service.changePublic(uid);
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", true);
