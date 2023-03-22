@@ -1,7 +1,6 @@
 package com.danim.dto;
 
 import com.danim.entity.Photo;
-import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
 import lombok.Builder;
@@ -51,7 +50,6 @@ public class MainTimelinePhotoDto {
         return s3;
     }
 
-
     public static MainTimelinePhotoDtoBuilder builder(TimeLine timeline, Photo photo, User user) {
 
         String start = "";
@@ -63,7 +61,6 @@ public class MainTimelinePhotoDto {
         if (timeline.getFinishTime() != null) {
             finish = make(timeline.getFinishTime());
         }
-
 
         return MainTimelinePhotoDtoBuilder().
                 timelineId(timeline.getTimelineId()).

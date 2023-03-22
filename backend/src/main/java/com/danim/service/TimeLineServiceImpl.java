@@ -1,6 +1,7 @@
 package com.danim.service;
 
 import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.dto.TimelinePostInner;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +80,24 @@ public class TimeLineServiceImpl implements TimeLineService {
         List<Integer> nationIndex = new ArrayList<>();
 
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
+        //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
+
+        List<TimelinePostInner> timelineinnter = new ArrayList<>();
+        Map<String,String> temp=new HashMap<String,String>();
+
+        List<String> tempnow=new ArrayList<>();
+
+
+        for (Post p:post) {
+
+            //if(p.get)
+
+
+
+        }
+
+
+
 
 
 
