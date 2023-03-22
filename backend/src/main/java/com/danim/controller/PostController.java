@@ -6,6 +6,7 @@ import com.danim.repository.PostRepository;
 import com.danim.service.PhotoService;
 import com.danim.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/post")
 @RestController
+@Slf4j
 public class PostController {
     private final PostService postService;
     private final PhotoService photoService;

@@ -55,7 +55,7 @@ public class RestDocController {
     }
     @GetMapping("/4")
     public String restDocd4(){
-        
+
         return htmlFileReader(FILE_PATH);
     }
     @GetMapping("/5")
