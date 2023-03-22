@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +51,8 @@ public class PostController {
     //포스트 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) throws Exception {
-            postService.deletePostById(postId);
-            return ResponseEntity.ok().build();
+        postService.deletePostById(postId);
+        return ResponseEntity.ok().build();
     }
 
     //지역명 키워드로 포스트 조회

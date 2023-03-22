@@ -4,6 +4,7 @@ import com.danim.conponent.AwsS3;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.repository.PhotoRepository;
+import com.danim.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PhotoServiceImpl implements PhotoService {
     private final AwsS3 awsS3;
     private final PhotoRepository photoRepository;
+
 
     @Override
     public Photo createPhoto(Double lat, Double lng, MultipartFile imageFile, Post savedPost) throws Exception {

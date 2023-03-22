@@ -1,4 +1,5 @@
 package com.danim.controller;
+
 import com.danim.entity.User;
 import com.danim.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 
 import com.danim.service.UserService;
@@ -31,12 +31,14 @@ public class UserController {
 
     private final UserService service;
     private final UserServiceImpl userServiceImpl;
+
     @PostMapping("/user")
-    public ResponseEntity<?> insertUser(@RequestBody User user){
+    public ResponseEntity<?> insertUser(@RequestBody User user) {
         User response = userServiceImpl.insertUser(User.builder().userUid(user.getUserUid()).nickname(user.getNickname()).clientId(user.getClientId()).build());
-        log.info("insertUser : ",response);
+        log.info("insertUser : ", response);
         return ResponseEntity.ok(response);
     }
+
     //메인피드 최신순 타임라인 조회
     @PostMapping("")
     public ResponseEntity<?> makenewuser() throws Exception {

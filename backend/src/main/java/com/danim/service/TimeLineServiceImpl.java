@@ -1,7 +1,15 @@
 package com.danim.service;
 
+import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.dto.MyPostDto;
+import com.danim.dto.TimelinePostInner;
+import com.danim.dto.TimelinePostOuter;
+import com.danim.entity.Photo;
+import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.PhotoRepository;
+import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +35,9 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     private final TimeLineRepository timeLineRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final PhotoRepository photoRepository;
+
 
     @Override
     //모든 최신 타임라인 얻어옴 , 페이징 x
@@ -31,7 +46,6 @@ public class TimeLineServiceImpl implements TimeLineService {
         //List<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now).orElseThrow(() -> new Exception("모든 최신 타임라인 얻어오기 실패"));
         List<TimeLine> timeline = timeLineRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
         return timeline;
-
     }
 
     @Override
@@ -51,10 +65,55 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public TimeLine searchOneTimeline(Long uid) throws Exception {
+    public TimelinePostOuter searchOneTimeline(Long uid) throws Exception {
 
+        //해당 되는 타임라인을 얻어 왔고
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다."));
-        return now;
+
+        //이제 그 다음으로 해당 되는 타임라인을 포스트를 얻어 올거임
+        List<Post> post = postRepository.findAllByTimelineIdOrderByCreateTimeAsc(now);
+        //이제 찾아 왔으므로 넘겨 줘야함
+
+
+        //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
+        //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
+        TimelinePostOuter timelineouter = new TimelinePostOuter();
+
+        List<MyPostDto> postlist = new ArrayList<>();
+        TimelinePostInner temptimeline = new TimelinePostInner();
+        Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
+        List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
+
+        for (Post p : post) {
+            String NationName = p.getNationId().getName();
+
+            if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
+
+                if (postlist.size() > 0) {
+                    temptimeline.setPostlist(postlist);
+                    //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
+                    timelineouter.getTimeline().add(temptimeline);
+                }
+                //이제 새로운 타임라인 생성을 하고 국가, 국기, post를 넣어주는 작업이다
+                postlist = new ArrayList<>();
+                temptimeline = new TimelinePostInner();
+                temptimeline.setFlag(p.getPhotoList().get(0).getPhotoUrl());
+                temptimeline.setNation(NationName);
+                tempnow.add(NationName);
+                temp.put(NationName, "1");
+                postlist.add(MyPostDto.builder(p).build());
+
+            } else {
+                //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
+                postlist.add(MyPostDto.builder(p).build());
+            }
+        }
+        //가장 마지막에 남은 것들 처리해 주는 과정
+        temptimeline.setPostlist(postlist);
+        timelineouter.getTimeline().add(temptimeline);
+
+        timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
+        return timelineouter;
     }
 
     @Override
@@ -67,7 +126,6 @@ public class TimeLineServiceImpl implements TimeLineService {
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
-
     }
 
 
@@ -80,7 +138,6 @@ public class TimeLineServiceImpl implements TimeLineService {
         now.setComplete(Boolean.TRUE);
         now.setFinishTime(LocalDateTime.now());
         timeLineRepository.save(now);
-
     }
 
 
@@ -88,15 +145,12 @@ public class TimeLineServiceImpl implements TimeLineService {
     public void deleteTimeline(Long uid) throws Exception {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
-
         timeLineRepository.delete(now);
-
     }
 
     @Override
     public void changePublic(Long uid) throws Exception {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 타임라인 입니다"));
-
         Boolean temp = now.getTimelinePublic();
 
         //완료->비완료 , 비완료->완료 로 변경하는 작업
@@ -107,39 +161,126 @@ public class TimeLineServiceImpl implements TimeLineService {
             now.setTimelinePublic(true);
         }
         timeLineRepository.save(now);
+
     }
 
-    //모든 타임라인 얻어옴, with paging
+    //타임라인 중에서 완료가 된 여행과 공개가 된 여행을 페이징 처리르 하여 보여준다 => 메인 피드 화면에서 타임라인과 썸네일 같이 넘어감
     @Override
-    public List<TimeLine> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception {
+    public List<MainTimelinePhotoDto> searchTimelineOrderBylatestPaging(Pageable pageable) throws Exception {
 
-        Page<TimeLine> timeline = timeLineRepository.findAll(pageable);
+        Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
         if (timeline.getContent().size() == 0) {
             throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
         }
-        return timeline.getContent();
+
+        //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
+        List<MainTimelinePhotoDto> list = new ArrayList<>();//넘겨줄 timeline dto생성
+        //이때 타임라인에서 post가 있는 친구는 보여주고 없으면 보여 주지 않아야 할듯 하다
+
+        for (TimeLine time : timeline) {
+            Post startpost = postRepository.findTopByTimelineIdOrderByCreateTimeAsc(time);
+            Post lastpost = postRepository.findTopByTimelineIdOrderByCreateTimeDesc(time);
+            //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
+            if (startpost == null || lastpost == null)
+                continue;
+            //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+            Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new Exception("존재하지 않는 사진 입니다"));
+            User user = userRepository.findById(1L).orElseThrow(() -> new Exception("존재 하지 않는 유저입니다"));
+            MainTimelinePhotoDto temp = MainTimelinePhotoDto.builder(time, startpost, lastpost, photo, user).build();
+            list.add(temp);
+        }
+
+        return list;
     }
 
-    //나의 타임라인 검색시 페이징 처리해서 검색을 해온다
+    //나의 타임라인 검색시 페이징 처리해서 검색을 해온다 => 나의 타임라인 조회를 할시에 비어 있는 타임라인으로 넘겨줄거임
     @Override
-    public List<TimeLine> searchMyTimelineWithPaging(Long uid, Pageable pageable) throws Exception {
+    public List<MainTimelinePhotoDto> searchMyTimelineWithPaging(Long uid, Pageable pageable) throws Exception {
         User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        Photo photo = null;
+        User user = null;
+        Post post = null;
+        MainTimelinePhotoDto temp = null;
+
         Page<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now, pageable);
         if (timeline.getContent().size() == 0) {
             throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
         }
-        return timeline.getContent();
+        //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
+        List<MainTimelinePhotoDto> list = new ArrayList<>();//넘겨줄 timeline dto생성
+        //타임라인을 얻어옴, =>
+        for (TimeLine time : timeline) {
+            Post startpost = postRepository.findTopByTimelineIdOrderByCreateTimeAsc(time);
+            Post lastpost = postRepository.findTopByTimelineIdOrderByCreateTimeDesc(time);
+            //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
+            if (startpost == null || lastpost == null) {//해당 되는 부분에는
+                photo = new Photo();
+                photo.setPhotoUrl("");
+                if (startpost == null) {
+                    startpost = new Post();
+                    startpost.setAddress2("");
+                }
+                if (lastpost == null) {
+                    lastpost = new Post();
+                    lastpost.setAddress2("");
+                }
+                user = userRepository.findById(1L).orElseThrow(() -> new Exception("존재 하지 않는 유저입니다"));
+                temp = MainTimelinePhotoDto.builder(time, startpost, lastpost, photo, user).build();
+                list.add(temp);
+            } else {
+                //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+                photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new Exception("존재하지 않는 사진 입니다"));
+                user = userRepository.findById(1L).orElseThrow(() -> new Exception("존재 하지 않는 유저입니다"));
+                temp = MainTimelinePhotoDto.builder(time, startpost, lastpost, photo, user).build();
+                list.add(temp);
+            }
+        }
+        return list;
     }
 
     //상대 타임라인 조회시 with Paging
     @Override
-    public List<TimeLine> searchTimelineNotPublicWithPaging(Long uid, Pageable pageable) throws Exception {
-        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
-        Page<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(now, true, pageable);
+    public List<MainTimelinePhotoDto> searchTimelineNotPublicWithPaging(Long uid, Pageable pageable) throws Exception {
+        User user = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        Page<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(user, true, pageable);
         if (timeline.getContent().size() == 0) {
             throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
         }
-        return timeline.getContent();
+        Photo photo = null;
+        Post post = null;
+        MainTimelinePhotoDto temp = null;
+        if (timeline.getContent().size() == 0) {
+            throw new Exception("존재하지 않는 타임라인 페이징의 페이지 입니다");
+        }
+        //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
+        List<MainTimelinePhotoDto> list = new ArrayList<>();//넘겨줄 timeline dto생성
+        //타임라인을 얻어옴, =>
+        for (TimeLine time : timeline) {
+            Post startpost = postRepository.findTopByTimelineIdOrderByCreateTimeAsc(time);
+            Post lastpost = postRepository.findTopByTimelineIdOrderByCreateTimeDesc(time);
+            //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
+            if (startpost == null || lastpost == null) {//해당 되는 부분에는
+                photo = new Photo();
+                photo.setPhotoUrl("");
+                if (startpost == null) {
+                    startpost = new Post();
+                    startpost.setAddress2("");
+                }
+                if (lastpost == null) {
+                    lastpost = new Post();
+                    lastpost.setAddress2("");
+                }
+
+                temp = MainTimelinePhotoDto.builder(time, startpost, lastpost, photo, user).build();
+                list.add(temp);
+            } else {
+                //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+                photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new Exception("존재하지 않는 사진 입니다"));
+                temp = MainTimelinePhotoDto.builder(time, startpost, lastpost, photo, user).build();
+                list.add(temp);
+            }
+        }
+        return list;
     }
 
 

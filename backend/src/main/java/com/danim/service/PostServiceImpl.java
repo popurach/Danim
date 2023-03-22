@@ -9,10 +9,9 @@ import com.danim.entity.TimeLine;
 import com.danim.repository.NationRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
-//import com.danim.utils.VoiceUtils;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +26,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
+
 
     // 포스트 등록
     @Override
