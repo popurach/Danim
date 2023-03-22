@@ -1,5 +1,6 @@
 package com.danim.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -12,8 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Photo {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "photoId", nullable = false)
@@ -30,7 +29,8 @@ public class Photo {
     @ColumnDefault("0")
     private Boolean isLive = false;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name="post_id")
+    @JsonIgnore
     private Post postId;
 }

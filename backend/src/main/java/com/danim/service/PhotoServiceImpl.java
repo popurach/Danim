@@ -1,7 +1,5 @@
 package com.danim.service;
 
-//import com.amazonaws.services.s3.AmazonS3;
-
 import com.danim.conponent.AwsS3;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
@@ -19,14 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PhotoServiceImpl implements PhotoService {
     private final AwsS3 awsS3;
     private final PhotoRepository photoRepository;
-    private final PostRepository postRepository;
 
 
     @Override
-    public Photo createPhoto(MultipartFile imageFile, Post savedPost) throws Exception {
+    public Photo createPhoto(Double lat, Double lng, MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-        //String photoUrl = awsS3.upload(imageFile, "Post");
-        String photoUrl = "www.임시임시.com";
+        String photoUrl = awsS3.upload(imageFile,"Danim/Post");
 
         // image metadata에서 lat,lng 지역 정보 가져오기
 //        HashMap<String, Double> location = ImageUtils.extractLocationFromImage(imageFile);
@@ -38,28 +34,11 @@ public class PhotoServiceImpl implements PhotoService {
         Photo photo = Photo.builder()
                 .postId(savedPost)
                 .photoUrl(photoUrl)
-                .lat(23.23)
-                .lng(23.23)
+                .lat(lat)
+                .lng(lng)
                 .build();
         photoRepository.save(photo);
         log.info("Transaction complete");
         return photo;
-    }
-
-    ;
-
-    // 파일 s3 서버에 올리는 메서드
-//    private String uploadFileToS3(MultipartFile file, String key) throws IOException {
-//        String bucketName = "my-bucket-name"; // 버킷 생성 후 수정 필요
-//        s3Client.putObject(bucketName, key, file.getInputStream(), null);
-//        return s3Client.getUrl(bucketName, key).toString();
-//    }
-
-//    @Override
-//    public List<Photo> findByPostId(Long postId) throws Exception{
-//        List<Photo> photoList = photoRepository.findByPostId(postId);
-//        return photoList;
-//    }
-
-
+    };
 }

@@ -1,21 +1,37 @@
-//package com.danim.utils;
-//
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import javax.sound.sampled.AudioInputStream;
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.UnsupportedAudioFileException;
-//
-//import java.io.IOException;
-//import java.io.InputStream;
-//
-//
-//public class VoiceUtils {
-//    public static long extractVoiceLength(MultipartFile voiceFile) throws IOException, UnsupportedAudioFileException {
-//        InputStream voiceInputStream = voiceFile.getInputStream();
-//        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(voiceInputStream);
-//        long durationMillis = (long) (audioInputStream.getFrameLength() * 1000.0 / audioInputStream.getFormat().getFrameRate());
-//
-//        return durationMillis;
-//    }
-//}
+package com.danim.utils;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.*;
+
+@Slf4j
+public class VoiceUtils {
+    public static double getVoiceFileLength(MultipartFile voiceFile) throws Exception {
+
+        File file  = new File(voiceFile.getOriginalFilename());
+        voiceFile.transferTo(file);
+
+        AudioInputStream audioInputStream = null;
+        double durationInSeconds = 0.0;
+
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(file);
+            AudioFormat format = audioInputStream.getFormat();
+            long frames = audioInputStream.getFrameLength();
+            log.info("frames",frames);
+            durationInSeconds = (frames + 0.0) / format.getFrameRate();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (audioInputStream != null) {
+                audioInputStream.close();
+            }
+        }
+
+        return durationInSeconds;
+    }
+}

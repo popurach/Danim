@@ -5,6 +5,5 @@ import com.danim.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PhotoService {
-    Photo createPhoto(MultipartFile imageFile, Post savedPost) throws Exception;
-//    List<Photo> findByPostId(Long postId) throws Exception;
+    Photo createPhoto(Double lat, Double lng, MultipartFile imageFile, Post savedPost) throws Exception;
 }

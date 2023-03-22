@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
@@ -24,43 +25,38 @@ import org.springframework.data.repository.cdi.Eager;
 @Builder
 @ToString
 @DynamicInsert
-public class Post extends BaseTime {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+public class Post extends BaseTime{
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "post_id", nullable = false)
+	private Long postId;
+	
+	private String voiceUrl;
+	
+	private Double voiceLength;
+	
+	private String nationUrl;
+	
+	private String address1;
+	private String address2;
+	private String address3;
+	private String address4;
 
-    private String voiceUrl;
+	private String text;
 
-    private Long voiceLength;
+	// Post 테이블과 TimeLine 테이블 FK
+	@ManyToOne
+	@JoinColumn(name="timeline_id")
+	@ToString.Exclude
+	private TimeLine timelineId;
 
-    private String nationUrl;
+	// Post 테이블과 Nation 테이블 FK
+	@ManyToOne
+	@JoinColumn(name="nation_id")
+	@ToString.Exclude
+	private Nation nationId;
 
-    private String address1;
-
-    private String address2;
-
-    private String address3;
-
-    private String address4;
-
-    private String text;
-
-    // Post 테이블과 TimeLine 테이블 FK
-    @ManyToOne
-    @JoinColumn(name = "timeline_id")
-    @ToString.Exclude
-    private TimeLine timelineId;
-
-    // Post 테이블과 Nation 테이블 FK
-    @ManyToOne
-    @JoinColumn(name = "nation_id")
-    @ToString.Exclude
-    private Nation nationId;
-
-    @OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
-
-
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Builder.Default
+	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 }
