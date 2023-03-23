@@ -21,12 +21,12 @@ public class RestDocController {
     private final String FILE_PATH = "/BOOT-INF/classes/static/index.html";
     private final String FILE_PATH1 = "/static/docs/index.html";
 
-    
+
     @GetMapping("/1")
-    public ClassPathResource restDoc() {
+    public ClassPathResource restDoc(){
         ClassPathResource classPathResource = new ClassPathResource(FILE_PATH);
-        if (classPathResource.exists() == false) {
-            log.info("invaild filepath :{}", FILE_PATH);
+        if(classPathResource.exists()==false){
+            log.info("invaild filepath :{}",FILE_PATH);
             throw new IllegalArgumentException();
         }
         log.info("file path exists = {}", classPathResource.exists());
@@ -55,7 +55,7 @@ public class RestDocController {
 
     @GetMapping("/4")
     public String restDocd4(){
-
+        
         return htmlFileReader(FILE_PATH);
     }
 
