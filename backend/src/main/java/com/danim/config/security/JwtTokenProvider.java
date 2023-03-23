@@ -1,11 +1,9 @@
 package com.danim.config.security;
 
+import com.danim.dto.TokenRes;
 import com.danim.service.UserService;
+import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
@@ -31,29 +29,67 @@ public class JwtTokenProvider {
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
 
-    private final long tokenValidMillisecond = 1000L * 60 * 60;
+    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 90 * 1; // access token 1분 30초
+    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24; // refresh token 24일
 
     @PostConstruct
     protected void init() {
-//        log.info("[init] JwtTokenProvider 내 secretKey 초기화 시작");
+//        log.info("[init] JwtTokenProvider secretKey 초기화");
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
-//        log.info("[init] JwtTokenProvider 내 secretKey 초기화 완료");
     }
 
-    public String createtoken(String clientId, List<String> roles) {
+    public TokenRes createtoken(String nickname, String role) {
 //        log.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims().setSubject(clientId);
-        claims.put("roles", roles);
+        Claims claims = Jwts.claims().setSubject(nickname);
+        claims.put("roles", role);
+
         Date now = new Date();
 
-        String token = Jwts.builder()
+        String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
 //        log.info("[createToken] 토큰 생성 완료");
-        return token;
+        return TokenRes.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpireDate(ACCESS_TOKEN_VALID_MILLISECOND)
+                .build();
+    }
+
+    // 로그인 시 accessToken 만료 및 refreshToken 유효할 시
+    public TokenRes recreateToken(String nickname, String role, String refreshToken){
+        Claims claims = Jwts.claims().setSubject(nickname);
+        claims.put("role", role);
+
+        Date now = new Date();
+
+        // accessToken 재생성
+        String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        return TokenRes.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpireDate(ACCESS_TOKEN_VALID_MILLISECOND)
+                .build();
     }
 
     public Authentication getAuthenthication(String token) throws Exception {
@@ -65,12 +101,11 @@ public class JwtTokenProvider {
     public String getUsername(String token) {
 //        log.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
         String info = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-//        log.info("[getUsername] 토큰 기반 회원 구별 정보 추출 완료, info : {}", info);
         return info;
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH_TOKEN");
+        return request.getHeader("Bearer ");
     }
 
     public boolean validateToken(String token) {
@@ -78,10 +113,16 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch(Exception e) {
-//            log.info("[validateToken] 토큰 유효 체크 예외 발생");
-            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("잘못된 Jwt 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하지 않는 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 토큰입니다.");
         }
+        return false;
     }
 
 }

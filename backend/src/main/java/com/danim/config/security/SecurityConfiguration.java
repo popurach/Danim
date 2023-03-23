@@ -1,12 +1,18 @@
 package com.danim.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -17,15 +23,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    //  CORS 해결을 위해 추가
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
-//		httpSecurity.cors().configurationSource(request -> {
-//			CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-//			configuration.setAllowedMethods(List.of("OPTIONS", "GET", "POST", "PUT", "DELETE"));
-//            configuration.setAllowedHeaders(List.of("*"));
-//            configuration.setAllowedOrigins(List.of("*"));
-//		})//  CORS 해결을 위해 추가
+		httpSecurity.cors().configurationSource(request -> {
+			CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+			configuration.setAllowedMethods(List.of("OPTIONS", "GET", "POST", "PUT", "DELETE"));
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setAllowedOrigins(List.of("*"));
 
+            return configuration;
+		});
 
         // UI를 사용하는 것을 기본값으로 가진 시큐리티 설정을 비활성화합니다.
         httpSecurity.httpBasic().disable()
@@ -37,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login/**", "/api/auth/**").permitAll()
 //			.antMatchers(HttpMethod.GET, "/product/**").permitAll()
                 .antMatchers("**exception**").permitAll()
-                .anyRequest().hasRole("ADMIN")
+                .anyRequest().hasRole("USER")
                 .and()
 //			.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
 //			.and()
@@ -52,5 +60,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

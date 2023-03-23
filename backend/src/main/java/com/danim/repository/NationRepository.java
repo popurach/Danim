@@ -1,10 +1,10 @@
 package com.danim.repository;
 
-import com.danim.entity.User;
+import com.danim.entity.Nation;
+import com.danim.entity.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User getByNickname(String nickname);
+public interface NationRepository extends JpaRepository<Nation, Long> {
 }

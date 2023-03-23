@@ -15,11 +15,10 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -38,6 +37,8 @@ public class User implements UserDetails {
 
     private String profileImageUrl;
 
+    private String password;
+
     // 계정이 가지고 있는 권한 목록을 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,13 +49,13 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
     // 계정의 clientId 리턴
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.clientId;
+        return this.nickname;
     }
 //    // 계정이 만료됐는지 리턴. true는 만료되지 않았다는 의미
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -80,4 +81,16 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+//    @Builder
+//    public User(Long userUid, String nickname, String clientId) {
+//        this.userUid = userUid;
+//        this.nickname = nickname;
+//        this.clientId = clientId;
+//    }
+//    void TestUser(Long userUid, String nickname, String clientId){
+//        this.userUid = userUid;
+//        this.nickname = nickname;
+//        this.clientId = clientId;
+//    }
+
 }
