@@ -34,8 +34,6 @@ public class RestDocController {
     }
 
 
-
-
     @GetMapping("/2")
     public ClassPathResource restDoc1() {
         ClassPathResource classPathResource = new ClassPathResource(FILE_PATH1);
@@ -46,6 +44,7 @@ public class RestDocController {
         log.info("file path exists = {}", classPathResource.exists());
         return classPathResource;
     }
+
     @GetMapping("/3")
     public String restDocd3() throws IOException {
         Resource[] resources = ResourcePatternUtils
@@ -53,18 +52,20 @@ public class RestDocController {
                 .getResources("classpath/**");
         return "**/index.html";
     }
+
     @GetMapping("/4")
     public String restDocd4(){
         
         return htmlFileReader(FILE_PATH);
     }
+
     @GetMapping("/5")
-    public String restDocd5(){
+    public String restDocd5() {
 
         return htmlFileReader(FILE_PATH1);
     }
 
-    static String htmlFileReader(String pathStr){
+    static String htmlFileReader(String pathStr) {
 
         ClassPathResource resource = new ClassPathResource(pathStr);
         String resultcontent = "";
@@ -75,7 +76,7 @@ public class RestDocController {
             StringBuilder builder = new StringBuilder();
             while (true) {
                 String line = br.readLine();
-                if(line == null ) break;
+                if (line == null) break;
                 builder.append(line);
             }
 
