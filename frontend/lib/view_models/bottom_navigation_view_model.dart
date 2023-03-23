@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BottomNavigationBarViewModel extends ChangeNotifier {
+class BottomNavigationViewModel extends ChangeNotifier {
   int _currentIndex = 0;
 
-  int get currentIndex => _currentIndex;
+  BottomNavigationViewModel(this._currentIndex);
 
-  set currentIndex(int value) {
-    if (_currentIndex != value) {
-      _currentIndex = value;
-      notifyListeners();
-    }
-  }
+  int get currentIndex => _currentIndex;
 }
