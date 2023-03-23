@@ -34,8 +34,7 @@ class TimelineListItem extends StatelessWidget {
                           floatingActionButtonLocation:
                               FloatingActionButtonLocation.centerDocked,
                           bottomNavigationBar: ChangeNotifierProvider(
-                            create: (_) =>
-                                BottomNavigationBarViewModel(currentIndex: 0),
+                            create: (_) => BottomNavigationViewModel(0),
                             child: CustomBottomNavigationBar(),
                           ),
                         )));

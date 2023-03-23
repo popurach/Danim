@@ -11,7 +11,7 @@ import 'modify_profile.dart';
 class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<BottomNavigationBarViewModel>(
+    return Consumer<BottomNavigationViewModel>(
         builder: (context, viewModel, child) {
       return AnimatedBottomNavigationBar(
         icons: const [Icons.home, Icons.account_circle],
@@ -20,7 +20,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         gapLocation: GapLocation.center,
         notchSmoothness: NotchSmoothness.softEdge,
         onTap: (index) {
-          viewModel.currentIndex = index;
           if (index == 0) {
             Navigator.pushReplacement(
                 context,
@@ -31,8 +30,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           floatingActionButtonLocation:
                               FloatingActionButtonLocation.centerDocked,
                           bottomNavigationBar: ChangeNotifierProvider(
-                            create: (_) =>
-                                BottomNavigationBarViewModel(currentIndex: 0),
+                            create: (_) => BottomNavigationViewModel(0),
                             child: CustomBottomNavigationBar(),
                           ),
                         )));
@@ -49,8 +47,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           floatingActionButtonLocation:
                               FloatingActionButtonLocation.centerDocked,
                           bottomNavigationBar: ChangeNotifierProvider(
-                            create: (_) =>
-                                BottomNavigationBarViewModel(currentIndex: 1),
+                            create: (_) => BottomNavigationViewModel(1),
                             child: CustomBottomNavigationBar(),
                           ),
                         )));
