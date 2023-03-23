@@ -37,6 +37,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ),
                         )));
           } else {
+            // TODO 이곳에 내피드로 이동하는 로직이 들어가야함
             Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(

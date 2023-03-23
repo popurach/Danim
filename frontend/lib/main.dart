@@ -1,6 +1,6 @@
 import 'package:danim/view_models/app_bar_view_model.dart';
 import 'package:danim/views/app_bar.dart';
-import 'package:danim/views/home_feed.dart';
+import 'package:danim/views/main_frame.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,7 +29,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyCustomAppBar(viewModel: AppBarViewModel()),
-      body: HomeFeed(),
+      body: MainFrame(),
     );
   }
 }

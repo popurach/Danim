@@ -1,6 +1,5 @@
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/my_appbar_bottom_navigation_frame.dart';
 import 'package:danim/views/post_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

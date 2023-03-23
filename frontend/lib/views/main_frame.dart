@@ -9,7 +9,7 @@ import '../view_models/home_feed_view_model.dart';
 import 'camera_floating_action_button.dart';
 import 'modify_profile.dart';
 
-class HomeFeed extends StatelessWidget {
+class MainFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
