@@ -7,6 +7,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
 import 'package:multiple_images_picker/multiple_images_picker.dart';
@@ -14,9 +15,11 @@ import 'package:dio/dio.dart';
 
 import '../module/audio_player_view_model.dart';
 
+var logger = Logger();
+
 class RecordViewModel extends ChangeNotifier {
   late List<XFile> _imageList;
-  late Map _locationInfo;
+  late Map<dynamic, dynamic> _locationInfo;
   late String _recordedFileName;
   String _recordedFilePath = "";
   late AudioPlayerViewModel audioPlayerViewModel;
@@ -28,11 +31,11 @@ class RecordViewModel extends ChangeNotifier {
 
   Map get locationInfo => _locationInfo;
   set locationInfo (Map newInfo) {
-    _locationInfo = newInfo;
+    updateLocationInformation(newInfo);
   }
 
-  void updateLocationInformation(Map<String, dynamic> locationInfo) {
-    _locationInfo = locationInfo;
+  void updateLocationInformation(Map<dynamic, dynamic> loIn) {
+    _locationInfo = loIn;
     notifyListeners();
   }
 

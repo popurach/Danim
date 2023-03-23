@@ -102,7 +102,7 @@ class CameraView extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ChangeNotifierProvider<RecordViewModel>(
-                                                  create: (_) => viewModel.recordViewModel,
+                                                  create: (_) => RecordViewModel(viewModel.allFileList,viewModel.locationInformation!),
                                                     child: RecordView(),
                                               ),
                                             ),

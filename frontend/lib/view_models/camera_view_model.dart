@@ -23,7 +23,13 @@ class CameraViewModel extends ChangeNotifier {
   late String _imagePath;
   late RecordViewModel recordViewModel;
 
-  Map? _locationInformation = {};
+  Map<dynamic, dynamic> _locationInformation = {
+    "country":"",
+    "city":"",
+    "district":"",
+    "suburb":"",
+    "flagBytes": null
+  };
 
   List<XFile> _allFileList = [];
 
@@ -35,10 +41,10 @@ class CameraViewModel extends ChangeNotifier {
 
   String get imagePath => _imagePath;
 
-  Map? get locationInformation => _locationInformation;
+  Map get locationInformation => _locationInformation;
 
   CameraViewModel() {
-    recordViewModel = RecordViewModel(_allFileList,_locationInformation!);
+    recordViewModel = RecordViewModel(allFileList,locationInformation);
   }
 
   Future<void> initializeCamera() async {
@@ -50,53 +56,21 @@ class CameraViewModel extends ChangeNotifier {
     final cameras = await availableCameras();
     _cameras = cameras;
     if (_cameras.isNotEmpty) {
-      _controller = CameraController(_cameras.first, ResolutionPreset.high);
+      _controller = CameraController(_cameras.first, ResolutionPreset.high,);
       await _controller.initialize();
+      _controller.setFlashMode(FlashMode.off);
       notifyListeners();
     }
   }
 
   Future<void> takePhoto() async {
     XFile file = await _controller.takePicture();
-
-    if (allFileList.isEmpty) {
-      final currentPosition = await Geolocator.getCurrentPosition();
-      final curLong = currentPosition.longitude;
-      final curLat = currentPosition.latitude;
-      final url = 'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
-
-      Response response = await dio.get(url);
-      if (response.statusCode == 200) {
-        locationInformation?["country"] = response.data["results"][0]["country"];
-        locationInformation?["city"] = response.data["results"][0]["city"];
-        locationInformation?["district"] = response.data["results"][0]["district"];
-        locationInformation?["suburb"] = response.data["results"][0]["suburb"];
-        String countryCode = response.data["results"][0]["country_code"];
-        final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
-        Response<Uint8List> flagResponse = await dio.get(
-            flagUrl,
-            options: Options(responseType: ResponseType.bytes)
-        );
-        locationInformation?["flagBytes"] = flagResponse.data;
-        recordViewModel.locationInfo = locationInformation!;
-        notifyListeners();
-
-      }
-
-      // 현재 위치 불러오기
-
-      // 파일의 exif 데이터 불러와서 작성하기
-      // final exif = await Exif.fromPath(file.path);
-      // await exif.writeAttributes({
-      //   'GPSLatitude': currentPosition.latitude,
-      //   'GPSLatitudeRef': 'N',
-      //   'GPSLongitude': currentPosition.longitude,
-      //   'GPSLongitudeRef': 'W',
-      // });
+    if (allFileList.length < 9 ) {
+      allFileList.add(file);
 
       // 파일 저장할 위치 지정
       Directory externalDirectory =
-          Directory('/storage/emulated/0/Documents/photos');
+      Directory('/storage/emulated/0/Documents/photos');
       if (!await externalDirectory.exists()) {
         await externalDirectory.create(recursive: true);
       }
@@ -111,6 +85,38 @@ class CameraViewModel extends ChangeNotifier {
 
       // 파일에 이미지 저장
       await imageFile.writeAsBytes(imageBytes);
+
+      if (allFileList.length == 1) {
+        final currentPosition = await Geolocator.getCurrentPosition();
+        final curLong = currentPosition.longitude;
+        final curLat = currentPosition.latitude;
+        final url = 'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
+
+        Response response = await dio.get(url);
+        if (response.statusCode == 200) {
+          locationInformation["country"] = response.data["results"][0]["country"];
+          locationInformation["city"] = response.data["results"][0]["city"];
+          locationInformation["district"] = response.data["results"][0]["district"];
+          locationInformation["suburb"] = response.data["results"][0]["suburb"];
+          String countryCode = response.data["results"][0]["country_code"];
+          final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
+          Response<Uint8List> flagResponse = await dio.get(
+              flagUrl,
+              options: Options(responseType: ResponseType.bytes)
+          );
+          locationInformation["flagBytes"] = flagResponse.data;
+          recordViewModel.locationInfo = locationInformation;
+          notifyListeners();
+        }
+    }
+      // 파일의 exif 데이터 불러와서 작성하기
+      // final exif = await Exif.fromPath(file.path);
+      // await exif.writeAttributes({
+      //   'GPSLatitude': currentPosition.latitude,
+      //   'GPSLatitudeRef': 'N',
+      //   'GPSLongitude': currentPosition.longitude,
+      //   'GPSLongitudeRef': 'W',
+      // });
     }
     notifyListeners();
   }
