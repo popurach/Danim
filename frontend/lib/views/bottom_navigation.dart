@@ -15,7 +15,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         activeIndex: viewModel.currentIndex,
         gapLocation: GapLocation.center,
         notchSmoothness: NotchSmoothness.softEdge,
-        onTap: (index) => viewModel.currentIndex = index,
+        onTap: (index) {
+          viewModel.currentIndex = index;
+          if (index == 0) {
+            Navigator.pushNamed(context, '/timeline-list');
+          } else {
+            Navigator.pushNamed(context, '/modify-profile');
+          }
+        },
         activeColor: Colors.lightBlue,
       );
     });

@@ -1,4 +1,5 @@
 import 'package:danim/view_models/appbar_bottom_navigation_view_model.dart';
+import 'package:danim/view_models/bottom_navigation_view_model.dart';
 import 'package:danim/views/app_bar.dart';
 import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
@@ -26,12 +27,8 @@ class MyAppbarBottomNavigationFrame extends StatelessWidget {
             floatingActionButtonLocation: useBottomNavigation
                 ? FloatingActionButtonLocation.centerDocked
                 : null,
-            bottomNavigationBar: useBottomNavigation
-                ? ChangeNotifierProvider(
-                    create: (_) => viewModel.bottomNavigationViewModel,
-                    child: CustomBottomNavigationBar(),
-                  )
-                : null);
+            bottomNavigationBar:
+                useBottomNavigation ? CustomBottomNavigationBar() : null);
       },
     );
   }

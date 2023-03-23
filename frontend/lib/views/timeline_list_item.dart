@@ -18,18 +18,7 @@ class TimelineListItem extends StatelessWidget {
         height: cardHeight,
         child: GestureDetector(
           onTap: () {
-            Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      ChangeNotifierProvider(
-                    create: (_) => TimelineDetailViewModel(
-                      timeline.timelineId,
-                    ),
-                    child: TimelineDetail(),
-                  ),
-                  transitionDuration: Duration.zero,
-                ));
+            Navigator.pushNamed(context, '/detail/${timeline.timelineId}');
           },
           child: Card(
               shape: RoundedRectangleBorder(

@@ -9,8 +9,8 @@ import 'package:timeline_tile/timeline_tile.dart';
 class TimelineDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MyAppbarBottomNavigationFrame(body:
-        Consumer<TimelineDetailViewModel>(builder: (context, viewModel, child) {
+    return Consumer<TimelineDetailViewModel>(
+        builder: (context, viewModel, child) {
       return ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: 3, // Number of nations
@@ -48,7 +48,7 @@ class TimelineDetail extends StatelessWidget {
                   child: TimelineTile(
                     indicatorStyle: const IndicatorStyle(
                         width: 20,
-                        color: Colors.lightBlueAccent,
+                        color: Colors.lightBlue,
                         padding: EdgeInsets.only(left: 5)),
                     endChild: Container(
                       padding: const EdgeInsets.all(8),
@@ -83,6 +83,6 @@ class TimelineDetail extends StatelessWidget {
           );
         },
       );
-    }));
+    });
   }
 }
