@@ -17,15 +17,19 @@ public enum ErrorMessage {
     NOT_EXIST_USER("존재하지 않는 유저 입니다",HttpStatus.BAD_REQUEST),
     NOT_EXIST_POST("존재하지 않는 포스트입니다.",HttpStatus.BAD_REQUEST),
     NOT_EXIST_TIMELINE("존재하지 않는 타임라인입니다.",HttpStatus.BAD_REQUEST),
+
     NOT_EXIST_FAVORITE("유저가 해당 포스트에 좋아요를 누른 적이 없습니다.",HttpStatus.BAD_REQUEST),
     NOT_EXIST_USER_FAV_POST("유저가 좋아요를 누른 포스트가 없습니다.",HttpStatus.BAD_REQUEST),
-    NOT_EXIST_KEYWORD("해당 지역명 키워드를 포함한 포스트가 없습니다.",HttpStatus.BAD_REQUEST);
+    NOT_EXIST_KEYWORD("해당 지역명 키워드를 포함한 포스트가 없습니다.",HttpStatus.BAD_REQUEST),
+
+    NOT_EXIST_TIMELINE_PAGING("존재하지 않는 타임라인 페이징의 페이지 입니다",HttpStatus.BAD_REQUEST),
+    NOT_EXIST_PHOTO("존재하지 않는 사진 입니다", HttpStatus.BAD_REQUEST);
 
 
     private final String errMsg;
     private final HttpStatus httpStatus;
 
-    ErrorMessage( String errMsg, HttpStatus httpStatus) {
+    ErrorMessage(String errMsg, HttpStatus httpStatus) {
         //this.code = code;
         this.errMsg = errMsg;
         this.httpStatus = httpStatus;
