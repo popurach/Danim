@@ -8,6 +8,8 @@ import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.exception.BaseException;
+import com.danim.exception.ErrorMessage;
 import com.danim.repository.PhotoRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
@@ -51,7 +53,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
     //나의 타임라인 얻어옴 , 페이징 x
     public List<TimeLine> searchMyTimeline(Long uid) throws Exception {
-        User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
+        User now = userRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         List<TimeLine> timeline = timeLineRepository.findAllByUserUid(now).orElseThrow(() -> new Exception("타임라인 얻어오기 실패"));
         return timeline;
     }
