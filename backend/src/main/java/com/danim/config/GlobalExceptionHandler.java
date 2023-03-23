@@ -28,9 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<?> baseHandler(BaseException e) {
         Map<String, Object> result = new HashMap<>();
-        if (e.getErrorCode() != 0) {
-            result.put("정의 되지 않은 에러", e.getErrorMessage());
-        }
+        result.put("msg", e.getErrorMessage());
         return new ResponseEntity<Object>(result, e.getHttpStatus());
     }
 
@@ -38,24 +36,21 @@ public class GlobalExceptionHandler {
     @NoArgsConstructor
     @AllArgsConstructor
     static class Error {
-        private int code;
+
         private HttpStatus status;
-        private List<String> message;
+        private String message;
 
 
         static Error create(BaseException exception) {
-            return new Error(exception.getErrorCode(), exception.getHttpStatus(), exception.getErrorMessage());
+            return new Error(exception.getHttpStatus(), exception.getErrorMessage());
         }
 
-        public int getCode() {
-            return code;
-        }
 
         public HttpStatus getStatus() {
             return status;
         }
 
-        public List<String> getMessage() {
+        public String getMessage() {
             return message;
         }
 
