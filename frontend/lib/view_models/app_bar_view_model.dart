@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppBarViewModel with ChangeNotifier {
-  dynamic _userInfo;
+  String _profileImageUrl = 'https://picsum.photos/id/10/500/500.jpg';
 
-  dynamic get userInfo => _userInfo;
+  String get profileImageUrl => _profileImageUrl;
 
   bool get isLogin {
-    return _userInfo != null;
+    return _profileImageUrl != null;
   }
 
-  set userInfo(dynamic value) {
-    _userInfo = value;
+  set profileImageUrl(String value) {
+    _profileImageUrl = value;
     notifyListeners();
   }
 }
