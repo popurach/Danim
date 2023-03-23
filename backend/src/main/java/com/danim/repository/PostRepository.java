@@ -17,13 +17,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     //Optional<List<TimeLine>> findAllByUserUidOrderByCreateTimeDesc(User u);
 
-    List<Post> findByTimelineIdOrderByCreateTimeAsc(TimeLine timeline) throws Exception;
+    List<Post> findByTimelineIdOrderByCreateTimeAsc(TimeLine timeline) ;
 
-    Post findTopByTimelineIdOrderByCreateTimeAsc(TimeLine timeline) throws Exception;
+    Post findTopByTimelineIdOrderByCreateTimeAsc(TimeLine timeline) ;
 
-    List<Post> findAllByTimelineIdOrderByCreateTimeAsc(TimeLine timeLine) throws Exception;
+    List<Post> findAllByTimelineIdOrderByCreateTimeAsc(TimeLine timeLine) ;
 
-    Post findTopByTimelineIdOrderByCreateTimeDesc(TimeLine timeline) throws Exception;
+    Post findTopByTimelineIdOrderByCreateTimeDesc(TimeLine timeline) ;
 
 
 }
