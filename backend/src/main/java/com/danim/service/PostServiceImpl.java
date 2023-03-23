@@ -29,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
 
+
     // 포스트 등록
     @Override
     public Post createPost() throws Exception {
