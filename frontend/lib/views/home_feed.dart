@@ -1,8 +1,6 @@
 import 'package:danim/view_models/bottom_navigation_view_model.dart';
 import 'package:danim/view_models/modify_profile_view_model.dart';
-import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/bottom_navigation.dart';
-import 'package:danim/views/timeline_detail.dart';
 import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,22 +21,7 @@ class HomeFeed extends StatelessWidget {
             initialRoute: viewModel.timelineListPage,
             onGenerateRoute: (settings) {
               late Widget page;
-              if (settings.name!.startsWith(viewModel.timelineDetailPage)) {
-                final timelineId = int.parse(settings.name!.substring(8));
-                page = Scaffold(
-                  body: ChangeNotifierProvider(
-                      create: (_) => TimelineDetailViewModel(timelineId),
-                      child: TimelineDetail()),
-                  floatingActionButton: CameraFloatingActionButton(),
-                  floatingActionButtonLocation:
-                      FloatingActionButtonLocation.centerDocked,
-                  bottomNavigationBar: ChangeNotifierProvider(
-                    create: (_) =>
-                        BottomNavigationBarViewModel(currentIndex: 0),
-                    child: CustomBottomNavigationBar(),
-                  ),
-                );
-              } else if (settings.name == viewModel.modifyProfilePage) {
+              if (settings.name == viewModel.modifyProfilePage) {
                 page = Scaffold(
                   body: ChangeNotifierProvider(
                       create: (_) => ModifyProfileViewModel(),

@@ -1,8 +1,12 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/bottom_navigation_view_model.dart';
+import '../view_models/modify_profile_view_model.dart';
+import 'camera_floating_action_button.dart';
+import 'modify_profile.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   @override
@@ -18,9 +22,37 @@ class CustomBottomNavigationBar extends StatelessWidget {
         onTap: (index) {
           viewModel.currentIndex = index;
           if (index == 0) {
-            Navigator.pushNamed(context, '/timeline-list');
+            Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => Scaffold(
+                          body: const TimeLineList(),
+                          floatingActionButton: CameraFloatingActionButton(),
+                          floatingActionButtonLocation:
+                              FloatingActionButtonLocation.centerDocked,
+                          bottomNavigationBar: ChangeNotifierProvider(
+                            create: (_) =>
+                                BottomNavigationBarViewModel(currentIndex: 0),
+                            child: CustomBottomNavigationBar(),
+                          ),
+                        )));
           } else {
-            Navigator.pushNamed(context, '/modify-profile');
+            Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => Scaffold(
+                          body: ChangeNotifierProvider(
+                              create: (_) => ModifyProfileViewModel(),
+                              child: ModifyProfile()),
+                          floatingActionButton: CameraFloatingActionButton(),
+                          floatingActionButtonLocation:
+                              FloatingActionButtonLocation.centerDocked,
+                          bottomNavigationBar: ChangeNotifierProvider(
+                            create: (_) =>
+                                BottomNavigationBarViewModel(currentIndex: 1),
+                            child: CustomBottomNavigationBar(),
+                          ),
+                        )));
           }
         },
         activeColor: Colors.lightBlue,
