@@ -1,0 +1,13 @@
+package com.danim.dto;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class ChangeFavoriteStatusRes {
+    private boolean isFavorite;
+    private Long TotalFavorite;
+}

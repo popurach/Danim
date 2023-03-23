@@ -21,6 +21,7 @@ public class PhotoServiceImpl implements PhotoService {
     private final AwsS3 awsS3;
     private final PhotoRepository photoRepository;
 
+    // 각각의 imageFile을 Photo 객체로 저장 후 photo 객체들의 리스트를 반환 (이후, Post 속성 값 중 하나인 photoList에서 사용)
     @Override
     public List<Photo> createPhotoList(InsertPostReq insertPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception {
         List<Photo> photoList = new ArrayList<>();
@@ -35,11 +36,6 @@ public class PhotoServiceImpl implements PhotoService {
     private Photo savePhoto(InsertPostReq insertPostReq, MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
         String photoUrl = awsS3.upload(imageFile,"Danim/Post");
-
-        // image metadata에서 lat,lng 지역 정보 가져오기
-//        HashMap<String, Double> location = ImageUtils.extractLocationFromImage(imageFile);
-//        double lat = location.get("latitude");
-//        double lng = location.get("longitude");
 
         // photo 객체 생성
         log.info("Starting savePhoto transaction");
