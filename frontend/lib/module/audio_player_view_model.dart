@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
   // 파일 경로
@@ -46,50 +47,66 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 재생 시작
   Future<void> playRecordedFile() async {
-    await audioPlayer.play(DeviceFileSource(_audioFilePath!));
-    if (_audioFilePath == null) {
+    if (isPlaying == true || getAudioFilePath == null || getAudioFilePath!.isEmpty) {
       return;
+    } else {
+      await audioPlayer.play(DeviceFileSource(_audioFilePath!));
+      isPlaying = true;
+
+      notifyListeners();
+      // 재생이 완료 되었을 때 변수 바꿔주기
+      audioPlayer.onPlayerComplete.listen((event) {
+        isPlaying = false;
+        notifyListeners();
+      });
+
+      // 음성 파일에서의 현재 위치 갱신
+      audioPlayer.onPositionChanged.listen((curPos) {
+        audioPosition = curPos;
+        notifyListeners();
+      });
+
+      audioPlayer.onDurationChanged.listen((newDuration) {
+        duration = newDuration;
+        notifyListeners();
+      });
     }
-    isPlaying = true;
-    notifyListeners();
-
-    // 녹음이 완료 되었을 때 변수 바꿔주기
-    audioPlayer.onPlayerComplete.listen((event) {
-      isPlaying = false;
-      notifyListeners();
-    });
-
-    // 음성 파일에서의 현재 위치 갱신
-    audioPlayer.onPositionChanged.listen((curPos) {
-      audioPosition = curPos;
-      notifyListeners();
-    });
-
-    audioPlayer.onDurationChanged.listen((newDuration) {
-      duration = newDuration;
-      notifyListeners();
-    });
   }
 
   // 일시정지
   Future<void> pauseRecordedFile() async {
-    audioPlayer.pause();
-    isPlaying = false;
-    notifyListeners();
+    if (isPlaying == true) {
+        audioPlayer.pause();
+        isPlaying = false;
+        notifyListeners();
+      } else {
+      return;
+    }
+
   }
 
   // 계속 재생
   Future<void> resumeRecordedFile() async {
-    audioPlayer.resume();
-    isPlaying = true;
-    notifyListeners();
+    if (isPlaying == false) {
+      audioPlayer.resume();
+      isPlaying = true;
+      notifyListeners();
+    } else {
+      return;
+    }
+
   }
 
   // 완전 멈춤
   Future<void> stopRecordedFile() async {
-    audioPlayer.stop();
-    isPlaying = false;
-    notifyListeners();
+    if (isPlaying == true) {
+      audioPlayer.stop();
+      isPlaying = false;
+      notifyListeners();
+    } else {
+      return;
+    }
+
   }
 
   // 위치 갱신
