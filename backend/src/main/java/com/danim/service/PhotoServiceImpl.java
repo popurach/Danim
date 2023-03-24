@@ -24,12 +24,14 @@ public class PhotoServiceImpl implements PhotoService {
     // 각각의 imageFile을 Photo 객체로 저장 후 photo 객체들의 리스트를 반환 (이후, Post 속성 값 중 하나인 photoList에서 사용)
     @Override
     public List<Photo> createPhotoList(InsertPostReq insertPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception {
+        log.info("Starting createPhotoList transaction");
         List<Photo> photoList = new ArrayList<>();
 
         for (MultipartFile imageFile : imageFiles) {
             Photo savedPhoto = this.savePhoto(insertPostReq, imageFile, savedPost);
             photoList.add(savedPhoto);
         }
+        log.info("createPhotoList Transaction complete");
         return photoList;
     };
 
@@ -39,7 +41,6 @@ public class PhotoServiceImpl implements PhotoService {
 
         // photo 객체 생성
         log.info("Starting savePhoto transaction");
-        System.out.println(insertPostReq);
         Photo photo = Photo.builder()
                 .postId(savedPost)
                 .photoUrl(photoUrl)
@@ -47,7 +48,7 @@ public class PhotoServiceImpl implements PhotoService {
                 .lng(insertPostReq.getLng())
                 .build();
         photoRepository.save(photo);
-        log.info("Transaction complete");
+        log.info("savePhoto Transaction complete");
         return photo;
     };
 }

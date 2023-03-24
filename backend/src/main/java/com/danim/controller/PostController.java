@@ -24,15 +24,17 @@ public class PostController {
 
     //포스트 등록 (Address 1 - 국가 -> Address 4 - 동네)
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> insertPost(@RequestPart MultipartFile flagFile,
-                                        @RequestPart List<MultipartFile> imageFiles,
-                                        @RequestPart MultipartFile voiceFile,
-                                        @ModelAttribute InsertPostReq insertPostReq) throws Exception {
-        log.info("insertPost transaction starts");
+    public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
+                                    @RequestPart List<MultipartFile> imageFiles,
+                                    @RequestPart MultipartFile voiceFile,
+                                    @ModelAttribute InsertPostReq insertPostReq) throws Exception {
+        // 입력 값 잘 들어오는지 확인
+        System.out.println(insertPostReq);
+        log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoList(insertPostReq, imageFiles, savedPost);
         Post resavedPost = postService.insertPost(savedPost, photoList, flagFile, voiceFile, insertPostReq);
-        log.info("insertPost transaction ends");
+        log.info("addPost transaction ends");
         return ResponseEntity.ok(resavedPost);
     }
 

@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
         savedPost.setTimelineId(timeline);
         savedPost.setNationId(nation);
         Post resavedPost = postRepository.save(savedPost);
-        log.info("Transaction complete");
+        log.info("savePost Transaction complete");
         return resavedPost;
     }
 
