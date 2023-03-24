@@ -30,6 +30,8 @@ public class PostController {
                                     @ModelAttribute InsertPostReq insertPostReq) throws Exception {
         // 입력 값 잘 들어오는지 확인
         System.out.println(insertPostReq);
+        System.out.println(flagFile);
+
         log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoList(insertPostReq, imageFiles, savedPost);
