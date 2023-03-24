@@ -63,26 +63,30 @@ public class PostServiceImpl implements PostService {
         // timeline 객체 가져오기
         TimeLine timeline = timelineRepository.findById(insertPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
 
-        // nation entity 생성 및 속성 값 입력 후 저장
-        Nation nation = new Nation();
-        String flagUrl = awsS3.upload(flagFile, "Danim/Nation");
-        nation.setNationUrl(flagUrl);
-        nation.setName(insertPostReq.getAddress1());
-        Nation savedNation = nationRepository.save(nation);
+        // db에 저장된 국가인 경우 가져와서 사용, 새로운 국가인 경우 nation 저장 후 사용
+        String address1 = insertPostReq.getAddress1();
+        Nation nation = nationRepository.findByName(address1);
+        if (nation == null) {
+            nation = new Nation();
+            String flagUrl = awsS3.upload(flagFile, "Danim/Nation");
+            nation.setNationUrl(flagUrl);
+            nation.setName(address1);
+            nationRepository.save(nation);
+        }
 
         // imageURL, voiceURL db에 저장하기
         log.info("Starting savePost transaction");
         savedPost.setPhotoList(photoList);
         savedPost.setVoiceUrl(voiceUrl);
         savedPost.setVoiceLength(2.2);
-        savedPost.setNationUrl(flagUrl);
+        savedPost.setNationUrl(nation.getNationUrl());
         savedPost.setAddress1(insertPostReq.getAddress1());
         savedPost.setAddress2(insertPostReq.getAddress2());
         savedPost.setAddress3(insertPostReq.getAddress3());
         savedPost.setAddress4(insertPostReq.getAddress4());
 //        savedPost.setText(text);
         savedPost.setTimelineId(timeline);
-        savedPost.setNationId(savedNation);
+        savedPost.setNationId(nation);
         Post resavedPost = postRepository.save(savedPost);
         log.info("Transaction complete");
         return resavedPost;
