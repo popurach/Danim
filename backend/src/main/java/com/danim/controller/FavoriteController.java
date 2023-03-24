@@ -22,6 +22,7 @@ public class FavoriteController {
     @PostMapping(value = "")
     public ResponseEntity<?> changeFavoriteStatus(@RequestParam Long postId, @RequestParam Long userUid) throws Exception {
         ChangeFavoriteStatusRes res = new ChangeFavoriteStatusRes();
+        res.setPostId(postId);
         res.setFavorite(favoriteService.isFavorite(postId, userUid));
         res.setTotalFavorite(favoriteService.countFavorite(postId));
         return ResponseEntity.ok(res);

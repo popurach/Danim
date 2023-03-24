@@ -43,8 +43,8 @@ public class PostController {
             log.info("postId 값 없음");
             throw new IllegalArgumentException();
         }
-            postService.deletePostById(postId);
-            return ResponseEntity.ok().build();
+        postService.deletePostById(postId);
+        return ResponseEntity.ok().build();
     }
 
     //지역명 키워드로 포스트 조회
@@ -54,7 +54,7 @@ public class PostController {
             log.info("location 값 없음");
             throw new IllegalArgumentException();
         }
-            List<Post> postList = postService.findByLocation(location);
-            return ResponseEntity.ok(postList);
+        List<Post> postList = postService.findByLocation(location);
+        return ResponseEntity.ok(postList);
     }
 }

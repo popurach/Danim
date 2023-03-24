@@ -40,7 +40,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public ResourceBundleMessageSource translator(){
+    public ResourceBundleMessageSource translator() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setDefaultEncoding("utf-8");
 
