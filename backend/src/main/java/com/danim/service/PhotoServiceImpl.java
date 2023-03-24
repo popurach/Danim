@@ -39,6 +39,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         // photo 객체 생성
         log.info("Starting savePhoto transaction");
+        System.out.println(insertPostReq);
         Photo photo = Photo.builder()
                 .postId(savedPost)
                 .photoUrl(photoUrl)
