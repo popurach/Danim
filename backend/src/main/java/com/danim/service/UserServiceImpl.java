@@ -3,12 +3,11 @@ package com.danim.service;
 import com.danim.config.security.JwtTokenProvider;
 import com.danim.dto.UserLoginReq;
 import com.danim.dto.TokenRes;
+import com.danim.dto.UserInfoRes;
 import com.danim.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.danim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,6 +43,21 @@ public class UserServiceImpl implements UserService {
 //        log.info("[loadUserByUsername] loadUserByUsername 수행. username : {}", username);
         return userRepository.getByNickname(nickname);
     }
+
+    @Override
+    public List<UserInfoRes> searchUserByNickname(String search) {
+        List<UserInfoRes> result = userRepository.searchUserByNickname(search);
+        return result;
+    }
+
+    @Override
+    public UserInfoRes getNicknameAndProfileImage(Long userUid) {
+        UserInfoRes result = userRepository.getNicknameAndProfileImage(userUid);
+        return result;
+    }
+
+    // 카카오 로그인 연동
+
 
     // 네이버 로그인 연동
     @Override

@@ -1,42 +1,38 @@
 package com.danim.controller;
-import com.amazonaws.Response;
+import com.danim.dto.TokenRes;
 import com.danim.dto.UserLoginReq;
+import com.danim.dto.UserInfoRes;
 import com.danim.entity.User;
-import com.danim.service.UserServiceImpl;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danim.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 //import org.json.JSONObject;
 
 
-import java.util.HashMap;
+import java.util.List;
 
 
 @RequestMapping("/api")
 @RestController
 @Slf4j
 public class UserController {
-
-
     private final UserService userService;
 
     @Autowired
     public UserController(UserService userService){
         this.userService = userService;
     }
+
 //    @PostMapping("/user")
 //    public ResponseEntity<?> insertUser(@RequestBody User user){
 //        User response = userServiceImpl.insertUser(User.builder().userUid(user.getUserUid()).nickname(user.getNickname()).build());
@@ -55,46 +51,31 @@ public class UserController {
 //        }}, HttpStatus.OK);
 //    }
 
-    //  닉네임 중복 체크
-    @GetMapping("/auth/user/{nickname}")
-    public ResponseEntity<?> duplicateCheck(@PathVariable String nickname){
-        return null;
-    }
-
     // 유저 조회
     @GetMapping("/auth/user")
     public ResponseEntity<?> searchUserByNickname(@RequestParam("search") String search){
-        return null;
+        List<UserInfoRes> resultList = userService.searchUserByNickname(search);
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     // 닉네임, 프로필 이미지 조회
-//    @GetMapping("")
-//    public ResponseEntity<?> getNicknameAndProfileImage(){
-//
-//    }
-
-    // 소셜 로그인(구글)
-//    @PostMapping("/google")
-//    public ResponseEntity<?> signUpGoogle(){
-//
-//    }
+    @GetMapping("/auth/user/info")
+    public ResponseEntity<?> getNicknameAndProfileImage(Authentication authentication){
+        User auth = (User)authentication.getPrincipal();
+        UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 소셜 로그인(네이버)
     @PostMapping("/login/naver")
     public ResponseEntity<?> signUpNaver(@RequestBody UserLoginReq userLoginReq){
-        userService.signUpNaver(userLoginReq);
-        return new ResponseEntity<>(HttpStatus.OK);
+        TokenRes tokenRes = userService.signUpNaver(userLoginReq);
+        return new ResponseEntity<>(tokenRes, HttpStatus.OK);
     }
 
-    // 소셜 로그인(카카오)
-//    @PostMapping("/kakao")
-//    public ResponseEntity<?> signUpGoogle(){
-//
-//    }
-
     // 회원 정보 수정 (프로필 이미지 등)
-//    @PutMapping("/user")
-//    public ResponseEntity<?> updateUser(){
-//
-//    }
+    @PutMapping("/auth/user/info")
+    public ResponseEntity<?> updateUser(){
+        return null;
+    }
 }
