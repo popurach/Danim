@@ -74,6 +74,8 @@ dependencies:
   # 토근 저장을 위한 shared_preferences
   shared_preferences: ^2.0.20
 
+  flutter_dotenv: ^5.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -98,6 +100,7 @@ flutter:
 
   assets:
     - assets/images/kakao_login.png
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

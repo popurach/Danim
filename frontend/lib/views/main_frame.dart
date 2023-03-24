@@ -23,7 +23,7 @@ class MainFrame extends StatelessWidget {
                   builder: (_) {
                     return Scaffold(
                       // body: const TimelineList(),
-                      body: LoginPage(),
+                      body: TimelineList(),
                       floatingActionButton: CameraFloatingActionButton(),
                       floatingActionButtonLocation:
                           FloatingActionButtonLocation.centerDocked,
