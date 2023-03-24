@@ -29,7 +29,8 @@ public class MyPostDto {
     private String text;
 
 
-    private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
+    private List<Photo> photoList ; // photoId 리스트
+
 
 
     public static MyPostDtoBuilder builder(Post post) {
