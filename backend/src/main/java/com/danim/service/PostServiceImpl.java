@@ -52,6 +52,7 @@ public class PostServiceImpl implements PostService {
 //        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceUrl);
 
         // voiceFile -> text 변환
+        String text = "Not yet";
 //        final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
 //        NestRequestEntity requestEntity = new NestRequestEntity();
 //        final String result =
@@ -84,7 +85,7 @@ public class PostServiceImpl implements PostService {
         savedPost.setAddress2(insertPostReq.getAddress2());
         savedPost.setAddress3(insertPostReq.getAddress3());
         savedPost.setAddress4(insertPostReq.getAddress4());
-//        savedPost.setText(text);
+        savedPost.setText(text);
         savedPost.setTimelineId(timeline);
         savedPost.setNationId(nation);
         Post resavedPost = postRepository.save(savedPost);
