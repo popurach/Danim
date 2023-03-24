@@ -6,9 +6,9 @@ import com.danim.entity.TimeLine;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -113,9 +113,10 @@ public class TimelineController {
     //메인피드 최신순 타임라인 조회 with paging +
     //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
     //sort="id", direction = Sort.Direction.DESC
-    @GetMapping("/main/test")//테스트 해보기
-    public ResponseEntity<?> getTimelineLatestWithPaging(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC, size = 3) Pageable pageable) throws Exception {
+    @GetMapping("/main/test/{page}")//테스트 해보기
+    public ResponseEntity<?> getTimelineLatestWithPaging(@PathVariable Integer page) throws Exception {
         log.info("메인피드 최신순 타임라인 조회 시작");
+        Pageable pageable = PageRequest.of(page, 3, Sort.by("createTime").descending());
         List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
         log.info("메인피드 최신순 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
@@ -123,9 +124,10 @@ public class TimelineController {
 
 
     //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
-    @GetMapping("/mine/test")
-    public ResponseEntity<?> getMyTimelineListWithPaging(@PageableDefault(size = 3) Pageable pageable) throws Exception {
+    @GetMapping("/mine/test/{page}")
+    public ResponseEntity<?> getMyTimelineListWithPaging(@PathVariable Integer page) throws Exception {
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 시작");
+        Pageable pageable = PageRequest.of(page, 3);
         List<MainTimelinePhotoDto> timelinelist = timeLineService.searchMyTimelineWithPaging(1L, pageable);
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
@@ -133,8 +135,9 @@ public class TimelineController {
 
 
     //다른 유저의 피드에서 타임라인 조회 with Paging => 테스트 해보기
-    @GetMapping("/other/text/{uid}")
-    public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PageableDefault(size = 3) Pageable pageable) throws Exception {
+    @GetMapping("/other/text/{uid}/{page}")
+    public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PathVariable Integer page) throws Exception {
+        Pageable pageable = PageRequest.of(page, 3);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 시작");
         List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineNotPublicWithPaging(uid, pageable);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 종료");
