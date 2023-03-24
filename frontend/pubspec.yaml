@@ -71,6 +71,9 @@ dependencies:
   kakao_flutter_sdk: ^1.4.1 # 전체 추가
   kakao_flutter_sdk_user: ^1.4.1 # 카카오 로그인
 
+  # 토근 저장을 위한 shared_preferences
+  shared_preferences: ^2.0.20
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

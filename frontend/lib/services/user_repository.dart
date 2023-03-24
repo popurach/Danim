@@ -1,14 +1,16 @@
 import 'package:danim/models/Timeline.dart';
 import 'package:dio/dio.dart';
 
+import '../models/dto/Token.dart';
+
 class UserRepository {
   // 싱글턴 패턴
+  UserRepository._internal();
   static final UserRepository _instance = UserRepository._internal();
   factory UserRepository() => _instance;
-  UserRepository._internal();
-  // json파싱이나. multipart파일 전송을 원활히 하기 위해 Dio 라이브러리 사용
-  // baseurl 설정
-  final _dio = Dio(BaseOptions(baseUrl: 'https://Danim.com/'));
+
+  final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000'));
+
   // 메인화면의 타임리스트를 가져오는 함수 Future은 js의 Promise라고 보시면 됩니다.
   Future<List<Timeline>> getMainTimeline() async {
     try {
@@ -25,6 +27,27 @@ class UserRepository {
       return Timeline.fromJson(response.data);
     } catch (error) {
       throw Exception('Fail to get timeline id $id : $error');
+    }
+  }
+
+  Future<Token> kakaoLogin(Token token) async {
+    try {
+      Response response =
+          await _dio.post('/api/login/kakao', data: token.toJson());
+      return Token.fromJson(response.data);
+    } catch (error) {
+      throw Exception('Fail to login: $error');
+    }
+  }
+
+  Future<String> getUserProfileImageUrl(Token token) async {
+    try {
+      Response response = await _dio.get('api/auth/user/info',
+          options:
+              Options(headers: {'accessToken': 'Bearer ${token.accessToken}'}));
+      return response.data.imageUrl;
+    } catch (error) {
+      throw Exception('Fail to login: $error');
     }
   }
 }

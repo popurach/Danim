@@ -1,5 +1,6 @@
 import 'package:danim/view_models/bottom_navigation_view_model.dart';
 import 'package:danim/views/bottom_navigation.dart';
+import 'package:danim/views/login_page.dart';
 import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,8 @@ class MainFrame extends StatelessWidget {
               return MaterialPageRoute(
                   builder: (_) {
                     return Scaffold(
-                      body: const TimelineList(),
+                      // body: const TimelineList(),
+                      body: LoginPage(),
                       floatingActionButton: CameraFloatingActionButton(),
                       floatingActionButtonLocation:
                           FloatingActionButtonLocation.centerDocked,
