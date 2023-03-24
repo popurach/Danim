@@ -25,7 +25,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 context,
                 PageRouteBuilder(
                     pageBuilder: (_, __, ___) => Scaffold(
-                          body: const TimeLineList(),
+                          body: const TimelineList(),
                           floatingActionButton: CameraFloatingActionButton(),
                           floatingActionButtonLocation:
                               FloatingActionButtonLocation.centerDocked,

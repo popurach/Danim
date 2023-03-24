@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppBarViewModel with ChangeNotifier {
+class CustomAppBarViewModel with ChangeNotifier {
   String _profileImageUrl = 'https://picsum.photos/id/10/500/500.jpg';
 
   String get profileImageUrl => _profileImageUrl;

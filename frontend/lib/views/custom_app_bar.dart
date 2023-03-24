@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:danim/view_models/app_bar_view_model.dart';
+import 'package:danim/view_models/custom_app_bar_view_model.dart';
 import 'package:flutter/material.dart';
 
-class MyCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final AppBarViewModel viewModel;
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final CustomAppBarViewModel viewModel;
 
-  MyCustomAppBar({required this.viewModel});
+  CustomAppBar({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {

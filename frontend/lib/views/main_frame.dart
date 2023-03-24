@@ -21,7 +21,7 @@ class MainFrame extends StatelessWidget {
               return MaterialPageRoute(
                   builder: (_) {
                     return Scaffold(
-                      body: const TimeLineList(),
+                      body: const TimelineList(),
                       floatingActionButton: CameraFloatingActionButton(),
                       floatingActionButtonLocation:
                           FloatingActionButtonLocation.centerDocked,

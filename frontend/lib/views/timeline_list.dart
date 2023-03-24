@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../view_models/timeline_list_view_model.dart';
 
-class TimeLineList extends StatelessWidget {
-  const TimeLineList({super.key});
+class TimelineList extends StatelessWidget {
+  const TimelineList({super.key});
 
   @override
   Widget build(BuildContext context) {
