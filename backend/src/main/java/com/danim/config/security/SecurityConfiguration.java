@@ -58,8 +58,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // webSecurity는 HttpSecurity 앞단에 적용, 스프링 시큐리티의 영향권 밖에 있음. 즉, 인증과 인가가 적용되지 않는 리소스 접근에 대해서만 사용.
     @Override
     public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception");
+        webSecurity.ignoring().antMatchers("/v3/api-docs/**", "/swagger-resources/**",
+                "/swagger-ui/**", "/webjars/**", "/swagger/**", "/sign-api/exception");
     }
 
     @Bean

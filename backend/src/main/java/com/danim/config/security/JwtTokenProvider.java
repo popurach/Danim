@@ -38,9 +38,9 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenRes createtoken(String nickname, String role) {
+    public TokenRes createtoken(String clientId, String role) {
 //        log.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims().setSubject(nickname);
+        Claims claims = Jwts.claims().setSubject(clientId);
         claims.put("roles", role);
 
         Date now = new Date();
@@ -69,8 +69,8 @@ public class JwtTokenProvider {
     }
 
     // 로그인 시 accessToken 만료 및 refreshToken 유효할 시
-    public TokenRes recreateToken(String nickname, String role, String refreshToken){
-        Claims claims = Jwts.claims().setSubject(nickname);
+    public TokenRes recreateToken(String clientId, String role, String refreshToken){
+        Claims claims = Jwts.claims().setSubject(clientId);
         claims.put("role", role);
 
         Date now = new Date();

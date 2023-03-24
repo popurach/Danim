@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserInfoRes {
+    private Long userUid;
     private String nickname;
     private String profileImageUrl;
 }

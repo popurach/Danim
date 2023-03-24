@@ -13,9 +13,11 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User getByNickname(String nickname);
 
-    @Query(value = "select u.nickname, u.profileImageUrl from User u where u.userUid = :userUid")
+    User getByClientId(String clientId);
+
+    @Query(value = "select u.userUid, u.nickname, u.profileImageUrl from User u where u.userUid = :userUid")
     UserInfoRes getNicknameAndProfileImage(@Param("userUid") Long userUid);
 
-    @Query(value = "select u.nickname, u.profileImageUrl from User u where u.nickname like %:search% order by u.nickname")
+    @Query(value = "select u.userUid, u.nickname, u.profileImageUrl from User u where u.nickname like %:search% order by u.nickname")
     List<UserInfoRes> searchUserByNickname(@Param("search") String search);
 }

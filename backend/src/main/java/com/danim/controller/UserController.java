@@ -3,6 +3,7 @@ import com.danim.dto.TokenRes;
 import com.danim.dto.UserLoginReq;
 import com.danim.dto.UserInfoRes;
 import com.danim.entity.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,6 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.*;
 //import org.json.JSONObject;
-
-
 import java.util.List;
 
 
@@ -32,24 +31,6 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
-
-//    @PostMapping("/user")
-//    public ResponseEntity<?> insertUser(@RequestBody User user){
-//        User response = userServiceImpl.insertUser(User.builder().userUid(user.getUserUid()).nickname(user.getNickname()).build());
-//        log.info("insertUser : ",response);
-//        return ResponseEntity.ok(response);
-//    }
-    //메인피드 최신순 타임라인 조회
-//    @PostMapping("")
-//    public ResponseEntity<?> makenewuser() throws Exception {
-//
-//        service.makeUser();
-//
-//        return new ResponseEntity<Object>(new HashMap<String, Object>() {{
-//            put("result", true);
-//            put("msg", "User 가입성공");
-//        }}, HttpStatus.OK);
-//    }
 
     // 유저 조회
     @GetMapping("/auth/user")
@@ -66,10 +47,10 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 소셜 로그인(네이버)
-    @PostMapping("/login/naver")
-    public ResponseEntity<?> signUpNaver(@RequestBody UserLoginReq userLoginReq){
-        TokenRes tokenRes = userService.signUpNaver(userLoginReq);
+    // 소셜 로그인(카카오)
+    @PostMapping("/login/kakao")
+    public ResponseEntity<?> signUpKakao(@RequestBody UserLoginReq userLoginReq) throws JsonProcessingException {
+        TokenRes tokenRes = userService.signUpKakao(userLoginReq);
         return new ResponseEntity<>(tokenRes, HttpStatus.OK);
     }
 

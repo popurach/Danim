@@ -24,7 +24,6 @@ public class User implements UserDetails {
     @Column
     private Long userUid;
 
-    @Column(unique = true)
     private String nickname;
 
     @Column(unique = true, nullable = false)
