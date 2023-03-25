@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             configuration.setAllowedOrigins(List.of("*"));
 
             return configuration;
-		});
+		}); //  CORS 해결을 위해 추가
 
         // UI를 사용하는 것을 기본값으로 가진 시큐리티 설정을 비활성화합니다.
         httpSecurity.httpBasic().disable()
@@ -43,16 +43,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() //request에 대한 사용 권한을 체크
                 .antMatchers("/api/login/**", "/api/auth/**").permitAll()
-//			.antMatchers(HttpMethod.GET, "/product/**").permitAll()
-                .antMatchers("**exception**").permitAll()
+                .antMatchers("/exception/**").permitAll()
                 .anyRequest().hasRole("USER")
                 .and()
 //			.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
 //			.and()
 //			.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 //			.and()
-                //UsernamePasswordAuthenticationFilter 앞에 JwtAuthenticationFilter를 추가하겠다는 의미
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        //UsernamePasswordAuthenticationFilter 앞에 JwtAuthenticationFilter를 추가하겠다는 의미
     }
 
     // webSecurity는 HttpSecurity 앞단에 적용, 스프링 시큐리티의 영향권 밖에 있음. 즉, 인증과 인가가 적용되지 않는 리소스 접근에 대해서만 사용.

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
-    private final UserService userService;
+    private final CustomUserService userService;
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
@@ -34,17 +34,17 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-//        log.info("[init] JwtTokenProvider secretKey 초기화");
+        log.info("[init] JwtTokenProvider secretKey 초기화");
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public TokenRes createtoken(String clientId, String role) {
-//        log.info("[createToken] 토큰 생성 시작");
+        log.info("[createToken] 토큰 생성 시작");
         Claims claims = Jwts.claims().setSubject(clientId);
         claims.put("roles", role);
 
         Date now = new Date();
-
+        System.out.println("오늘 날짜 !!! : " + now);
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -59,9 +59,12 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-//        log.info("[createToken] 토큰 생성 완료");
+        System.out.println("accessToken : " + accessToken);
+        System.out.println("refreshToken : " + refreshToken);
+        log.info("[createToken] 토큰 생성 완료");
+
         return TokenRes.builder()
-                .grantType("Bearer")
+                .grantType("Bearer ")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpireDate(ACCESS_TOKEN_VALID_MILLISECOND)
@@ -93,23 +96,22 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthenthication(String token) throws Exception {
-//        log.info("[getAuthentication] 토큰 인증 정보 조회 시작");
+        log.info("[getAuthentication] 토큰 인증 정보 조회 시작");
         UserDetails userDetails = userService.loadUserByUsername(this.getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String getUsername(String token) {
-//        log.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
-        String info = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-        return info;
+        log.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Bearer ");
+        return request.getHeader("Bearer");
     }
 
     public boolean validateToken(String token) {
-//        log.info("[validateToken] 토큰 유효 체크 시작");
+        log.info("[validateToken] 토큰 유효 체크 시작");
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());

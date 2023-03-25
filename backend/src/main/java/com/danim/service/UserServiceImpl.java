@@ -28,9 +28,10 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
-    public JwtTokenProvider jwtTOkenProvider;
-    public PasswordEncoder passwordEncoder;
+    public final JwtTokenProvider jwtTokenProvider;
+    public final PasswordEncoder passwordEncoder;
 
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, @Lazy JwtTokenProvider jwtTokenProvider, @Lazy PasswordEncoder passwordEncoder){
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
         String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
         String nickname = json.get("kakao_account").get("profile").get("profile_image_url").asText();
 
-        // 카카오에서 받아 온 데이터로 이미 등록된 유저인지 확인
+        // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         User user;
 
         if(userRepository.getByClientId(clientId) != null){
@@ -79,18 +80,19 @@ public class UserServiceImpl implements UserService {
             if(!passwordEncoder.matches("다님", user.getPassword())){
                 throw new RuntimeException();
             }
-            return jwtTOkenProvider.recreateToken(user.getClientId(), "USER", user.getRefreshToken());
+            return jwtTokenProvider.recreateToken(user.getClientId(), "USER", user.getRefreshToken());
         }
 
         // 미등록 사용자
-        TokenRes tokenRes = jwtTOkenProvider.createtoken(clientId, "USER");
-
+        System.out.println("토큰 provider 실행 !!!");
+        TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
+        System.out.println("토큰 생성 !!!!");
         user = User.builder()
                 .nickname(nickname) // 'nickname' 값을 nickname에 저장
                 .clientId(clientId) // 'id' 값을 clientId에 저장
                 .role("USER")
                 .refreshToken(tokenRes.getRefreshToken())
-                .profileImageUrl("")
+                .profileImageUrl(profileImageUrl)
                 .password(passwordEncoder.encode("다님"))
                 .build();
         User savedUser = userRepository.save(user);
