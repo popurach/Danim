@@ -49,7 +49,7 @@ public class UserController {
 
     // 소셜 로그인(카카오)
     @PostMapping("/login/kakao")
-    public ResponseEntity<?> signUpKakao(@RequestBody UserLoginReq userLoginReq) throws JsonProcessingException {
+    public ResponseEntity<?> signUpKakao(@RequestBody UserLoginReq userLoginReq) throws Exception {
         System.out.println("컨트롤러 진입 " + userLoginReq.getAccessToken() + userLoginReq.getRefreshToken());
         TokenRes tokenRes = userService.signUpKakao(userLoginReq);
         return new ResponseEntity<>(tokenRes, HttpStatus.OK);
