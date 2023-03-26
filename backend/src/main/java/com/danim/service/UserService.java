@@ -9,8 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 
 public interface UserService {
-    User loadUserByUsername(String clientId) throws Exception;
-
     // 유저 조회
     List<UserInfoRes> searchUserByNickname(String search);
 
