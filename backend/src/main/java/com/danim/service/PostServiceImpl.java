@@ -10,6 +10,7 @@ import com.danim.entity.TimeLine;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
 import com.danim.repository.NationRepository;
+import com.danim.repository.PhotoRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +32,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final AwsS3 awsS3;
     private final PostRepository postRepository;
+    private final PhotoRepository photoRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
 
@@ -94,10 +96,11 @@ public class PostServiceImpl implements PostService {
         return resavedPost;
     }
 
-    // 포스트 삭제
+    // 포스트 삭제 및 해당 포스트의 삭제 사진
     @Override
     public void deletePostById(Long postId) throws Exception {
         postRepository.deleteById(postId);
+        photoRepository.deleteByPostId(postId);
     }
 
     // 지역명 키워드로 포스트 조회

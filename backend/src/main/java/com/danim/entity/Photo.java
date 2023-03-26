@@ -29,7 +29,7 @@ public class Photo {
     @ColumnDefault("0")
     private Boolean isLive = false;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name="post_id")
     @JsonIgnore
     private Post postId;
