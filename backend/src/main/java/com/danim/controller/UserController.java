@@ -43,19 +43,22 @@ public class UserController {
 
     // 닉네임, 프로필 이미지 조회
     @GetMapping("/auth/user/info")
-    public ResponseEntity<?> getNicknameAndProfileImage(Authentication authentication){
+    public ResponseEntity<?> getNicknameAndProfileImage(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("SecurityContextHolder 값 이용");
-        System.out.println(auth);
+
         System.out.println("auth.getPrincipal : " + auth.getPrincipal());
-        System.out.println("auth.getDetails : " + auth.getDetails());
-        System.out.println("auth.getClass : " + auth.getClass());
-        System.out.println("auth.getCredentials : " + auth.getCredentials());
-        System.out.println("auth.getName : " + auth.getName());
-//        System.out.println(auth.getUserUid() + " 닉네임 : " + auth.getNickname() + " 프로필 이미지 : " + auth.getProfileImageUrl());
-//        UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-        return null;
+
+        if(auth != null && auth.getPrincipal() != null){
+            User user = (User)auth.getPrincipal();
+            UserInfoRes result = UserInfoRes.builder()
+                    .userUid(user.getUserUid())
+                    .nickname(user.getNickname())
+                    .profileImageUrl(user.getProfileImageUrl())
+                    .build();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 소셜 로그인(카카오)
@@ -69,6 +72,10 @@ public class UserController {
     // 회원 정보 수정 (프로필 이미지 등)
     @PutMapping("/auth/user/info")
     public ResponseEntity<?> updateUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null && auth.getPrincipal() != null) {
+            User user = (User) auth.getPrincipal();
+        }
         return null;
     }
 }
