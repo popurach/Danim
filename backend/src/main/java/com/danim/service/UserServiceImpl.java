@@ -39,11 +39,6 @@ public class UserServiceImpl implements UserService {
 //        this.jwtTOkenProvider = jwtTokenProvider;
 //        this.passwordEncoder = passwordEncoder;
 //    }
-    @Override
-    public User loadUserByUsername(String clientId) throws Exception {
-//        log.info("[loadUserByUsername] loadUserByUsername 수행. username : {}", username);
-        return userRepository.getByClientId(clientId);
-    }
 
     @Override
     public List<UserInfoRes> searchUserByNickname(String search) {
@@ -70,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
         String clientId = json.get("id").asText();
         String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
-        String nickname = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         User user;

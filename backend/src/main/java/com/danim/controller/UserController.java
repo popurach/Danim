@@ -43,6 +43,8 @@ public class UserController {
     @GetMapping("/auth/user/info")
     public ResponseEntity<?> getNicknameAndProfileImage(Authentication authentication){
         User auth = (User)authentication.getPrincipal();
+        log.info("SecurityContextHolder 값 이용");
+        System.out.println(auth.getUserUid() + " 닉네임 : " + auth.getNickname() + " 프로필 이미지 : " + auth.getProfileImageUrl());
         UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
