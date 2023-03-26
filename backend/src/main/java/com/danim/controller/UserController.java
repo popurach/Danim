@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ public class UserController {
     // 유저 조회
     @GetMapping("/auth/user")
     public ResponseEntity<?> searchUserByNickname(@RequestParam("search") String search){
+        log.info("search 값 : " + search);
         List<UserInfoRes> resultList = userService.searchUserByNickname(search);
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
@@ -42,11 +44,17 @@ public class UserController {
     // 닉네임, 프로필 이미지 조회
     @GetMapping("/auth/user/info")
     public ResponseEntity<?> getNicknameAndProfileImage(Authentication authentication){
-        User auth = (User)authentication.getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("SecurityContextHolder 값 이용");
-        System.out.println(auth.getUserUid() + " 닉네임 : " + auth.getNickname() + " 프로필 이미지 : " + auth.getProfileImageUrl());
-        UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        System.out.println(auth);
+        System.out.println(auth.getPrincipal());
+        System.out.println(auth.getDetails());
+        System.out.println(auth.getClass());
+        System.out.println(auth.getCredentials());
+//        System.out.println(auth.getUserUid() + " 닉네임 : " + auth.getNickname() + " 프로필 이미지 : " + auth.getProfileImageUrl());
+//        UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+        return null;
     }
 
     // 소셜 로그인(카카오)
