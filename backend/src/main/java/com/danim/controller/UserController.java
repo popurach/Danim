@@ -47,10 +47,11 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("SecurityContextHolder 값 이용");
         System.out.println(auth);
-        System.out.println(auth.getPrincipal());
-        System.out.println(auth.getDetails());
-        System.out.println(auth.getClass());
-        System.out.println(auth.getCredentials());
+        System.out.println("auth.getPrincipal : " + auth.getPrincipal());
+        System.out.println("auth.getDetails : " + auth.getDetails());
+        System.out.println("auth.getClass : " + auth.getClass());
+        System.out.println("auth.getCredentials : " + auth.getCredentials());
+        System.out.println("auth.getName : " + auth.getName());
 //        System.out.println(auth.getUserUid() + " 닉네임 : " + auth.getNickname() + " 프로필 이미지 : " + auth.getProfileImageUrl());
 //        UserInfoRes result = userService.getNicknameAndProfileImage(auth.getUserUid());
 //        return new ResponseEntity<>(result, HttpStatus.OK);

@@ -64,7 +64,7 @@ public class JwtTokenProvider {
         log.info("[createToken] 토큰 생성 완료");
 
         return TokenRes.builder()
-                .grantType("Bearer ")
+                .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpireDate(ACCESS_TOKEN_VALID_MILLISECOND)
@@ -107,7 +107,12 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Bearer");
+        String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public boolean validateToken(String token) {
