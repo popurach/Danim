@@ -1,5 +1,9 @@
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/custom_app_bar_view_model.dart';
+import 'package:danim/views/bottom_navigation.dart';
+import 'package:danim/views/camera_floating_action_button.dart';
 import 'package:danim/views/custom_app_bar.dart';
+import 'package:danim/views/login_page.dart';
 import 'package:danim/views/main_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,9 +24,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Danim',
       theme: ThemeData(
-        primaryColor: Colors.lightBlueAccent,
+        primarySwatch: Colors.lightBlue,
       ),
-      home: MyHomePage(profileImageUrl: ''),
+      home: LoginPage(),
     );
   }
 }
@@ -35,8 +39,13 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(viewModel: CustomAppBarViewModel(profileImageUrl)),
+      appBar: CustomAppBar(
+        viewModel: AppViewModel(profileImageUrl),
+      ),
       body: MainFrame(),
+      floatingActionButton: const CameraFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

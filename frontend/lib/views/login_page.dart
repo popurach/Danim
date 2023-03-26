@@ -10,17 +10,17 @@ class LoginPage extends StatelessWidget {
       body: ChangeNotifierProvider(
           create: (_) => LoginViewModel(),
           child: Consumer<LoginViewModel>(
-            builder: (context, viewModel, child) {
+            builder: (ctx, viewModel, child) {
               return SafeArea(
                 minimum: const EdgeInsets.symmetric(horizontal: 32),
                 child: Center(
-                    // width: MediaQuery.of(context).size.width,
-                    child: InkWell(
-                  onTap: () {
-                    viewModel.loginButtonPressed(context);
-                  },
-                  child: Image.asset('assets/images/kakao_login.png'),
-                )),
+                  child: InkWell(
+                    onTap: () {
+                      viewModel.loginButtonPressed(context);
+                    },
+                    child: Image.asset('assets/images/kakao_login.png'),
+                  ),
+                ),
               );
             },
           )),
