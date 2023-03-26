@@ -1,7 +1,7 @@
 package com.danim.service;
 
 import com.danim.conponent.AwsS3;
-//import com.danim.conponent.ClovaSpeechClient;
+import com.danim.conponent.ClovaSpeechClient;
 import com.danim.dto.InsertPostReq;
 import com.danim.entity.Nation;
 import com.danim.entity.Photo;
@@ -12,13 +12,16 @@ import com.danim.exception.ErrorMessage;
 import com.danim.repository.NationRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
-//import com.danim.utils.VoiceUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.File;
 import java.util.List;
 
 
@@ -48,18 +51,16 @@ public class PostServiceImpl implements PostService {
         String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
 
         // voiceFile에서 voiceLength 가져오기
-        // Parameter 1 of constructor in com.danim.service.PostServiceImpl required a bean of type 'com.danim.utils.VoiceUtils' that could not be found
-//        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceUrl);
+//        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceFile);
 
         // voiceFile -> text 변환
-        String text = "Not yet";
-//        final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
-//        NestRequestEntity requestEntity = new NestRequestEntity();
-//        final String result =
-//                clovaSpeechClient.upload(new File("/data/sample.mp4"), requestEntity);
-//        //final String result = clovaSpeechClient.url("file URL", requestEntity);
-//        //final String result = clovaSpeechClient.objectStorage("Object Storage key", requestEntity);
-//        System.out.println(result);
+        final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
+        ClovaSpeechClient.NestRequestEntity requestEntity = new ClovaSpeechClient.NestRequestEntity();
+        final String result = clovaSpeechClient.url(voiceUrl, requestEntity);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(result);
+        String text = rootNode.get("text").asText();
 
         // timeline 객체 가져오기
         TimeLine timeline = timelineRepository.findById(insertPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));

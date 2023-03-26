@@ -56,7 +56,7 @@ public class Post extends BaseTime{
 	@ToString.Exclude
 	private Nation nationId;
 
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "postId", orphanRemoval = true, fetch = FetchType.EAGER)
 	@Builder.Default
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 }
