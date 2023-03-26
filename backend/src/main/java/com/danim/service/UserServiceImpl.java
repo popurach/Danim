@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,33 +43,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserInfoRes> searchUserByNickname(String search) {
-        List<UserInfoRes> result = userRepository.searchUserByNickname(search);
-        return result;
+        List<User> resultList = userRepository.searchUserByNickname(search);
+        List<UserInfoRes> returnList = new ArrayList<>();
+
+        for (User user : resultList){
+            returnList.add(entityToResponseDTO(user));
+        }
+        return returnList;
     }
 
     @Override
     public UserInfoRes getNicknameAndProfileImage(Long userUid) {
-        UserInfoRes result = userRepository.getNicknameAndProfileImage(userUid);
-        return result;
+        User result = userRepository.getNicknameAndProfileImage(userUid);
+        return entityToResponseDTO(result);
     }
 
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
         // 카카오톡 rest api (id, profile image, nickname)
-        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
-        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
-
-        JsonNode json = new ObjectMapper().readTree(response.getBody());
-
-        String clientId = json.get("id").asText();
-        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
-        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+//        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
+//        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
+//
+//        HttpEntity<String> request = new HttpEntity<>(headers);
+//        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
+//
+//        JsonNode json = new ObjectMapper().readTree(response.getBody());
+//
+//        String clientId = json.get("id").asText();
+//        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+//        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         User user;
+        String clientId = "1234";
+        String nickname = "이영차";
+        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg ";
 
         if(userRepository.getByClientId(clientId) != null){
             user = userRepository.getByClientId(clientId);
@@ -94,4 +103,11 @@ public class UserServiceImpl implements UserService {
         return tokenRes;
     }
 
+    private UserInfoRes entityToResponseDTO(User user){
+        return UserInfoRes.builder()
+                .userUid(user.getUserUid())
+                .nickname(user.getNickname())
+                .profileImageUrl((user.getProfileImageUrl()))
+                .build();
+    }
 }
