@@ -44,11 +44,9 @@ class UserRepository {
   Future<String> getUserProfileImageUrl(Token token) async {
     try {
       Response response = await _dio.get('api/auth/user/info',
-          options:
-              Options(headers: {'accessToken': 'Bearer ${token.accessToken}'}));
-      var logger = Logger();
+          options: Options(
+              headers: {'Authorization': 'Bearer ${token.accessToken}'}));
       final String profileImageUrl = response.data['profileImageUrl'];
-      logger.d(profileImageUrl);
       return profileImageUrl;
     } catch (error) {
       throw Exception('Fail to login: $error');

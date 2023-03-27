@@ -25,7 +25,6 @@ class TimelineListItem extends StatelessWidget {
             Navigator.pushNamed(
               context,
               '/timeline/detail/${timeline.timelineId}',
-              arguments: null,
             );
           },
           child: Card(

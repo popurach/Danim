@@ -23,6 +23,7 @@ class LoginViewModel extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', ourToken.accessToken);
     await prefs.setString('refreshToken', ourToken.refreshToken);
+    logger.d(accessToken);
     final String profileImageUrl =
         await UserRepository().getUserProfileImageUrl(ourToken);
     Navigator.pushReplacement(

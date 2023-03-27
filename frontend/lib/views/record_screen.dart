@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:danim/module/CupertinoAlertDialog.dart';
+import 'package:danim/views/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +13,13 @@ import '../view_models/record_view_model.dart';
 class RecordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var recordViewModel = Provider.of<RecordViewModel>(context, listen: false);
     return SafeArea(
-        child: ChangeNotifierProvider<RecordViewModel>(
-            create: (context) => RecordViewModel(
-                recordViewModel.imageList, recordViewModel.locationInfo),
-            child:
-                Consumer<RecordViewModel>(builder: (context, viewModel, child) {
-              return Column(children: [
+      child: Consumer<RecordViewModel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
+            appBar: const CustomAppBar(),
+            body: Column(
+              children: [
                 // 캐러셀
                 Container(
                     height: MediaQuery.of(context).size.height * 0.60,
@@ -140,9 +140,13 @@ class RecordView extends StatelessWidget {
                       )
                     ],
                   ),
-                )
-              ]);
-            })));
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
