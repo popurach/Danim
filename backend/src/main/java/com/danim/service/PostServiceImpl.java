@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -98,9 +99,10 @@ public class PostServiceImpl implements PostService {
 
     // 포스트 삭제 및 해당 포스트의 삭제 사진
     @Override
+    @Transactional
     public void deletePostById(Long postId) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_POST));
-        photoRepository.deleteByPostId(post);
+        photoRepository.deleteAllByPostId(post);
         postRepository.deleteById(postId);
     }
 
