@@ -1,6 +1,7 @@
 package com.danim.service;
 
 import com.danim.config.security.JwtTokenProvider;
+import com.danim.conponent.AwsS3;
 import com.danim.dto.UserLoginReq;
 import com.danim.dto.TokenRes;
 import com.danim.dto.UserInfoRes;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -33,13 +35,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     public final JwtTokenProvider jwtTokenProvider;
     public final PasswordEncoder passwordEncoder;
-
-//    @Autowired
-//    public UserServiceImpl(UserRepository userRepository, @Lazy JwtTokenProvider jwtTokenProvider, @Lazy PasswordEncoder passwordEncoder){
-//        this.userRepository = userRepository;
-//        this.jwtTOkenProvider = jwtTokenProvider;
-//        this.passwordEncoder = passwordEncoder;
-//    }
+    private final AwsS3 awsS3;
 
     @Override
     public List<UserInfoRes> searchUserByNickname(String search) {
@@ -52,29 +48,26 @@ public class UserServiceImpl implements UserService {
         return returnList;
     }
 
-    @Override
-    public UserInfoRes getNicknameAndProfileImage(Long userUid) {
-        User result = userRepository.getNicknameAndProfileImage(userUid);
-        return entityToResponseDTO(result);
-    }
-
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
         // 카카오톡 rest api (id, profile image, nickname)
-        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
-        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
-
-        JsonNode json = new ObjectMapper().readTree(response.getBody());
-
-        String clientId = json.get("id").asText();
-        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
-        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+//        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
+//        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
+//
+//        HttpEntity<String> request = new HttpEntity<>(headers);
+//        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
+//
+//        JsonNode json = new ObjectMapper().readTree(response.getBody());
+//
+//        String clientId = json.get("id").asText();
+//        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+//        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         User user;
+        String clientId = "1234";
+        String nickname = "이영차";
+        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
 
         if(userRepository.getByClientId(clientId) != null){
             user = userRepository.getByClientId(clientId);
@@ -100,6 +93,21 @@ public class UserServiceImpl implements UserService {
         return tokenRes;
     }
 
+    @Override
+    public UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage) throws Exception {
+        // 프로필 이미지 S3에 업로드 및 imageURL 가져오기
+        String ProfileImageUrl = awsS3.upload(profileImage, "Danim/profile");
+
+        User user = userRepository.getByUserUid(userUid);
+
+        // 이전 프로필 이미지 Url -> s3에서 삭제
+        String beforeProfileImageUrl = user.getProfileImageUrl();
+
+        user.setProfileImageUrl(ProfileImageUrl);
+        return entityToResponseDTO(user);
+    }
+
+    // User 객체를 UserInfoRes로 변환
     private UserInfoRes entityToResponseDTO(User user){
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
