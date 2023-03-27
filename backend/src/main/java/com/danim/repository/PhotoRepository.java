@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
-    void deleteByPostId(Long postId);
+    void deleteByPostId(Post post);
 }
