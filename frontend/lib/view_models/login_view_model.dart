@@ -25,17 +25,18 @@ class LoginViewModel extends ChangeNotifier {
     await prefs.setString('refreshToken', ourToken.refreshToken);
     final String profileImageUrl =
         await UserRepository().getUserProfileImageUrl(ourToken);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => MultiProvider(
           providers: [
             ChangeNotifierProvider(
-                create: (_) => AppViewModel(
-                      profileImageUrl: profileImageUrl,
-                    )),
+              create: (_) => AppViewModel(
+                profileImageUrl: profileImageUrl,
+              ),
+            ),
           ],
-          child: MyHomePage(profileImageUrl: profileImageUrl),
+          child: MyHomePage(),
         ),
       ),
     );

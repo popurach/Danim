@@ -1,12 +1,8 @@
-import 'package:danim/view_models/bottom_navigation_view_model.dart';
-import 'package:danim/views/bottom_navigation.dart';
-import 'package:danim/views/login_page.dart';
 import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/main_frame_view_model.dart';
-import 'camera_floating_action_button.dart';
 
 class MainFrame extends StatelessWidget {
   @override
@@ -20,20 +16,11 @@ class MainFrame extends StatelessWidget {
             initialRoute: viewModel.initPage,
             onGenerateRoute: (settings) {
               return MaterialPageRoute(
-                  builder: (_) {
-                    return Scaffold(
-                      // body: const TimelineList(),
-                      body: TimelineList(),
-                      floatingActionButton: CameraFloatingActionButton(),
-                      floatingActionButtonLocation:
-                          FloatingActionButtonLocation.centerDocked,
-                      bottomNavigationBar: ChangeNotifierProvider(
-                        create: (_) => BottomNavigationViewModel(0),
-                        child: CustomBottomNavigationBar(),
-                      ),
-                    );
-                  },
-                  settings: settings);
+                builder: (_) {
+                  return TimelineList();
+                },
+                settings: settings,
+              );
             },
           );
         },
