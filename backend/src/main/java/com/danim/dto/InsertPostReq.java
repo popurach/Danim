@@ -1,5 +1,7 @@
 package com.danim.dto;
 
+import com.danim.exception.BaseException;
+import com.danim.exception.ErrorMessage;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +20,10 @@ public class InsertPostReq {
     private String address2;
     private String address3;
     private String address4;
+
+    public void validate() {
+        if (timelineId == null || address1 == null) {
+            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
+        }
+    }
 }

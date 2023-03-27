@@ -3,6 +3,8 @@ package com.danim.controller;
 import com.danim.dto.InsertPostReq;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
+import com.danim.exception.BaseException;
+import com.danim.exception.ErrorMessage;
 import com.danim.service.PhotoService;
 import com.danim.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,10 @@ public class PostController {
                                     @RequestPart MultipartFile voiceFile,
                                     @ModelAttribute InsertPostReq insertPostReq) throws Exception {
         // 입력 값 잘 들어오는지 확인
-        System.out.println(insertPostReq);
-        System.out.println(flagFile);
+        if (flagFile == null || imageFiles == null || voiceFile == null || insertPostReq == null) {
+            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
+        }
+        insertPostReq.validate();
 
         log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
@@ -45,7 +49,7 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long postId) throws Exception {
         if (postId == null) {
             log.info("postId 값 없음");
-            throw new IllegalArgumentException();
+            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
         }
         postService.deletePostById(postId);
         return ResponseEntity.ok().build();
@@ -56,7 +60,7 @@ public class PostController {
     public ResponseEntity<?> getPost(@PathVariable String location) throws Exception {
         if (location == null) {
             log.info("location 값 없음");
-            throw new IllegalArgumentException();
+            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
         }
         List<Post> postList = postService.findByLocation(location);
         return ResponseEntity.ok(postList);
