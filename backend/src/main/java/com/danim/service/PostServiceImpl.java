@@ -13,6 +13,7 @@ import com.danim.repository.NationRepository;
 import com.danim.repository.PhotoRepository;
 import com.danim.repository.PostRepository;
 import com.danim.repository.TimeLineRepository;
+import com.danim.utils.VoiceUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class PostServiceImpl implements PostService {
         String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
 
         // voiceFile에서 voiceLength 가져오기
-//        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceFile);
+        Double voiceLength = VoiceUtils.getVoiceFileLength(voiceUrl);
 
         // voiceFile -> text 변환
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
@@ -83,7 +84,7 @@ public class PostServiceImpl implements PostService {
         log.info("Starting savePost transaction");
         savedPost.setPhotoList(photoList);
         savedPost.setVoiceUrl(voiceUrl);
-        savedPost.setVoiceLength(2.2);
+        savedPost.setVoiceLength(voiceLength);
         savedPost.setNationUrl(nation.getNationUrl());
         savedPost.setAddress1(insertPostReq.getAddress1());
         savedPost.setAddress2(insertPostReq.getAddress2());
