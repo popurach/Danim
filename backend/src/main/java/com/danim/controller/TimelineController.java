@@ -121,7 +121,7 @@ public class TimelineController {
     //메인피드 최신순 타임라인 조회 with paging +
     //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
     //sort="id", direction = Sort.Direction.DESC
-    @GetMapping("/main/test/{page}")//테스트 해보기
+    @GetMapping("/main/{page}")//테스트 해보기
     public ResponseEntity<?> getTimelineLatestWithPaging(@PathVariable Integer page) throws Exception {
         log.info("메인피드 최신순 타임라인 조회 시작");
         Pageable pageable = PageRequest.of(page, 3, Sort.by("createTime").descending());
@@ -132,7 +132,7 @@ public class TimelineController {
 
 
     //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
-    @GetMapping("/mine/test/{page}")
+    @GetMapping("/mine/{page}")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PathVariable Integer page) throws Exception {
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 시작");
         Pageable pageable = PageRequest.of(page, 3);
@@ -147,7 +147,7 @@ public class TimelineController {
 
 
     //다른 유저의 피드에서 타임라인 조회 with Paging => 테스트 해보기
-    @GetMapping("/other/text/{uid}/{page}")
+    @GetMapping("/other/{uid}/{page}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PathVariable Integer page) throws Exception {
         Pageable pageable = PageRequest.of(page, 3);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 시작");
