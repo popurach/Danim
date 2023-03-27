@@ -5,17 +5,18 @@ import 'package:provider/provider.dart';
 import '../view_models/timeline_list_view_model.dart';
 
 class TimelineList extends StatelessWidget {
-  const TimelineList({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TimelineListViewModel>(
-        create: (_) => TimelineListViewModel(),
-        child: Consumer<TimelineListViewModel>(
-            builder: (context, viewModel, child) => ListView.builder(
-                itemCount: viewModel.timelineList.length,
-                itemBuilder: (context, index) {
-                  return TimelineListItem(viewModel.timelineList[index]);
-                })));
+      create: (_) => TimelineListViewModel(),
+      child: Consumer<TimelineListViewModel>(
+        builder: (context, viewModel, child) => ListView.builder(
+          itemCount: viewModel.timelineList.length,
+          itemBuilder: (context, index) {
+            return TimelineListItem(viewModel.timelineList[index]);
+          },
+        ),
+      ),
+    );
   }
 }

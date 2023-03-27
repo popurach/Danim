@@ -1,12 +1,5 @@
 import 'package:danim/models/Timeline.dart';
-import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/timeline_detail.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../view_models/bottom_navigation_view_model.dart';
-import 'bottom_navigation.dart';
-import 'camera_floating_action_button.dart';
 
 class TimelineListItem extends StatelessWidget {
   final Timeline timeline;
@@ -22,22 +15,10 @@ class TimelineListItem extends StatelessWidget {
         height: cardHeight,
         child: GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
-                context,
-                PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => Scaffold(
-                          body: ChangeNotifierProvider(
-                              create: (_) =>
-                                  TimelineDetailViewModel(timeline.timelineId),
-                              child: TimelineDetail()),
-                          floatingActionButton: CameraFloatingActionButton(),
-                          floatingActionButtonLocation:
-                              FloatingActionButtonLocation.centerDocked,
-                          bottomNavigationBar: ChangeNotifierProvider(
-                            create: (_) => BottomNavigationViewModel(0),
-                            child: CustomBottomNavigationBar(),
-                          ),
-                        )));
+            Navigator.pushNamed(
+              context,
+              '/timeline/detail/${timeline.timelineId}',
+            );
           },
           child: Card(
               shape: RoundedRectangleBorder(

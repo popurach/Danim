@@ -1,45 +1,79 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:danim/view_models/custom_app_bar_view_model.dart';
+import 'package:danim/models/dto/Token.dart';
+import 'package:danim/services/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final CustomAppBarViewModel viewModel;
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  CustomAppBar({required this.viewModel});
+  @override
+  State<StatefulWidget> createState() => _CustomAppBar();
+}
+
+class _CustomAppBar extends State<CustomAppBar> {
+  late String _profileImageUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfileImage();
+  }
+
+  loadProfileImage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('accessToken');
+    final newProfileImage = await UserRepository().getUserProfileImageUrl(
+        Token(accessToken: accessToken, refreshToken: ''));
+    changeProfileImageUrl(newProfileImage);
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      actions: viewModel.isLogin
-          ? <Widget>[
-              PopupMenuButton(
-                  tooltip: '',
-                  offset: const Offset(0, 55),
-                  icon: CachedNetworkImage(
-                    imageUrl: viewModel.profileImageUrl,
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 80.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
-                      ),
-                    ),
-                  ),
-                  iconSize: 40,
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                        const PopupMenuItem(
-                            child: SizedBox(width: 80, child: Text('프로필변경'))),
-                        const PopupMenuItem(
-                            child: SizedBox(width: 80, child: Text('로그아웃')))
-                      ])
-            ]
-          : null,
+      actions: <Widget>[
+        PopupMenuButton(
+          tooltip: '',
+          offset: const Offset(0, 55),
+          icon: CachedNetworkImage(
+            imageUrl: _profileImageUrl,
+            imageBuilder: (context, imageProvider) => Container(
+              width: 80.0,
+              height: 80.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          iconSize: 40,
+          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+            const PopupMenuItem(
+              child: SizedBox(
+                width: 80,
+                child: Text('프로필변경'),
+              ),
+            ),
+            const PopupMenuItem(
+              child: SizedBox(
+                width: 80,
+                child: Text('로그아웃'),
+              ),
+            )
+          ],
+        ),
+      ],
       title: const Text("Danim"),
     );
   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  void changeProfileImageUrl(newImageUrl) {
+    setState(() {
+      _profileImageUrl = newImageUrl;
+    });
+  }
 }

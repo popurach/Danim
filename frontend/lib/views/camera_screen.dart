@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './record_screen.dart';
-import '../view_models/camera_view_model.dart';
 import '../module/CupertinoAlertDialog.dart';
+import '../view_models/camera_view_model.dart';
 
 class CameraView extends StatelessWidget {
   @override
@@ -101,9 +99,13 @@ class CameraView extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  ChangeNotifierProvider<RecordViewModel>(
-                                                  create: (_) => RecordViewModel(viewModel.allFileList,viewModel.locationInformation!),
-                                                    child: RecordView(),
+                                                  ChangeNotifierProvider<
+                                                      RecordViewModel>(
+                                                create: (_) => RecordViewModel(
+                                                    viewModel.allFileList,
+                                                    viewModel
+                                                        .locationInformation!),
+                                                child: RecordView(),
                                               ),
                                             ),
                                           );

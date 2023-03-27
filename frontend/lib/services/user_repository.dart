@@ -1,5 +1,6 @@
 import 'package:danim/models/Timeline.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
 import '../models/dto/Token.dart';
 
@@ -9,7 +10,7 @@ class UserRepository {
   static final UserRepository _instance = UserRepository._internal();
   factory UserRepository() => _instance;
 
-  final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000'));
+  final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
 
   // 메인화면의 타임리스트를 가져오는 함수 Future은 js의 Promise라고 보시면 됩니다.
   Future<List<Timeline>> getMainTimeline() async {
@@ -43,9 +44,10 @@ class UserRepository {
   Future<String> getUserProfileImageUrl(Token token) async {
     try {
       Response response = await _dio.get('api/auth/user/info',
-          options:
-              Options(headers: {'accessToken': 'Bearer ${token.accessToken}'}));
-      return response.data.imageUrl;
+          options: Options(
+              headers: {'Authorization': 'Bearer ${token.accessToken}'}));
+      final String profileImageUrl = response.data['profileImageUrl'];
+      return profileImageUrl;
     } catch (error) {
       throw Exception('Fail to login: $error');
     }
