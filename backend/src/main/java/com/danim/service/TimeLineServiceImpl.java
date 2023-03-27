@@ -246,13 +246,13 @@ public class TimeLineServiceImpl implements TimeLineService {
         User user = userRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         Page<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(user, true, pageable);
         if (timeline.getContent().size() == 0) {
-            new BaseException(ErrorMessage.NOT_EXIST_TIMELINE);
+            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE);
         }
         Photo photo = null;
         Post post = null;
         MainTimelinePhotoDtoRes temp = null;
         if (timeline.getContent().size() == 0) {
-            new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
         }
         //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
         List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
