@@ -1,8 +1,9 @@
 package com.danim.controller;
 
-import com.danim.dto.MainTimelinePhotoDto;
+import com.danim.dto.MainTimelinePhotoDtoRes;
 import com.danim.dto.TimelinePostOuter;
 import com.danim.entity.TimeLine;
+import com.danim.entity.User;
 import com.danim.service.TimeLineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,10 +32,6 @@ public class TimelineController {
     public ResponseEntity<?> getTimelineLatest() throws Exception {
 
         log.info("메인피드 최신수 타임라인 조회 시작");
-
-//        Account auth = (Account) authentication.getPrincipal();
-//        Long tt = auth.getUid();
-//        Member savedUser = memberservice.signup(member.getName(), member.getNickname(), tt);
         List<TimeLine> timelinelist = timeLineService.searchTimelineOrderBylatest();
         log.info("메인피드 최신수 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
@@ -43,8 +42,13 @@ public class TimelineController {
     @GetMapping("/mine/{uid}")
     public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+
         log.info("내 피드에서 내 타임라인 리스트 조회");
-        List<TimeLine> timelinelist = timeLineService.searchMyTimeline(uid);
+        List<TimeLine> timelinelist = timeLineService.searchMyTimeline(uid, user);
         log.info("내 피드에서 내 타임라인 리스트 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
@@ -73,7 +77,12 @@ public class TimelineController {
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고자 한다
         log.info("여행 시작 기능 시작");
-        timeLineService.makenewTimeline(15L);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        timeLineService.makenewTimeline(user);
         log.info("여행 시작 기능 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -117,7 +126,7 @@ public class TimelineController {
     public ResponseEntity<?> getTimelineLatestWithPaging(@PathVariable Integer page) throws Exception {
         log.info("메인피드 최신순 타임라인 조회 시작");
         Pageable pageable = PageRequest.of(page, 3, Sort.by("createTime").descending());
-        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
+        List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
         log.info("메인피드 최신순 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
@@ -128,7 +137,11 @@ public class TimelineController {
     public ResponseEntity<?> getMyTimelineListWithPaging(@PathVariable Integer page) throws Exception {
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 시작");
         Pageable pageable = PageRequest.of(page, 3);
-        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchMyTimelineWithPaging(1L, pageable);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchMyTimelineWithPaging(user, pageable);
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
@@ -139,7 +152,7 @@ public class TimelineController {
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PathVariable Integer page) throws Exception {
         Pageable pageable = PageRequest.of(page, 3);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 시작");
-        List<MainTimelinePhotoDto> timelinelist = timeLineService.searchTimelineNotPublicWithPaging(uid, pageable);
+        List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchTimelineNotPublicWithPaging(uid, pageable);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }

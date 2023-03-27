@@ -23,7 +23,12 @@ public enum ErrorMessage {
     NOT_EXIST_KEYWORD("해당 지역명 키워드를 포함한 포스트가 없습니다.",HttpStatus.BAD_REQUEST),
 
     NOT_EXIST_TIMELINE_PAGING("존재하지 않는 타임라인 페이징의 페이지 입니다",HttpStatus.BAD_REQUEST),
+
+
     NOT_EXIST_PHOTO("존재하지 않는 사진 입니다", HttpStatus.BAD_REQUEST);
+
+
+
 
 
     private final String errMsg;
