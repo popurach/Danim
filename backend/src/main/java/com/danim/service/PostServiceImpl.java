@@ -99,8 +99,8 @@ public class PostServiceImpl implements PostService {
     // 포스트 삭제 및 해당 포스트의 삭제 사진
     @Override
     public void deletePostById(Long postId) throws Exception {
-        postRepository.deleteById(postId);
         photoRepository.deleteByPostId(postId);
+        postRepository.deleteById(postId);
     }
 
     // 지역명 키워드로 포스트 조회
