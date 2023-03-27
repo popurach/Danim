@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             if(!passwordEncoder.matches("다님", user.getPassword())){
                 throw new RuntimeException();
             }
-            return jwtTokenProvider.recreateToken(user.getClientId(), "USER", user.getRefreshToken());
+            return jwtTokenProvider.createtoken(clientId, "USER");
         }
 
         // 미등록 사용자
