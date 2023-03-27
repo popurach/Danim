@@ -18,6 +18,7 @@ import com.danim.service.UserService;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 //import org.json.JSONObject;
 import java.util.List;
 
@@ -36,7 +37,6 @@ public class UserController {
     // 유저 조회
     @GetMapping("/auth/user")
     public ResponseEntity<?> searchUserByNickname(@RequestParam("search") String search){
-        log.info("search 값 : " + search);
         List<UserInfoRes> resultList = userService.searchUserByNickname(search);
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
@@ -45,9 +45,6 @@ public class UserController {
     @GetMapping("/auth/user/info")
     public ResponseEntity<?> getNicknameAndProfileImage(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("SecurityContextHolder 값 이용");
-
-        System.out.println("auth.getPrincipal : " + auth.getPrincipal());
 
         if(auth != null && auth.getPrincipal() != null){
             User user = (User)auth.getPrincipal();
@@ -64,18 +61,19 @@ public class UserController {
     // 소셜 로그인(카카오)
     @PostMapping("/login/kakao")
     public ResponseEntity<?> signUpKakao(@RequestBody UserLoginReq userLoginReq) throws Exception {
-        System.out.println("컨트롤러 진입 " + userLoginReq.getAccessToken() + userLoginReq.getRefreshToken());
         TokenRes tokenRes = userService.signUpKakao(userLoginReq);
         return new ResponseEntity<>(tokenRes, HttpStatus.OK);
     }
 
-    // 회원 정보 수정 (프로필 이미지 등)
+    // 회원 정보 수정 (프로필 이미지)
     @PutMapping("/auth/user/info")
-    public ResponseEntity<?> updateUser(){
+    public ResponseEntity<?> updateUser(@RequestPart MultipartFile profileImage) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() != null) {
             User user = (User) auth.getPrincipal();
+            UserInfoRes userInfoRes = userService.updateUserInfo(user.getUserUid(), profileImage);
+            return new ResponseEntity<>(userInfoRes, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
