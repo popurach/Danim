@@ -45,6 +45,11 @@ public class UserController {
     @GetMapping("/auth/user/info")
     public ResponseEntity<?> getNicknameAndProfileImage(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("auth.getPrincipal : " + auth.getPrincipal());//com.danim.enitity.user
+        System.out.println("auth.getDetails : " + auth.getDetails());
+        System.out.println("auth.getClass : " + auth.getClass());
+        System.out.println("auth.getCredentials : " + auth.getCredentials());
+        System.out.println("auth.getName : " + auth.getName());
 
         if(auth != null && auth.getPrincipal() != null){
             User user = (User)auth.getPrincipal();
