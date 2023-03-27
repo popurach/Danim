@@ -10,9 +10,9 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Builder(builderMethodName = "MainTimelinePhotoDtoBuilder")
+@Builder(builderMethodName = "MainTimelinePhotoDtoResBuilder")
 @Getter
-public class MainTimelinePhotoDto {
+public class MainTimelinePhotoDtoRes {
 
     //10개 정도를 넘겨 준다고 생각 하면됨
 
@@ -51,7 +51,7 @@ public class MainTimelinePhotoDto {
         return s3;
     }
 
-    public static MainTimelinePhotoDtoBuilder builder(TimeLine timeline, Post startpost,Post lastpost, Photo photo, User user) {
+    public static MainTimelinePhotoDtoResBuilder builder(TimeLine timeline, Post startpost,Post lastpost, Photo photo, User user) {
 
         String start = "";
         String finish = "";
@@ -63,7 +63,7 @@ public class MainTimelinePhotoDto {
             finish = make(timeline.getFinishTime());
         }
 
-        return MainTimelinePhotoDtoBuilder().
+        return MainTimelinePhotoDtoResBuilder().
                 timelineId(timeline.getTimelineId()).
                 url(photo.getPhotoUrl())
                 .title(timeline.getTitle())

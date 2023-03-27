@@ -1,5 +1,6 @@
 package com.danim.config.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,8 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication = jwtTokenProvider.getAuthenthication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("[doFilterInternal] token 값 유효성 체크 완료");
-            } catch (Exception e) {
-                log.info("[doFilterInternal] token 값 오류");
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }

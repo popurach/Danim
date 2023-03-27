@@ -29,7 +29,7 @@ public class JwtTokenProvider {
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
 
-    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 90 * 1; // access token 1분 30초
+    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 1; // access token 1분 30초
     private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24; // refresh token 24일
 
     @PostConstruct
@@ -107,7 +107,7 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("accessToken");
+        String bearerToken = request.getHeader("Authorization");
 
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

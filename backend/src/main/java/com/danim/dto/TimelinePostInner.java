@@ -12,6 +12,6 @@ public class TimelinePostInner {
 
     private String flag;
     private String nation;
-    private List<MyPostDto> postlist;
+    private List<MyPostDtoRes> postlist;
 
 }

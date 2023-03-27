@@ -7,9 +7,9 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Builder(builderMethodName = "MyPostDtoBuilder")
+@Builder(builderMethodName = "MyPostDtoResBuilder")
 @Getter
-public class MyPostDto {
+public class MyPostDtoRes {
 
     private Long postId;
 
@@ -29,9 +29,9 @@ public class MyPostDto {
     private List<Photo> photoList; // photoId 리스트
 
 
-    public static MyPostDtoBuilder builder(Post post) {
+    public static MyPostDtoResBuilder builder(Post post) {
 
-        return MyPostDtoBuilder()
+        return MyPostDtoResBuilder()
                 .postId(post.getPostId())
                 .voiceUrl(post.getVoiceUrl())
                 .voiceLength(post.getVoiceLength())
