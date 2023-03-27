@@ -1,4 +1,3 @@
-import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/post_detail.dart';

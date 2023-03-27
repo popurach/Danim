@@ -9,16 +9,11 @@ import '../views/modify_profile.dart';
 
 class AppViewModel with ChangeNotifier {
   int currentIndex;
-  final String profileImageUrl;
   final pageController = PageController(initialPage: 0);
   final GlobalKey<NavigatorState> homeFeedNavigatorKey = GlobalKey();
   final GlobalKey<NavigatorState> myFeedNavigatorKey = GlobalKey();
 
-  bool get isLogin {
-    return profileImageUrl != null;
-  }
-
-  AppViewModel({this.currentIndex = 0, this.profileImageUrl = ''});
+  AppViewModel({this.currentIndex = 0});
 
   void changePage(index) {
     pageController.jumpToPage(index);

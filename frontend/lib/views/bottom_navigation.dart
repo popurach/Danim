@@ -1,13 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/views/timeline_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../view_models/bottom_navigation_view_model.dart';
-import '../view_models/modify_profile_view_model.dart';
-import 'camera_floating_action_button.dart';
-import 'modify_profile.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   @override

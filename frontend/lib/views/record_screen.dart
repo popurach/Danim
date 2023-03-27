@@ -17,7 +17,7 @@ class RecordView extends StatelessWidget {
       child: Consumer<RecordViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: const CustomAppBar(),
+            appBar: CustomAppBar(),
             body: Column(
               children: [
                 // 캐러셀

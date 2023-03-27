@@ -5,10 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final profileImageUrl;
-
-  const CustomAppBar({super.key, this.profileImageUrl});
-
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -22,11 +18,7 @@ class _CustomAppBar extends State<CustomAppBar> {
   @override
   void initState() {
     super.initState();
-    if (widget.profileImageUrl != null) {
-      changeProfileImageUrl(widget.profileImageUrl);
-    } else {
-      loadProfileImage();
-    }
+    loadProfileImage();
   }
 
   loadProfileImage() async {

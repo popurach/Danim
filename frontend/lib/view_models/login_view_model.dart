@@ -23,18 +23,14 @@ class LoginViewModel extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', ourToken.accessToken);
     await prefs.setString('refreshToken', ourToken.refreshToken);
-    logger.d(accessToken);
-    final String profileImageUrl =
-        await UserRepository().getUserProfileImageUrl(ourToken);
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => MultiProvider(
           providers: [
             ChangeNotifierProvider(
-              create: (_) => AppViewModel(
-                profileImageUrl: profileImageUrl,
-              ),
+              create: (_) => AppViewModel(),
             ),
           ],
           child: MyHomePage(),
