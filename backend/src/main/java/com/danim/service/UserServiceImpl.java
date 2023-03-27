@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
         // 이전 프로필 이미지 Url -> s3에서 삭제
         String beforeProfileImageUrl = user.getProfileImageUrl();
-
+        awsS3.delete(beforeProfileImageUrl);
         user.setProfileImageUrl(ProfileImageUrl);
         return entityToResponseDTO(user);
     }
