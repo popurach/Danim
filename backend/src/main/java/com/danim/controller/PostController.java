@@ -27,7 +27,7 @@ public class PostController {
     public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
                                     @RequestPart List<MultipartFile> imageFiles,
                                     @RequestPart MultipartFile voiceFile,
-                                    @ModelAttribute InsertPostReq insertPostReq) throws Exception {
+                                    @RequestBody InsertPostReq insertPostReq) throws Exception {
         // 입력 값 잘 들어오는지 확인
         System.out.println(insertPostReq);
         System.out.println(flagFile);
