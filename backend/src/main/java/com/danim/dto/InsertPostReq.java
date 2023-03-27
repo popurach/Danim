@@ -18,7 +18,4 @@ public class InsertPostReq {
     private String address2;
     private String address3;
     private String address4;
-    private MultipartFile flagFile;
-    private MultipartFile voiceFile;
-    private List<MultipartFile> imageFiles;
 }
