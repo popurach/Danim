@@ -41,7 +41,7 @@ public class TimeLine extends BaseTime {
 
 
     //not null그대로 가져와야함.....
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_uid", nullable = false)
     @ToString.Exclude
     private User userUid;
