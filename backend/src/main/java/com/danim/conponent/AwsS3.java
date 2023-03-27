@@ -2,6 +2,7 @@ package com.danim.conponent;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class AwsS3 {
     private final AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    private final String AWS_URL = "https://mydanimbucket.s3.ap-northeast-2.amazonaws.com";
     public String upload(MultipartFile file,String directoryName)throws Exception{
 
         String originalName = file.getOriginalFilename();
@@ -34,5 +36,10 @@ public class AwsS3 {
         amazonS3Client.putObject(new PutObjectRequest(bucket,keyname,file.getInputStream(),objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
         uploadUrl = amazonS3Client.getUrl(bucket,keyname).toString();
         return uploadUrl;
+    }
+    public void delete(String url){
+        url = url.substring(AWS_URL.length());
+        boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, url);
+        if(isObjectExist)amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, url));
     }
 }
