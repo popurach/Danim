@@ -56,24 +56,24 @@ public class UserServiceImpl implements UserService {
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
         // 카카오톡 rest api (id, profile image, nickname)
-//        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
-//        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
-//
-//        HttpEntity<String> request = new HttpEntity<>(headers);
-//        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
-//
-//        JsonNode json = new ObjectMapper().readTree(response.getBody());
-//
-//        String clientId = json.get("id").asText();
-//        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
-//        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
+        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
+
+        JsonNode json = new ObjectMapper().readTree(response.getBody());
+
+        String clientId = json.get("id").asText();
+        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+
+        User user;
+//        String clientId = "1234";
+//        String nickname = "이영차";
+//        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
-        User user;
-        String clientId = "1234";
-        String nickname = "이영차";
-        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
-
         if(userRepository.getByClientId(clientId) != null){
             user = userRepository.getByClientId(clientId);
             if(!passwordEncoder.matches("다님", user.getPassword())){
@@ -85,9 +85,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 미등록 사용자
-        System.out.println("토큰 provider 실행 !!!");
         TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
-        System.out.println("토큰 생성 !!!!");
         user = User.builder()
                 .nickname(nickname) // 'nickname' 값을 nickname에 저장
                 .clientId(clientId) // 'id' 값을 clientId에 저장
@@ -96,7 +94,7 @@ public class UserServiceImpl implements UserService {
                 .profileImageUrl(profileImageUrl)
                 .password(passwordEncoder.encode("다님"))
                 .build();
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
         return tokenRes;
     }
 
