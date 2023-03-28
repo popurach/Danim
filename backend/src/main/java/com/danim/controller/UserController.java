@@ -1,9 +1,10 @@
 package com.danim.controller;
+import com.danim.config.security.JwtTokenProvider;
 import com.danim.dto.TokenRes;
 import com.danim.dto.UserLoginReq;
 import com.danim.dto.UserInfoRes;
+import com.danim.dto.UserReq;
 import com.danim.entity.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 //import org.json.JSONObject;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -28,10 +30,12 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    public final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider){
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     // 유저 조회
@@ -80,5 +84,11 @@ public class UserController {
             return new ResponseEntity<>(userInfoRes, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // accessToken 재발급
+    @PostMapping("/login/reissuance")
+    public ResponseEntity<?> reissuance(@RequestBody UserReq user, HttpServletResponse response){
+        return ResponseEntity.ok().body("accessToken 갱신 완료");
     }
 }

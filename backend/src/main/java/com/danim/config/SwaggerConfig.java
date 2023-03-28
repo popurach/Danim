@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 .scheme("bearer")
                 .bearerFormat("JWT")
                 .in(SecurityScheme.In.HEADER)
-                .name("HttpHeaders.AUTHORIZATION");
+                .name(HttpHeaders.AUTHORIZATION);
 
         // Security 요청 설정
         SecurityRequirement addSecurityItem = new SecurityRequirement();

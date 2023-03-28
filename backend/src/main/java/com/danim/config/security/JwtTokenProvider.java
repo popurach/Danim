@@ -47,7 +47,6 @@ public class JwtTokenProvider {
         claims.put("roles", role);
 
         Date now = new Date();
-        System.out.println("오늘 날짜 !!! : " + now);
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -58,12 +57,10 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
-        System.out.println("accessToken : " + accessToken);
-        System.out.println("refreshToken : " + refreshToken);
         log.info("[createToken] 토큰 생성 완료");
 
         return TokenRes.builder()
