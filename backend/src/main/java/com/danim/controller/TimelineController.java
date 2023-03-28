@@ -131,6 +131,7 @@ public class TimelineController {
     }
 
 
+
     //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
     @GetMapping("/mine/{page}")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PathVariable Integer page) throws Exception {
