@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class TimelineDetail extends StatelessWidget {
+class TimelineDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +56,9 @@ class TimelineDetail extends StatelessWidget {
                       ),
                     ),
                     children: [
-                      PostDetail(
-                          viewModel: PostViewModel(viewModel.timeline!.post[0]))
+                      // PostDetail(
+                      //   viewModel: PostViewModel(viewModel.timeline!.post[0]),
+                      // )
                     ],
                   ),
                   ExpansionTile(

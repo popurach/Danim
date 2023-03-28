@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class TimelineListItem extends StatelessWidget {
   final Timeline timeline;
 
-  const TimelineListItem(this.timeline, {super.key});
+  const TimelineListItem({super.key, required this.timeline});
 
   @override
   Widget build(BuildContext context) {
@@ -44,24 +44,24 @@ class TimelineListItem extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
-                                SizedBox(width: 30),
-                                Text(
+                              children: [
+                                const SizedBox(width: 30),
+                                const Text(
                                   "Danim",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                SizedBox(width: 10),
-                                Icon(
+                                const SizedBox(width: 10),
+                                const Icon(
                                   Icons.flight_takeoff,
                                   color: Colors.white,
                                 ),
                                 Expanded(
                                     child: Text(
-                                  '서울 ~ 파리',
+                                  '${timeline.startPlace} ~ ${timeline.finishPlace}',
                                   textAlign: TextAlign.right,
-                                  style: TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 )),
-                                SizedBox(width: 30)
+                                const SizedBox(width: 30)
                               ],
                             )),
                         Expanded(
@@ -84,35 +84,39 @@ class TimelineListItem extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                     Expanded(
-                                        child: Row(
-                                      children: [
-                                        const SizedBox(
-                                          width: 90,
-                                          child: Text(
-                                            "T   I  T  L  E",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Expanded(child: Text(timeline.title))
-                                      ],
-                                    )),
-                                    Expanded(
-                                        child: Row(
-                                      children: [
-                                        const SizedBox(
-                                          width: 90,
-                                          child: Text(
-                                            "TRAVELER",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Expanded(
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
                                             child: Text(
-                                                timeline.userId.toString())),
-                                      ],
-                                    )),
+                                              "T   I  T  L  E",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(timeline.title),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
+                                            child: Text(
+                                              "TRAVELER",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(timeline.nickname),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                     Expanded(
                                         child: Row(
                                       children: [
@@ -124,7 +128,7 @@ class TimelineListItem extends StatelessWidget {
                                         ),
                                         Expanded(
                                             child: Text(
-                                                '${timeline.createTime} ~ ${timeline.modifyTime}'))
+                                                '${timeline.createTime} ~ ${timeline.finishTime}'))
                                       ],
                                     )),
                                   ])),

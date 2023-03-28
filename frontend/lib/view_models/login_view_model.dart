@@ -1,4 +1,5 @@
 import 'package:danim/main.dart';
+import 'package:danim/models/UserInfo.dart';
 import 'package:danim/models/dto/Token.dart';
 import 'package:danim/services/user_repository.dart';
 import 'package:danim/view_models/app_view_model.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends ChangeNotifier {
   var logger = Logger();
+  var logs;
 
   Future<void> loginButtonPressed(context) async {
     bool isInstalled = await isKakaoTalkInstalled();
@@ -23,6 +25,11 @@ class LoginViewModel extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', ourToken.accessToken);
     await prefs.setString('refreshToken', ourToken.refreshToken);
+
+    UserInfo userInfo = await UserRepository().getUserInfo();
+    await prefs.setInt('userUid', userInfo.userUid);
+    await prefs.setString('profileImageUrl', userInfo.profileImageUrl);
+    await prefs.setString('nickname', userInfo.nickname);
 
     Navigator.pushReplacement(
       context,

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../view_models/timeline_list_view_model.dart';
 
-class TimelineList extends StatelessWidget {
+class TimelineListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TimelineListViewModel>(
@@ -13,7 +13,10 @@ class TimelineList extends StatelessWidget {
         builder: (context, viewModel, child) => ListView.builder(
           itemCount: viewModel.timelineList.length,
           itemBuilder: (context, index) {
-            return TimelineListItem(viewModel.timelineList[index]);
+            return TimelineListItem(
+              key: Key(viewModel.timelineList[index].timelineId.toString()),
+              timeline: viewModel.timelineList[index],
+            );
           },
         ),
       ),

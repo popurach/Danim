@@ -1,7 +1,7 @@
 import 'package:danim/view_models/modify_profile_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/timeline_detail.dart';
-import 'package:danim/views/timeline_list.dart';
+import 'package:danim/views/timeline_detail_page.dart';
+import 'package:danim/views/timeline_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,10 +27,10 @@ class AppViewModel with ChangeNotifier {
       final timelineId = int.parse(settings.name.split('/')[3]);
       page = ChangeNotifierProvider(
         create: (_) => TimelineDetailViewModel(timelineId),
-        child: TimelineDetail(),
+        child: TimelineDetailPage(),
       );
     } else {
-      page = TimelineList();
+      page = TimelineListPage();
     }
     return PageRouteBuilder(
       pageBuilder: (_, __, ___) => page,
@@ -44,7 +44,7 @@ class AppViewModel with ChangeNotifier {
       final timelineId = int.parse(settings.name.split('/')[3]);
       page = ChangeNotifierProvider(
         create: (_) => TimelineDetailViewModel(timelineId),
-        child: TimelineDetail(),
+        child: TimelineDetailPage(),
       );
     } else {
       page = ChangeNotifierProvider(
