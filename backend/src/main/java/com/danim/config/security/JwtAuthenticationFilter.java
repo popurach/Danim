@@ -2,7 +2,6 @@ package com.danim.config.security;
 
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,8 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.BindException;
-import java.util.List;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -29,7 +26,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
-        log.info("[doFilterInternal] token 값 추출 완료. accessToken : {}", accessToken);
+        log.info("[doFilterInternal] token 값 추출 완료");
+        log.info("accessToken : {}", accessToken);
         log.info("refreshToken : {}", refreshToken);
         // 유효한 토큰인지 확인합니다.
         if (accessToken != null) {
