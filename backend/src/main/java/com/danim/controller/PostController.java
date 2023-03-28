@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,12 +30,14 @@ public class PostController {
     public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
                                     @RequestPart List<MultipartFile> imageFiles,
                                     @RequestPart MultipartFile voiceFile,
-                                    @ModelAttribute InsertPostReq insertPostReq) throws Exception {
+                                    @ModelAttribute @Valid InsertPostReq insertPostReq) throws Exception {
         // 입력 값 잘 들어오는지 확인
-        if (flagFile == null || imageFiles == null || voiceFile == null || insertPostReq == null) {
+        System.out.println(insertPostReq);
+        System.out.println(imageFiles);
+
+        if (flagFile == null || imageFiles == null || voiceFile == null) {
             throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
         }
-        insertPostReq.validate();
 
         log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
