@@ -20,8 +20,8 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 public class ClovaSpeechClient {
-    private static final String SECRET = "2b55b2aafc1042d397b61ecf8d8b02f8";
-    private static final String INVOKE_URL = "https://clovaspeech-gw.ncloud.com/external/v1/4727/a1cb39a867bbfba97b3aae4d6c961a9d8adbff7402de9b56b7371e3becfabcd9";
+    private static final String SECRET = "5363cc2f4577446abede2f0c96814b44";
+    private static final String INVOKE_URL = "https://clovaspeech-gw.ncloud.com/external/v1/4852/8e3d76eb02eca805c974a9640baf24a8f604b7981f5f71a4a4cbba091938c32e";
 
     private CloseableHttpClient httpClient = HttpClients.createDefault();
     private Gson gson = new Gson();
