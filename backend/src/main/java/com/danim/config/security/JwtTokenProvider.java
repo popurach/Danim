@@ -1,6 +1,7 @@
 package com.danim.config.security;
 
 import com.danim.dto.TokenRes;
+import com.danim.repository.UserRepository;
 import com.danim.service.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,17 +20,19 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
     private final CustomUserService userService;
+    private final UserRepository userRepository;
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
 
-    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 1; // access token 1분 30초
+    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 5; // access token 5분
     private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24; // refresh token 24일
 
     @PostConstruct
@@ -44,7 +47,6 @@ public class JwtTokenProvider {
         claims.put("roles", role);
 
         Date now = new Date();
-        System.out.println("오늘 날짜 !!! : " + now);
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -55,12 +57,10 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
-        System.out.println("accessToken : " + accessToken);
-        System.out.println("refreshToken : " + refreshToken);
         log.info("[createToken] 토큰 생성 완료");
 
         return TokenRes.builder()
@@ -72,7 +72,8 @@ public class JwtTokenProvider {
     }
 
     // 로그인 시 accessToken 만료 및 refreshToken 유효할 시
-    public TokenRes recreateToken(String clientId, String role, String refreshToken){
+    public String recreateToken(String clientId, String role){
+        log.info("accessToken 재발급 시작");
         Claims claims = Jwts.claims().setSubject(clientId);
         claims.put("role", role);
 
@@ -87,12 +88,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        return TokenRes.builder()
-                .grantType("Bearer")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .accessTokenExpireDate(ACCESS_TOKEN_VALID_MILLISECOND)
-                .build();
+        return accessToken;
     }
 
     public Authentication getAuthenthication(String token) throws Exception {
@@ -102,12 +98,21 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        log.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
+        log.info("[getUsername : clientId] 토큰 기반 회원 구별 정보 추출");
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("refreshToken");
 
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -132,4 +137,17 @@ public class JwtTokenProvider {
         return false;
     }
 
+    // refreshToken 존재 확인
+    public boolean existsRefreshToken(String refreshToken){
+        return userRepository.existsByRefreshToken(refreshToken);
+    }
+
+    // accessToken 헤더에 설정
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken ){
+        response.setHeader("Authorization", "Bearer " + accessToken);
+    }
+
+    public String getRole(String clientId){
+        return userRepository.findByClientId(clientId).getRole();
+    }
 }

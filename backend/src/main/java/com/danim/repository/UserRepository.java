@@ -15,6 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User getByClientId(String clientId);
 
+    Boolean existsByRefreshToken(String refreshToken);
+
+    User findByClientId(String clientId);
+
     @Query(value = "select u from User u where u.nickname like %:search% order by u.nickname")
     List<User> searchUserByNickname(@Param("search") String search);
 }
