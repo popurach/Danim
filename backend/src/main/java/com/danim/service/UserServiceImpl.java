@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
         List<User> resultList = userRepository.searchUserByNickname(search);
         List<UserInfoRes> returnList = new ArrayList<>();
 
-        for (User user : resultList){
+        for (User user : resultList) {
             returnList.add(entityToResponseDTO(user));
         }
         return returnList;
@@ -70,13 +71,15 @@ public class UserServiceImpl implements UserService {
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         User user;
-        String clientId = "1234";
-        String nickname = "이영차";
+//        String clientId = "1234";
+//        String nickname = "이영차";
+        String clientId = UUID.randomUUID().toString();
+        String nickname = UUID.randomUUID().toString();
         String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
 
-        if(userRepository.getByClientId(clientId) != null){
+        if (userRepository.getByClientId(clientId) != null) {
             user = userRepository.getByClientId(clientId);
-            if(!passwordEncoder.matches("다님", user.getPassword())){
+            if (!passwordEncoder.matches("다님", user.getPassword())) {
                 throw new RuntimeException();
             }
             TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // User 객체를 UserInfoRes로 변환
-    private UserInfoRes entityToResponseDTO(User user){
+    private UserInfoRes entityToResponseDTO(User user) {
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())

@@ -135,7 +135,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostById(Long postId) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_POST));
-        for (Photo p :post.getPhotoList()) awsS3.delete(p.getPhotoUrl());
+        for (Photo p : post.getPhotoList()) awsS3.delete(p.getPhotoUrl());
         photoRepository.deleteAllByPostId(post);
         postRepository.deleteById(postId);
     }
