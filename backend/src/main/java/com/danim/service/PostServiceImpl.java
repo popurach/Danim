@@ -92,10 +92,12 @@ public class PostServiceImpl implements PostService {
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
         ClovaSpeechClient.NestRequestEntity requestEntity = new ClovaSpeechClient.NestRequestEntity();
         final String result = clovaSpeechClient.url(voiceUrl, requestEntity);
+        System.out.println(result);
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(result);
         String text = rootNode.get("text").asText();
+        System.out.println(text);
 
         // timeline 객체 가져오기
         TimeLine timeline = timelineRepository.findById(insertPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
