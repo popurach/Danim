@@ -124,19 +124,18 @@ public class TimelineController {
     @GetMapping("/main/{page}")//테스트 해보기
     public ResponseEntity<?> getTimelineLatestWithPaging(@PathVariable Integer page) throws Exception {
         log.info("메인피드 최신순 타임라인 조회 시작");
-        Pageable pageable = PageRequest.of(page, 3, Sort.by("createTime").descending());
+        Pageable pageable = PageRequest.of(page, 15, Sort.by("createTime").descending());
         List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
         log.info("메인피드 최신순 타임라인 조회 종료");
         return new ResponseEntity<>(timelinelist, HttpStatus.OK);
     }
 
 
-
     //내 피드에서 내 타임라인 리스트 조회 with paging =>테스트 해보기
     @GetMapping("/mine/{page}")
     public ResponseEntity<?> getMyTimelineListWithPaging(@PathVariable Integer page) throws Exception {
         log.info("내 피드에서 내 타임라인 리스트 조회 기능 시작");
-        Pageable pageable = PageRequest.of(page, 3);
+        Pageable pageable = PageRequest.of(page, 15);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
         if (auth != null && auth.getPrincipal() != null)
@@ -150,7 +149,7 @@ public class TimelineController {
     //다른 유저의 피드에서 타임라인 조회 with Paging => 테스트 해보기
     @GetMapping("/other/{uid}/{page}")
     public ResponseEntity<?> getAnotherTimelineListWithPaging(@PathVariable Long uid, @PathVariable Integer page) throws Exception {
-        Pageable pageable = PageRequest.of(page, 3);
+        Pageable pageable = PageRequest.of(page, 15);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 시작");
         List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchTimelineNotPublicWithPaging(uid, pageable);
         log.info("다른 유저의 피드에서 타임라인 조회 기능 종료");
