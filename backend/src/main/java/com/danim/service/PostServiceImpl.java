@@ -54,6 +54,7 @@ public class PostServiceImpl implements PostService {
     }
 
     // 포스트 속성 값 설정 후 재저장
+    @Transactional
     @Override
     public Post insertPost(Post savedPost, List<Photo> photoList, MultipartFile flagFile, MultipartFile voiceFile, InsertPostReq insertPostReq) throws Exception {
 
@@ -72,6 +73,7 @@ public class PostServiceImpl implements PostService {
             throw new BaseException(ErrorMessage.NOT_PERMIT_VOICE_SAVE);
         }
 
+        // 파일 길이 추출
         File file = new File(target.toUri());
         AudioFileFormat audioInputStream = AudioSystem.getAudioFileFormat(file);
         AudioFormat format = audioInputStream.getFormat();
@@ -84,15 +86,21 @@ public class PostServiceImpl implements PostService {
             throw new BaseException(ErrorMessage.OVER_VOICE_TIME);
         }
 
-
         // voiceFile S3에 올리고 voiceURL 가져오기
         String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
 
-        // voiceFile -> text 변환
+        // voiceFile -> text 변환 : clova speech api 요청 보내기
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
         ClovaSpeechClient.NestRequestEntity requestEntity = new ClovaSpeechClient.NestRequestEntity();
         final String result = clovaSpeechClient.url(voiceUrl, requestEntity);
 
+        // voiceFile -> text 변환 : 응답 결과 확인
+        System.out.println(result);
+        if (result.contains("\"result\":\"FAILED\"")) {
+            new BaseException(ErrorMessage.NOT_STT_SAVE);
+        }
+
+        // voiceFile -> text 변환 : 응답받은 json 파일에서 text 추출
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(result);
         String text = rootNode.get("text").asText();
@@ -135,7 +143,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostById(Long postId) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_POST));
-        for (Photo p :post.getPhotoList()) awsS3.delete(p.getPhotoUrl());
+        for (Photo p : post.getPhotoList()) awsS3.delete(p.getPhotoUrl());
         photoRepository.deleteAllByPostId(post);
         postRepository.deleteById(postId);
     }
