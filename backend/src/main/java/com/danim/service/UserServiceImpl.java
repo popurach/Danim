@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 //        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
-        if(userRepository.getByClientId(clientId) != null){
+        if (userRepository.getByClientId(clientId) != null) {
             user = userRepository.getByClientId(clientId);
             if (!passwordEncoder.matches("다님", user.getPassword())) {
                 throw new RuntimeException();
