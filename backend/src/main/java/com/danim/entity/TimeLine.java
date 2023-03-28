@@ -3,6 +3,7 @@ package com.danim.entity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @DynamicInsert //@DynamicInsert사용
 @Builder
+
 public class TimeLine extends BaseTime {
 
     @Id

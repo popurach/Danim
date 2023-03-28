@@ -30,8 +30,8 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
+@Transactional(readOnly = true)
 public class TimeLineServiceImpl implements TimeLineService {
 
     private final TimeLineRepository timeLineRepository;

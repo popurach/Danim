@@ -36,9 +36,6 @@ public class MainTimelinePhotoDtoRes {
     //여행 마감
     private String finishTime;//완료시간
 
-
-    //여행 시작 장소 ~ 여행 마감 장소 =>  추후에 정해야 함
-
     private String startPlace;
 
     private String finishPlace;
@@ -72,7 +69,6 @@ public class MainTimelinePhotoDtoRes {
                 .finishTime(finish)
                 .startPlace(startpost.getAddress2())
                 .finishPlace(lastpost.getAddress2());
-
     }
 
 }
