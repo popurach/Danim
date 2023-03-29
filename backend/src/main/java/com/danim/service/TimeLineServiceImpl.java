@@ -103,7 +103,7 @@ public class TimeLineServiceImpl implements TimeLineService {
                 }
 
                 favorite_count = favoriteRepository.countByPostId(p);
-                favorite_temp = favoriteRepository.findByPostIdAndUserUid(p, user);
+                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
                 favorite = null;
 
                 if (favorite_temp == null)
@@ -122,7 +122,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
             } else {
                 favorite_count = favoriteRepository.countByPostId(p);
-                favorite_temp = favoriteRepository.findByPostIdAndUserUid(p, user);
+                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
                 if (favorite_temp == null)
                     favorite = false;
                 else favorite = true;
