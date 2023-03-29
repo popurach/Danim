@@ -21,8 +21,8 @@ class LoginViewModel extends ChangeNotifier {
 
     const storage = FlutterSecureStorage();
 
-    storage.write(key: 'accessToken', value: accessToken);
-    storage.write(key: 'refreshToken', value: refreshToken);
+    storage.write(key: 'accessToken', value: ourToken.accessToken);
+    storage.write(key: 'refreshToken', value: ourToken.refreshToken);
 
     UserInfo userInfo = await UserRepository().getUserInfo(context);
     storage.write(key: 'userUid', value: userInfo.userUid.toString());
