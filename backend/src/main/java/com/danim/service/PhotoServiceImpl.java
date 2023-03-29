@@ -1,7 +1,7 @@
 package com.danim.service;
 
 import com.danim.conponent.AwsS3;
-import com.danim.dto.AddPostReq;
+import com.danim.dto.InsertPostReq;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.repository.PhotoRepository;
@@ -23,32 +23,33 @@ public class PhotoServiceImpl implements PhotoService {
 
     // 각각의 imageFile을 Photo 객체로 저장 후 photo 객체들의 리스트를 반환 (이후, Post 속성 값 중 하나인 photoList에서 사용)
     @Override
-    public List<Photo> createPhotoList(AddPostReq addPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception {
+    public List<Photo> createPhotoList(InsertPostReq insertPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception {
         log.info("Starting createPhotoList transaction");
         List<Photo> photoList = new ArrayList<>();
 
         for (MultipartFile imageFile : imageFiles) {
-            Photo savedPhoto = this.savePhoto(addPostReq, imageFile, savedPost);
+            Photo savedPhoto = this.savePhoto(insertPostReq, imageFile, savedPost);
             photoList.add(savedPhoto);
         }
         log.info("createPhotoList Transaction complete");
         return photoList;
-    };
+    }
 
-    private Photo savePhoto(AddPostReq addPostReq, MultipartFile imageFile, Post savedPost) throws Exception {
+
+    private Photo savePhoto(InsertPostReq insertPostReq, MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-        String photoUrl = awsS3.upload(imageFile,"Danim/Post");
+        String photoUrl = awsS3.upload(imageFile, "Danim/Post");
 
         // photo 객체 생성
         log.info("Starting savePhoto transaction");
         Photo photo = Photo.builder()
                 .postId(savedPost)
                 .photoUrl(photoUrl)
-                .lat(addPostReq.getLat())
-                .lng(addPostReq.getLng())
                 .build();
         photoRepository.save(photo);
         log.info("savePhoto Transaction complete");
         return photo;
-    };
+    }
+
+    ;
 }
