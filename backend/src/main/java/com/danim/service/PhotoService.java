@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface PhotoService {
-    List<Photo> createPhotoList(AddPostReq addPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception;
+    List<Photo> createPhotoList(List<MultipartFile> imageFiles, Post savedPost) throws Exception;
 }

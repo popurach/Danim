@@ -33,13 +33,9 @@ public class PostController {
                                     @RequestPart MultipartFile voiceFile,
                                      @Valid @ModelAttribute AddPostReq addPostReq) throws Exception {
 
-        if (flagFile == null || imageFiles == null || voiceFile == null) {
-            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
-        }
-
         log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
-        List<Photo> photoList = photoService.createPhotoList(addPostReq, imageFiles, savedPost);
+        List<Photo> photoList = photoService.createPhotoList(imageFiles, savedPost);
         Post resavedPost = postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
         log.info("addPost transaction ends");
         return ResponseEntity.ok(resavedPost);

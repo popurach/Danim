@@ -23,7 +23,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     // 각각의 imageFile을 Photo 객체로 저장 후 photo 객체들의 리스트를 반환 (이후, Post 속성 값 중 하나인 photoList에서 사용)
     @Override
-    public List<Photo> createPhotoList(AddPostReq addPostReq, List<MultipartFile> imageFiles, Post savedPost) throws Exception {
+    public List<Photo> createPhotoList(List<MultipartFile> imageFiles, Post savedPost) throws Exception {
         log.info("Starting createPhotoList transaction");
         List<Photo> photoList = new ArrayList<>();
 

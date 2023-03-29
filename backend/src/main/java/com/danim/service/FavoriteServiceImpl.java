@@ -26,7 +26,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public boolean isFavorite (Long postId, Long userUid) throws Exception {
         Post post = postRepository.findById(postId).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_POST));
         User user = userRepository.findById(userUid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
-        Favorite favorite = favoriteRepository.findByPostIdAndUserUid(post, user);
+        Favorite favorite = favoriteRepository.findFirstByPostIdAndUserUid(post, user);
         // 좋아요 누른 적 없는 경우 - Favorite 생성 및 저장
         if (favorite == null) {
             Favorite newFavorite = new Favorite();
