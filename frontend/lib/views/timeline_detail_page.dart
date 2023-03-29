@@ -50,48 +50,53 @@ class TimelineDetailPage extends StatelessWidget {
               ),
               children: [
                 ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    itemCount: viewModel.timelineDetails[timelineIndex].postList
-                        .length, // Number of nations
-                    itemBuilder: (BuildContext context, int postIndex) {
-                      return ExpansionTile(
-                        shape: const RoundedRectangleBorder(),
-                        collapsedShape: const RoundedRectangleBorder(),
-                        onExpansionChanged: (isExpand) {
-                          viewModel.changePostExpansion(
-                              timelineIndex, postIndex, isExpand);
-                        },
-                        title: Text(viewModel.timelineDetails[timelineIndex]
-                            .postList[postIndex].address),
-                        leading: SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: TimelineTile(
-                            isLast: (timelineIndex ==
-                                    viewModel.timelineDetails.length - 1) &&
-                                (postIndex ==
-                                    viewModel.timelineDetails[timelineIndex]
-                                            .postList.length -
-                                        1) &&
-                                (!viewModel.timelineDetails[timelineIndex]
-                                    .postList[postIndex].isExpand),
-                            indicatorStyle: const IndicatorStyle(
-                                width: 20,
-                                color: Colors.lightBlue,
-                                padding: EdgeInsets.only(left: 5)),
-                            endChild: Container(
-                              padding: const EdgeInsets.all(8),
-                            ),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemCount: viewModel.timelineDetails[timelineIndex].postList
+                      .length, // Number of nations
+                  itemBuilder: (BuildContext context, int postIndex) {
+                    return ExpansionTile(
+                      shape: const RoundedRectangleBorder(),
+                      collapsedShape: const RoundedRectangleBorder(),
+                      onExpansionChanged: (isExpand) {
+                        viewModel.changePostExpansion(
+                            timelineIndex, postIndex, isExpand);
+                      },
+                      title: Text(viewModel.timelineDetails[timelineIndex]
+                          .postList[postIndex].address),
+                      leading: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: TimelineTile(
+                          isLast: (timelineIndex ==
+                                  viewModel.timelineDetails.length - 1) &&
+                              (postIndex ==
+                                  viewModel.timelineDetails[timelineIndex]
+                                          .postList.length -
+                                      1) &&
+                              (!viewModel.timelineDetails[timelineIndex]
+                                  .postList[postIndex].isExpand),
+                          indicatorStyle: const IndicatorStyle(
+                              width: 20,
+                              color: Colors.lightBlue,
+                              padding: EdgeInsets.only(left: 5)),
+                          endChild: Container(
+                            padding: const EdgeInsets.all(8),
                           ),
                         ),
-                        children: [
-                          PostDetail(
-                              post: viewModel.timelineDetails[timelineIndex]
-                                  .postList[postIndex]),
-                        ],
-                      );
-                    }),
+                      ),
+                      children: [
+                        PostDetail(
+                          key: Key(viewModel.timelineDetails[timelineIndex]
+                              .postList[postIndex].postId
+                              .toString()),
+                          post: viewModel.timelineDetails[timelineIndex]
+                              .postList[postIndex],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ],
             );
           },
