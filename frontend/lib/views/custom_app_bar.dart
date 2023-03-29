@@ -1,6 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:danim/models/dto/Token.dart';
-import 'package:danim/services/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,10 +21,8 @@ class _CustomAppBar extends State<CustomAppBar> {
 
   loadProfileImage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('accessToken');
-    final newProfileImage = await UserRepository().getUserProfileImageUrl(
-        Token(accessToken: accessToken, refreshToken: ''));
-    changeProfileImageUrl(newProfileImage);
+    final newProfileImage = prefs.getString('profileImageUrl');
+    if (newProfileImage != null) changeProfileImageUrl(newProfileImage);
   }
 
   @override

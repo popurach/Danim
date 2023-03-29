@@ -8,22 +8,23 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Danim')),
       body: ChangeNotifierProvider(
-          create: (_) => LoginViewModel(),
-          child: Consumer<LoginViewModel>(
-            builder: (ctx, viewModel, child) {
-              return SafeArea(
-                minimum: const EdgeInsets.symmetric(horizontal: 32),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      viewModel.loginButtonPressed(context);
-                    },
-                    child: Image.asset('assets/images/kakao_login.png'),
-                  ),
+        create: (_) => LoginViewModel(),
+        child: Consumer<LoginViewModel>(
+          builder: (ctx, viewModel, child) {
+            return SafeArea(
+              minimum: const EdgeInsets.symmetric(horizontal: 32),
+              child: Center(
+                child: InkWell(
+                  onTap: () {
+                    viewModel.loginButtonPressed(context);
+                  },
+                  child: Image.asset('assets/images/kakao_login.png'),
                 ),
-              );
-            },
-          )),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

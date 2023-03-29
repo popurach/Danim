@@ -17,7 +17,11 @@ class MyTimeLineListView extends StatelessWidget {
                           itemCount: viewModel.mytimelineList.length,
                           itemBuilder: (context, index) {
                             return TimelineListItem(
-                                viewModel.mytimelineList[index]);
+                              key: Key(viewModel
+                                  .mytimelineList[index].timelineId
+                                  .toString()),
+                              timeline: viewModel.mytimelineList[index],
+                            );
                           }),
                     ],
                   ))),
