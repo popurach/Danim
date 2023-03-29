@@ -76,6 +76,9 @@ dependencies:
 
   flutter_dotenv: ^5.0.2
 
+  # device 정보 가져오기
+  device_info_plus: ^8.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

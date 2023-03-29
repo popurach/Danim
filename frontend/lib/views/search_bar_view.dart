@@ -62,7 +62,7 @@ class SearchBar extends StatelessWidget {
               focusNode: viewModel.myfocus,
               keyboardType: TextInputType.text,
               onChanged: (String? keyword) async {
-
+                viewModel.searchUser(keyword);
               },
               // 포커스 일 때 스타일 바꾸기
               decoration: const InputDecoration(

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/utils/auth_dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,7 +21,11 @@ import 'camera_view_model.dart';
 
 var logger = Logger();
 
+
 class RecordViewModel extends ChangeNotifier {
+  final _dio = AuthDio().getDio();
+  get dio => _dio;
+
   late List<XFile> _imageList;
 
   LocationInformation _locationInfo =
@@ -152,7 +157,7 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
-    final dio = Dio();
+
     final List<MultipartFile> imageFiles =
         imageList.map((el) => MultipartFile.fromFileSync(el.path)).toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath);
@@ -175,9 +180,10 @@ class RecordViewModel extends ChangeNotifier {
           final currentPosition = await Geolocator.getCurrentPosition();
           final curLong = currentPosition.longitude;
           final curLat = currentPosition.latitude;
+          final plainDio = Dio();
           final url =
               'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
-          Response response = await dio.get(url);
+          Response response = await plainDio.get(url);
           if (response.statusCode == 200) {
             LocationInformation newLocation = LocationInformation(
                 response.data["results"][0]["country"],

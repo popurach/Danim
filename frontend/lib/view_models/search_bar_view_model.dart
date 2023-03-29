@@ -1,14 +1,15 @@
 import 'package:danim/models/UserSearchResults.dart';
-import 'package:danim/views/search_bar_view.dart';
+import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-var dio = Dio();
 var logger = Logger();
 
 class SearchBarViewModel extends ChangeNotifier {
-  final String searchUrl = "http://j8a701.p.ssafy.io:5000/api/auth/user";
+
+  final _dio = AuthDio().getDio();
+  get dio => _dio;
 
   String? _searchKeyWord = "";
   String? get searchKeyWord => _searchKeyWord;
@@ -40,10 +41,13 @@ class SearchBarViewModel extends ChangeNotifier {
   FocusNode get myfocus => _myfocus;
 
   Future<void> searchUser(String? keyword) async {
-    Response response = await dio.get(searchUrl);
+    searchKeyWord = keyword;
+    Response response = await _dio.get('api/auth/user');
+
     if (response.statusCode == 200) {
       logger.d(response.data);
     }
+    notifyListeners();
   }
 
   @override

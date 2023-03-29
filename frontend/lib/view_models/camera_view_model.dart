@@ -10,12 +10,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:logger/logger.dart';
 
 var apikey = "fcc989ff906649ea961871b106cfc061";
-var dio = Dio();
 var logger = Logger();
+final deviceInfoPlugin = DeviceInfoPlugin();
 
 class CameraViewModel extends ChangeNotifier {
   List<CameraDescription> _cameras = [];
@@ -48,10 +49,22 @@ class CameraViewModel extends ChangeNotifier {
   }
 
   Future<void> initializeCamera() async {
-    await Permission.camera.request();
-    await Permission.storage.request();
-    await Permission.manageExternalStorage.request();
-    await Permission.location.request();
+    AndroidDeviceInfo deviceInfo = await deviceInfoPlugin.androidInfo;
+    final sdkInfo = deviceInfo.version.sdkInt;
+    if (sdkInfo >= 33) {
+      await Permission.camera.request();
+      await Permission.photos.request();
+      await Permission.videos.request();
+      await Permission.audio.request();
+      await Permission.manageExternalStorage.request();
+      await Permission.location.request();
+    } else {
+      await Permission.camera.request();
+      await Permission.storage.request();
+      await Permission.manageExternalStorage.request();
+      await Permission.location.request();
+    }
+
 
     final cameras = await availableCameras();
     _cameras = cameras;
@@ -86,15 +99,6 @@ class CameraViewModel extends ChangeNotifier {
       // 파일에 이미지 저장
       await imageFile.writeAsBytes(imageBytes);
 
-
-      // 파일의 exif 데이터 불러와서 작성하기
-      // final exif = await Exif.fromPath(file.path);
-      // await exif.writeAttributes({
-      //   'GPSLatitude': currentPosition.latitude,
-      //   'GPSLatitudeRef': 'N',
-      //   'GPSLongitude': currentPosition.longitude,
-      //   'GPSLongitudeRef': 'W',
-      // });
     }
     notifyListeners();
   }
