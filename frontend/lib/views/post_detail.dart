@@ -30,6 +30,15 @@ class PostDetail extends StatelessWidget {
           height: 500,
           child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings),
+                  ),
+                ],
+              ),
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -41,7 +50,7 @@ class PostDetail extends StatelessWidget {
                             child: ChangeNotifierProvider(
                               create: (_) =>
                                   ImagesPageViewModel(post.photoList),
-                              child: ImagesPageView(),
+                              child: const ImagesPageView(),
                             ),
                           );
                         });
@@ -50,6 +59,24 @@ class PostDetail extends StatelessWidget {
                     create: (_) => ImagesPageViewModel(post.photoList),
                     child: const ImagesPageView(),
                   ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.favorite_outline,
+                        color: post.isFavorite
+                            ? Colors.pinkAccent
+                            : Colors.black12,
+                      ),
+                    ),
+                    Text(post.favoriteCount.toString()),
+                  ],
                 ),
               ),
               ChangeNotifierProvider(
