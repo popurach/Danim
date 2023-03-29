@@ -9,12 +9,12 @@ import java.util.List;
 @Getter
 @Setter
 public class TimelinePostOuter {
-    private List<TimelinePostInner> Timeline;
+    private List<TimelinePostInner> timeline;
 
-    private List<String> NationList;
+    private List<String> nationList;
 
     public TimelinePostOuter() {
-        Timeline = new ArrayList<>();
+        timeline = new ArrayList<>();
 
     }
 }
