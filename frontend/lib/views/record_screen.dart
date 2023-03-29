@@ -55,7 +55,7 @@ class RecordView extends StatelessWidget {
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: Image.memory(
-                                        viewModel.locationInfo.flag,
+                                        viewModel.locationInfo.flag!,
                                         fit: BoxFit.fitHeight),
                                   )
                                 : Text("")),

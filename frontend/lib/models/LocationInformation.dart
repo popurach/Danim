@@ -5,13 +5,13 @@ class LocationInformation {
   final String city;
   final String district;
   final String suburb;
-  late final Uint8List flag;
+  late final Uint8List? flag;
 
-  LocationInformation(
-      this.country,
-      this.city,
-      this.district,
-      this.suburb,
+  LocationInformation({
+      required this.country,
+      required this.city,
+      required this.district,
+      required this.suburb,
       this.flag
-      );
+  });
 }

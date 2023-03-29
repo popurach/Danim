@@ -28,7 +28,7 @@ class RecordViewModel extends ChangeNotifier {
   late List<XFile> _imageList;
 
   LocationInformation _locationInfo =
-      LocationInformation("", "", "", "", [] as Uint8List);
+      LocationInformation(country: "", city:"", district: "", suburb: "", flag: null);
 
   LocationInformation get locationInfo => _locationInfo;
 
@@ -175,6 +175,7 @@ class RecordViewModel extends ChangeNotifier {
     if (_haveLocation == false) {
       if (imageList.isNotEmpty) {
         if (isFirstPhotoFromGallery == false) {
+          logger.d(locationInfo.toString());
           _haveLocation = true;
           final currentPosition = await Geolocator.getCurrentPosition();
           final curLong = currentPosition.longitude;
@@ -183,18 +184,24 @@ class RecordViewModel extends ChangeNotifier {
           final url =
               'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
           Response response = await plainDio.get(url);
+          logger.d(response.data);
           if (response.statusCode == 200) {
-            LocationInformation newLocation = LocationInformation(
-                response.data["results"][0]["country"],
-                response.data["results"][0]["city"],
-                response.data["results"][0]["district"],
-                response.data["results"][0]["suburb"],
-                [] as Uint8List);
+            String countryName = response.data["results"][0]["country"];
+            String cityName = response.data["results"][0]["city"];
+            String districtName = response.data["results"][0]["district"];
+            String suburbName = response.data["results"][0]["suburb"];
             String countryCode = response.data["results"][0]["country_code"];
             final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
             Response<Uint8List> flagResponse = await plainDio.get(flagUrl,
                 options: Options(responseType: ResponseType.bytes));
-            newLocation.flag = flagResponse.data!;
+            Uint8List? flagData = flagResponse.data;
+            LocationInformation newLocation = LocationInformation(
+                country:countryName,
+                city:cityName,
+                district:districtName,
+                suburb:suburbName,
+                flag:flagData
+            );
             locationInfo = newLocation;
             notifyListeners();
           }
