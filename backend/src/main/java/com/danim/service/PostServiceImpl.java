@@ -2,11 +2,9 @@ package com.danim.service;
 
 import com.danim.conponent.AwsS3;
 import com.danim.conponent.ClovaSpeechClient;
-import com.danim.dto.InsertPostReq;
-import com.danim.entity.Nation;
-import com.danim.entity.Photo;
-import com.danim.entity.Post;
-import com.danim.entity.TimeLine;
+import com.danim.dto.AddPostReq;
+import com.danim.dto.GetPostRes;
+import com.danim.entity.*;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
 import com.danim.repository.NationRepository;
@@ -31,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,7 +55,7 @@ public class PostServiceImpl implements PostService {
     // 포스트 속성 값 설정 후 재저장
     @Transactional
     @Override
-    public Post insertPost(Post savedPost, List<Photo> photoList, MultipartFile flagFile, MultipartFile voiceFile, InsertPostReq insertPostReq) throws Exception {
+    public Post insertPost(Post savedPost, List<Photo> photoList, MultipartFile flagFile, MultipartFile voiceFile, AddPostReq addPostReq) throws Exception {
 
         //파일 형식과 길이를 파악을 하여 post를 등록 시킬지 안시킬지 정하는 부분이다
         String fileName = voiceFile.getOriginalFilename();
@@ -106,10 +105,10 @@ public class PostServiceImpl implements PostService {
         String text = rootNode.get("text").asText();
 
         // timeline 객체 가져오기
-        TimeLine timeline = timelineRepository.findById(insertPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+        TimeLine timeline = timelineRepository.findById(addPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
 
         // db에 저장된 국가인 경우 가져와서 사용, 새로운 국가인 경우 nation 저장 후 사용
-        String address1 = insertPostReq.getAddress1();
+        String address1 = addPostReq.getAddress1();
         Nation nation = nationRepository.findByName(address1);
         if (nation == null) {
             nation = new Nation();
@@ -126,10 +125,10 @@ public class PostServiceImpl implements PostService {
         savedPost.setVoiceUrl(voiceUrl);
         savedPost.setVoiceLength(durationInSeconds);
         savedPost.setNationUrl(nation.getNationUrl());
-        savedPost.setAddress1(insertPostReq.getAddress1());
-        savedPost.setAddress2(insertPostReq.getAddress2());
-        savedPost.setAddress3(insertPostReq.getAddress3());
-        savedPost.setAddress4(insertPostReq.getAddress4());
+        savedPost.setAddress1(addPostReq.getAddress1());
+        savedPost.setAddress2(addPostReq.getAddress2());
+        savedPost.setAddress3(addPostReq.getAddress3());
+        savedPost.setAddress4(addPostReq.getAddress4());
         savedPost.setText(text);
         savedPost.setTimelineId(timeline);
         savedPost.setNationId(nation);
@@ -150,8 +149,12 @@ public class PostServiceImpl implements PostService {
 
     // 지역명 키워드로 포스트 조회
     @Override
-    public List<Post> findByLocation(String location) throws Exception {
+    public List<GetPostRes> findByLocation(String location) throws Exception {
         List<Post> postList = postRepository.findByAddress1OrAddress2OrAddress3OrAddress4(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
-        return postList;
+        List<GetPostRes> getPostResList = new ArrayList<>();
+        for (Post post : postList) {
+            getPostResList.add(GetPostRes.builder(post).build());
+        }
+        return getPostResList;
     }
 }
