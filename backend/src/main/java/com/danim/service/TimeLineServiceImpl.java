@@ -4,16 +4,10 @@ import com.danim.dto.MainTimelinePhotoDtoRes;
 import com.danim.dto.MyPostDtoRes;
 import com.danim.dto.TimelinePostInner;
 import com.danim.dto.TimelinePostOuter;
-import com.danim.entity.Photo;
-import com.danim.entity.Post;
-import com.danim.entity.TimeLine;
-import com.danim.entity.User;
+import com.danim.entity.*;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
-import com.danim.repository.PhotoRepository;
-import com.danim.repository.PostRepository;
-import com.danim.repository.TimeLineRepository;
-import com.danim.repository.UserRepository;
+import com.danim.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,6 +32,8 @@ public class TimeLineServiceImpl implements TimeLineService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PhotoRepository photoRepository;
+
+    private final FavoriteRepository favoriteRepository;
 
 
     @Override
@@ -66,7 +62,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public TimelinePostOuter searchOneTimeline(Long uid) throws BaseException {
+    public TimelinePostOuter searchOneTimeline(Long uid, User user) throws BaseException {
 
         //해당 되는 타임라인을 얻어 왔고
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
@@ -84,10 +80,16 @@ public class TimeLineServiceImpl implements TimeLineService {
         TimelinePostInner temptimeline = new TimelinePostInner();
         Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
         List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
+        List<String> photolist = new ArrayList<>();
+        Long favorite_count = 0L;
+        Favorite favorite_temp = null;
+        Boolean favorite = false;
 
         for (Post p : post) {
+            favorite_count=0L;
+            favorite=false;
             String NationName = p.getNationId().getName();
-            List<String>photolist=new ArrayList<>();
+            photolist = new ArrayList<>();
             if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
 
                 if (postlist.size() > 0) {
@@ -96,29 +98,43 @@ public class TimeLineServiceImpl implements TimeLineService {
                     //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
                     timelineouter.getTimeline().add(temptimeline);
                 }
-                for (Photo p1: p.getPhotoList()) {
+                for (Photo p1 : p.getPhotoList()) {
                     photolist.add(p1.getPhotoUrl());
                 }
+
+                favorite_count = favoriteRepository.countByPostId(p);
+                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
+                favorite = null;
+
+                if (favorite_temp == null)
+                    favorite = false;
+                else favorite = true;
 
                 //이제 새로운 타임라인 생성을 하고 국가, 국기, post를 넣어주는 작업이다
                 postlist = new ArrayList<>();
                 temptimeline = new TimelinePostInner();
-                temptimeline.setFlag(p.getPhotoList().get(0).getPhotoUrl());
+                temptimeline.setFlag(p.getNationUrl());
                 temptimeline.setNation(NationName);
                 tempnow.add(NationName);
                 temp.put(NationName, "1");
-                postlist.add(MyPostDtoRes.builder(p,photolist).build());
+
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
 
             } else {
+                favorite_count = favoriteRepository.countByPostId(p);
+                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
+                if (favorite_temp == null)
+                    favorite = false;
+                else favorite = true;
                 //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
-                postlist.add(MyPostDtoRes.builder(p,photolist).build());
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
             }
         }
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
 
-       // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
+        // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
     }
 
@@ -191,7 +207,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             if (startpost == null || lastpost == null)
                 continue;
             //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
-            if(startpost.getPhotoList().isEmpty())
+            if (startpost.getPhotoList().isEmpty())
                 throw new BaseException(ErrorMessage.NOT_EXIST_PHOTO);
             Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_PHOTO));
             //Long uid = time.getTimelineId();

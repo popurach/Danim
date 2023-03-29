@@ -20,7 +20,7 @@ public interface TimeLineService {
     List<TimeLine> searchTimelineNotPublic(Long uid) throws Exception;
 
     //타임라인 한개 조회=>완료
-    TimelinePostOuter searchOneTimeline(Long uid) throws Exception;
+    TimelinePostOuter searchOneTimeline(Long uid,User user) throws Exception;
 
     //여행시작 =>완료
     void makenewTimeline(User user) throws Exception;
