@@ -1,15 +1,22 @@
 import 'package:dio/dio.dart';
 
-class PostForUpload {
-  final List<MultipartFile>? imageSources;
-  final MultipartFile? audioSource;
-  final Object? locationInfo;
-  final MultipartFile? flag;
+class PostForUpload extends FormData {
+  final MultipartFile flag;
+  final List<MultipartFile> imageSources;
+  final MultipartFile audioSource;
+  final String address1;
+  final String address2;
+  final String address3;
+  final String? address4;
+
 
   PostForUpload({
-    this.audioSource,
-    this.imageSources,
-    this.flag,
-    this.locationInfo
+    required this.audioSource,
+    required this.imageSources,
+    required this.flag,
+    required this.address1,
+    required this.address2,
+    required this.address3,
+    this.address4,
   });
 }

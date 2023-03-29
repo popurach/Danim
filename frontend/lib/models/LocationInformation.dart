@@ -2,16 +2,16 @@ import 'dart:typed_data';
 
 class LocationInformation {
   final String country;
-  final String city;
-  final String district;
-  final String suburb;
+  final String? address2;
+  final String? address3;
+  final String? address4;
   late final Uint8List? flag;
 
   LocationInformation({
       required this.country,
-      required this.city,
-      required this.district,
-      required this.suburb,
+      this.address2,
+      this.address3,
+      this.address4,
       this.flag
   });
 }

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/models/PostForUpload.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,17 @@ import 'camera_view_model.dart';
 
 var logger = Logger();
 
-
 class RecordViewModel extends ChangeNotifier {
   final _dio = AuthDio().getDio();
 
   late List<XFile> _imageList;
 
-  LocationInformation _locationInfo =
-      LocationInformation(country: "", city:"", district: "", suburb: "", flag: null);
+  LocationInformation _locationInfo = LocationInformation(
+      country: "", address2: "", address3: "", address4: "", flag: null);
 
   LocationInformation get locationInfo => _locationInfo;
+
+  int _countryIndex = 0;
 
   set locationInfo(LocationInformation newInfo) {
     _locationInfo = newInfo;
@@ -156,21 +158,30 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
-
+    final flag = MultipartFile.fromBytes(
+      locationInfo.flag!);
     final List<MultipartFile> imageFiles =
         imageList.map((el) => MultipartFile.fromFileSync(el.path)).toList();
-    final audioFile = await MultipartFile.fromFile(recordedFilePath);
+    final audioFile = await MultipartFile.fromFile(recordedFilePath,);
+
 
     FormData formData = FormData.fromMap({
-      'images': imageFiles,
-      'audio': audioFile,
+      'flagFile': flag,
+      'imageFiles': imageFiles,
+      'voiceFile': audioFile,
+      'address1': locationInfo.country,
+      'address2': locationInfo.address2,
+      'address3': locationInfo.address3,
+      'address4': locationInfo.address4
     });
 
-    Response response = await _dio.post("path", data: formData);
-
-    if (response.statusCode == 200) {}
+    Response response = await _dio.post("api/auth/post", data: formData);
+    if (response.statusCode == 200) {
+      logger.d(response.data);
+    }
   }
 
+  // 위치를 받아오는 함수
   void getLocation() async {
     if (_haveLocation == false) {
       if (imageList.isNotEmpty) {
@@ -182,28 +193,42 @@ class RecordViewModel extends ChangeNotifier {
           final curLat = currentPosition.latitude;
           final plainDio = Dio();
           final url =
-              'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
+              'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&type=street&format=json';
           Response response = await plainDio.get(url);
-          logger.d(response.data);
+          ;
           if (response.statusCode == 200) {
-            String countryName = response.data["results"][0]["country"];
-            String cityName = response.data["results"][0]["city"];
-            String districtName = response.data["results"][0]["district"];
-            String suburbName = response.data["results"][0]["suburb"];
-            String countryCode = response.data["results"][0]["country_code"];
-            final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
-            Response<Uint8List> flagResponse = await plainDio.get(flagUrl,
-                options: Options(responseType: ResponseType.bytes));
-            Uint8List? flagData = flagResponse.data;
-            LocationInformation newLocation = LocationInformation(
-                country:countryName,
-                city:cityName,
-                district:districtName,
-                suburb:suburbName,
-                flag:flagData
-            );
-            locationInfo = newLocation;
-            notifyListeners();
+            if (response.data["results"] != null) {
+              List keyList = await response.data["results"][0].keys.toList();
+              _countryIndex = keyList.indexOf("country");
+              // country 포함 6개 불러옴
+              List valueList = await response.data["results"][0].values
+                  .toList(_countryIndex, _countryIndex + 6);
+              String countryName = valueList[0];
+              String address2Name = valueList[2];
+              String address3Name = valueList[3];
+              String address4Name;
+              if (keyList[4] == "postcode") {
+                address4Name = valueList[5];
+              } else {
+                address4Name = valueList[4];
+              }
+              if (address3Name == address4Name) {
+                address4Name = "";
+              }
+              String countryCode = valueList[1];
+              final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
+              Response<Uint8List> flagResponse = await plainDio.get(flagUrl,
+                  options: Options(responseType: ResponseType.bytes));
+              Uint8List? flagData = flagResponse.data;
+              LocationInformation newLocation = LocationInformation(
+                  country: countryName,
+                  address2: address2Name,
+                  address3: address3Name,
+                  address4: address4Name,
+                  flag: flagData);
+              locationInfo = newLocation;
+              notifyListeners();
+            }
           }
         }
       }
