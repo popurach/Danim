@@ -191,6 +191,8 @@ public class TimeLineServiceImpl implements TimeLineService {
             if (startpost == null || lastpost == null)
                 continue;
             //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+            if(startpost.getPhotoList().isEmpty())
+                throw new BaseException(ErrorMessage.NOT_EXIST_PHOTO);
             Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_PHOTO));
             //Long uid = time.getTimelineId();
             User user = userRepository.findById(time.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
