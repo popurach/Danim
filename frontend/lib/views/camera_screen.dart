@@ -102,9 +102,8 @@ class CameraView extends StatelessWidget {
                                                   ChangeNotifierProvider<
                                                       RecordViewModel>(
                                                 create: (_) => RecordViewModel(
-                                                    viewModel.allFileList,
-                                                    viewModel
-                                                        .locationInformation!),
+                                                  viewModel.allFileList,
+                                                ),
                                                 child: RecordView(),
                                               ),
                                             ),
