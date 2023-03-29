@@ -31,7 +31,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
+
 public class TimeLineServiceImpl implements TimeLineService {
 
     private final TimeLineRepository timeLineRepository;
@@ -147,6 +147,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         timeLineRepository.delete(now);
+
     }
 
     @Override

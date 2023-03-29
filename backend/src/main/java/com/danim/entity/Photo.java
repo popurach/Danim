@@ -21,9 +21,7 @@ public class Photo {
     @Column(unique = true, nullable = false)
     private String photoUrl;
 
-    private double lat;
 
-    private double lng;
 
     @Builder.Default
     @ColumnDefault("0")
