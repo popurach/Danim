@@ -33,11 +33,12 @@ public class PhotoServiceImpl implements PhotoService {
         }
         log.info("createPhotoList Transaction complete");
         return photoList;
-    };
+    }
+
 
     private Photo savePhoto(AddPostReq addPostReq, MultipartFile imageFile, Post savedPost) throws Exception {
         // imageFile S3에 올리고 imageURL 가져오기
-        String photoUrl = awsS3.upload(imageFile,"Danim/Post");
+        String photoUrl = awsS3.upload(imageFile, "Danim/Post");
 
         // photo 객체 생성
         log.info("Starting savePhoto transaction");
@@ -50,5 +51,7 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.save(photo);
         log.info("savePhoto Transaction complete");
         return photo;
-    };
+    }
+
+    ;
 }

@@ -25,5 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Post findTopByTimelineIdOrderByCreateTimeDesc(TimeLine timeline) ;
 
+    List<Post>findAllByTimelineId(TimeLine timeLine);
+
 
 }

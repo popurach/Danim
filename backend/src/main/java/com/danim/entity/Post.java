@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.repository.cdi.Eager;
 
 @Entity
@@ -48,15 +50,18 @@ public class Post extends BaseTime{
 	@ManyToOne
 	@JoinColumn(name="timeline_id")
 	@ToString.Exclude
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private TimeLine timelineId;
 
 	// Post 테이블과 Nation 테이블 FK
 	@ManyToOne
 	@JoinColumn(name="nation_id")
 	@ToString.Exclude
+
 	private Nation nationId;
 
 	@OneToMany(mappedBy = "postId",fetch = FetchType.EAGER)
 	@Builder.Default
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Photo> photoList = new ArrayList<>(); // photoId 리스트
 }
