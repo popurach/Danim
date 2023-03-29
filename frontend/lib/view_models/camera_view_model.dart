@@ -44,7 +44,7 @@ class CameraViewModel extends ChangeNotifier {
   Map get locationInformation => _locationInformation;
 
   CameraViewModel() {
-    recordViewModel = RecordViewModel(allFileList,locationInformation);
+    recordViewModel = RecordViewModel(allFileList);
   }
 
   Future<void> initializeCamera() async {
@@ -86,29 +86,7 @@ class CameraViewModel extends ChangeNotifier {
       // 파일에 이미지 저장
       await imageFile.writeAsBytes(imageBytes);
 
-      if (allFileList.length == 1) {
-        final currentPosition = await Geolocator.getCurrentPosition();
-        final curLong = currentPosition.longitude;
-        final curLat = currentPosition.latitude;
-        final url = 'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
 
-        Response response = await dio.get(url);
-        if (response.statusCode == 200) {
-          locationInformation["country"] = response.data["results"][0]["country"];
-          locationInformation["city"] = response.data["results"][0]["city"];
-          locationInformation["district"] = response.data["results"][0]["district"];
-          locationInformation["suburb"] = response.data["results"][0]["suburb"];
-          String countryCode = response.data["results"][0]["country_code"];
-          final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
-          Response<Uint8List> flagResponse = await dio.get(
-              flagUrl,
-              options: Options(responseType: ResponseType.bytes)
-          );
-          locationInformation["flagBytes"] = flagResponse.data;
-          recordViewModel.locationInfo = locationInformation;
-          notifyListeners();
-        }
-    }
       // 파일의 exif 데이터 불러와서 작성하기
       // final exif = await Exif.fromPath(file.path);
       // await exif.writeAttributes({

@@ -1,19 +1,25 @@
+import 'package:danim/models/UserSearchResults.dart';
+import 'package:danim/views/search_bar_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 var dio = Dio();
+var logger = Logger();
 
 class SearchBarViewModel extends ChangeNotifier {
-  String? _searchKeyWord;
+  final String searchUrl = "http://j8a701.p.ssafy.io:5000/api/auth/user";
+
+  String? _searchKeyWord = "";
   String? get searchKeyWord => _searchKeyWord;
   set searchKeyWord (String? newString) {
     _searchKeyWord = newString;
   }
 
-  List? _myTimelines;
-  List? get myTimelines => _myTimelines;
-  set myTimelines (List? newList) {
-    _myTimelines = newList;
+  List<UserSearchResult> _searchedResults = [];
+  List<UserSearchResult> get searchedResults => _searchedResults;
+  set searchedResults (List<UserSearchResult> newList) {
+    _searchedResults = newList;
   }
 
   List? _posts;
@@ -22,24 +28,29 @@ class SearchBarViewModel extends ChangeNotifier {
     _posts = newPosts;
   }
 
+  bool _isSearching = false;
+  bool get isSearching => _isSearching;
+  set isSearching (bool newBool) {
+    _isSearching = newBool;
+  }
 
-  Future<void> myTimelineSearch(String? value) async {
-    const timelineSearchUrl = "";
 
-    if (value != null) {
-      searchKeyWord = value;
-      Response searchResponse = await dio.get(timelineSearchUrl);
-      myTimelines = searchResponse.data[0];
+
+  FocusNode _myfocus = FocusNode();
+  FocusNode get myfocus => _myfocus;
+
+  Future<void> searchUser(String? keyword) async {
+    Response response = await dio.get(searchUrl);
+    if (response.statusCode == 200) {
+      logger.d(response.data);
     }
   }
 
-  Future<void> postsSearch(String? value) async {
-    const postSearchUrl = "";
-
-    if (value != null) {
-      searchKeyWord = value;
-      Response searchResponse = await dio.get(postSearchUrl);
-      posts = searchResponse.data[0];
-    }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    // isSearching = false;
+    // searchKeyWord = "";
+    super.dispose();
   }
 }
