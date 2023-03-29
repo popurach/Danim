@@ -1,6 +1,7 @@
 package com.danim.controller;
 
-import com.danim.dto.InsertPostReq;
+import com.danim.dto.AddPostReq;
+import com.danim.dto.GetPostRes;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.exception.BaseException;
@@ -30,10 +31,7 @@ public class PostController {
     public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
                                     @RequestPart List<MultipartFile> imageFiles,
                                     @RequestPart MultipartFile voiceFile,
-                                    @ModelAttribute @Valid InsertPostReq insertPostReq) throws Exception {
-        // 입력 값 잘 들어오는지 확인
-        System.out.println(insertPostReq);
-        System.out.println(imageFiles);
+                                     @Valid @ModelAttribute AddPostReq addPostReq) throws Exception {
 
         if (flagFile == null || imageFiles == null || voiceFile == null) {
             throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
@@ -41,8 +39,8 @@ public class PostController {
 
         log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
-        List<Photo> photoList = photoService.createPhotoList(insertPostReq, imageFiles, savedPost);
-        Post resavedPost = postService.insertPost(savedPost, photoList, flagFile, voiceFile, insertPostReq);
+        List<Photo> photoList = photoService.createPhotoList(addPostReq, imageFiles, savedPost);
+        Post resavedPost = postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
         log.info("addPost transaction ends");
         return ResponseEntity.ok(resavedPost);
     }
@@ -65,7 +63,7 @@ public class PostController {
             log.info("location 값 없음");
             throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
         }
-        List<Post> postList = postService.findByLocation(location);
-        return ResponseEntity.ok(postList);
+        List<GetPostRes> getPostResList = postService.findByLocation(location);
+        return ResponseEntity.ok(getPostResList);
     }
 }
