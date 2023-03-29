@@ -91,7 +91,8 @@ public class TimeLineServiceImpl implements TimeLineService {
             if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
 
                 if (postlist.size() > 0) {
-                    temptimeline.setPostlist(postlist);
+                    temptimeline.setPostList(postlist);
+
                     //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
                     timelineouter.getTimeline().add(temptimeline);
                 }
@@ -110,7 +111,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             }
         }
         //가장 마지막에 남은 것들 처리해 주는 과정
-        temptimeline.setPostlist(postlist);
+        temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
 
         timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
