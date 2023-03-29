@@ -66,7 +66,11 @@ public class TimelineController {
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {
         log.info("타임라인 한개 조회 시작");
-        TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid,user);
         log.info("타임라인 한개 조회 종료");
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
