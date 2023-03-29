@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
             user.setProfileImageUrl(ProfileImageUrl);
             user.setNickname(nickname);
         }
-        
+
         return entityToResponseDTO(user);
     }
 

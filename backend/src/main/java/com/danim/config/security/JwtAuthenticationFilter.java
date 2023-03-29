@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } else {
                 log.info("accessToken 만료 및 refreshToken 없음");
-                throw new BaseException(ErrorMessage.NOT_PERMISSION_EXCEPTION);
+//                throw new BaseException(ErrorMessage.UNAUTHORIZED_ACCESSTOKEN);
             }
         } else if (refreshToken != null) {
             // 엑세스 토큰이 만료된 상황 | 리프레시 토큰 존재하는 상황
