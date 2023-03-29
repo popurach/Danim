@@ -1,5 +1,6 @@
 package com.danim.config.security;
 
+import com.danim.config.security.common.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,21 +38,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // UI를 사용하는 것을 기본값으로 가진 시큐리티 설정을 비활성화합니다.
         httpSecurity.httpBasic().disable()
-                .csrf().disable() // REST API에서는 CSRF 보안이 필요 없기 때문에 비활성화하는 로직
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT 토큰으로 인증을 처리하며, 세션은 사용하지 않기 떄문에 STATELESS 설정
-                .and()
-                .authorizeRequests() //request에 대한 사용 권한을 체크
-                .antMatchers("/api/login/**", "/api/auth/**").permitAll()
-                .antMatchers("/exception/**").permitAll()
-                .anyRequest().hasRole("USER")
-                .and()
-//			.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
-//			.and()
-//			.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//			.and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        //UsernamePasswordAuthenticationFilter 앞에 JwtAuthenticationFilter를 추가하겠다는 의미
+            .csrf().disable() // REST API에서는 CSRF 보안이 필요 없기 때문에 비활성화하는 로직
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT 토큰으로 인증을 처리하며, 세션은 사용하지 않기 떄문에 STATELESS 설정
+            .and()
+            .authorizeRequests() //request에 대한 사용 권한을 체크
+            .antMatchers("/api/auth/**").authenticated()
+            .antMatchers("/api/login/**").permitAll()
+            .antMatchers("/exception/**").permitAll()
+
+            .anyRequest().hasRole("USER")
+            .and()
+            .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+            .and()
+            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+            //UsernamePasswordAuthenticationFilter 앞에 JwtAuthenticationFilter를 추가하겠다는 의미
     }
 
     // webSecurity는 HttpSecurity 앞단에 적용, 스프링 시큐리티의 영향권 밖에 있음. 즉, 인증과 인가가 적용되지 않는 리소스 접근에 대해서만 사용.

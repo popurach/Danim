@@ -12,8 +12,12 @@ public class BaseException extends RuntimeException {
 
 
     public BaseException(ErrorMessage errorMessage) {
+        System.out.println(errorMessage);
         this.errorMessage = errorMessage.getErrMsg();
         this.httpStatus = errorMessage.getHttpStatus();
+
+        System.out.println(errorMessage);
+        System.out.println(httpStatus);
     }
 
 
