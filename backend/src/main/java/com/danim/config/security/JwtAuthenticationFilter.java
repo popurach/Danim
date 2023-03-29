@@ -52,6 +52,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             boolean validateRefreshToken = jwtTokenProvider.validateToken(refreshToken);
             /// 리프레시 토큰 저장소 존재유무 확인
             boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
+
+            log.info("validateRefreshToken, {}", validateRefreshToken);
+            log.info("isRefreshToken, {}", isRefreshToken);
             if (validateRefreshToken && isRefreshToken) {
                 /// 리프레시 토큰으로 정보 가져오기
                 String clientid = jwtTokenProvider.getUsername(refreshToken);
