@@ -22,8 +22,9 @@ class ModifyProfile extends StatelessWidget {
                       : null,
                   child: viewModel.selectedImageFile == null
                       ? CachedNetworkImage(
-                          imageUrl:
-                              'https://mydanimbucket.s3.ap-northeast-2.amazonaws.com/Danim/Post/1d14f821-5cc5-431f-9536-a1f1db931aa8.jpg',
+                          imageUrl: viewModel.imagePath,
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.account_circle),
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,

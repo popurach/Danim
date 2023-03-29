@@ -63,7 +63,7 @@ class MyHomePage extends StatelessWidget {
               Navigator(
                 key: viewModel.homeFeedNavigatorKey,
                 onGenerateRoute: (settings) {
-                  return viewModel.onHomeFeedRoute(settings);
+                  return viewModel.onHomeFeedRoute(context, settings);
                 },
               ),
               Navigator(

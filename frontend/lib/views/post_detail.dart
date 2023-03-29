@@ -1,6 +1,6 @@
+import 'package:danim/models/Post.dart';
 import 'package:danim/module/audio_player_view.dart';
 import 'package:danim/view_models/images_page_view_model.dart';
-import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/views/images_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +9,9 @@ import 'package:timeline_tile/timeline_tile.dart';
 import '../module/audio_player_view_model.dart';
 
 class PostDetail extends StatelessWidget {
-  final PostViewModel viewModel;
+  final Post post;
 
-  const PostDetail({super.key, required this.viewModel});
+  const PostDetail({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -40,24 +40,23 @@ class PostDetail extends StatelessWidget {
                             insetPadding: const EdgeInsets.all(5),
                             child: ChangeNotifierProvider(
                               create: (_) =>
-                                  ImagesPageViewModel(viewModel.post.imageUrls),
+                                  ImagesPageViewModel(post.photoList),
                               child: ImagesPageView(),
                             ),
                           );
                         });
                   },
                   child: ChangeNotifierProvider(
-                    create: (_) =>
-                        ImagesPageViewModel(viewModel.post.imageUrls),
+                    create: (_) => ImagesPageViewModel(post.photoList),
                     child: const ImagesPageView(),
                   ),
                 ),
               ),
               ChangeNotifierProvider(
-                create: (_) => AudioPlayerViewModel(viewModel.post.voiceUrl),
+                create: (_) => AudioPlayerViewModel(post.voiceUrl),
                 child: AudioPlayerView(),
               ),
-              Text(viewModel.post.text)
+              Text(post.text)
             ],
           ),
         ),

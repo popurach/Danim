@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -20,8 +20,8 @@ class _CustomAppBar extends State<CustomAppBar> {
   }
 
   loadProfileImage() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final newProfileImage = prefs.getString('profileImageUrl');
+    const storage = FlutterSecureStorage();
+    final newProfileImage = await storage.read(key: 'profileImageUrl');
     if (newProfileImage != null) changeProfileImageUrl(newProfileImage);
   }
 
@@ -34,6 +34,8 @@ class _CustomAppBar extends State<CustomAppBar> {
           offset: const Offset(0, 55),
           icon: CachedNetworkImage(
             imageUrl: _profileImageUrl,
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.account_circle),
             imageBuilder: (context, imageProvider) => Container(
               width: 80.0,
               height: 80.0,

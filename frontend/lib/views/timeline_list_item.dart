@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/models/Timeline.dart';
 import 'package:flutter/material.dart';
 
@@ -70,11 +71,15 @@ class TimelineListItem extends StatelessWidget {
                               top: 10, right: 10, bottom: 10),
                           child: Row(
                             children: [
-                              ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                child: Image(
-                                  image: NetworkImage(timeline.imageUrl),
+                              SizedBox(
+                                height: 100,
+                                width: 100,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  child: CachedNetworkImage(
+                                      imageUrl: timeline.imageUrl,
+                                      fit: BoxFit.cover),
                                 ),
                               ),
                               const SizedBox(width: 10),
