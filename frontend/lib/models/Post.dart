@@ -2,36 +2,35 @@ class Post {
   final int postId;
   final String voiceUrl;
   final double voiceLength;
-  final String? address2;
-  final String? address3;
-  final String? address4;
+  final String address;
   final String text;
   final List<String> photoList;
-  final bool isLike;
+  final bool isFavorite;
+  final int favoriteCount;
+  bool isExpand;
 
   Post({
     required this.postId,
     required this.voiceUrl,
     required this.voiceLength,
-    required this.address2,
-    required this.address3,
-    required this.address4,
+    required this.address,
     required this.text,
     required this.photoList,
-    required this.isLike,
+    required this.isFavorite,
+    required this.favoriteCount,
+    this.isExpand = false,
   });
 
   // Serialize(직렬화)
   Map<String, dynamic> toJson() => {
-        'postId': postId.toString(),
+        'postId': postId,
         'voiceUrl': voiceUrl,
-        'voiceLength': voiceLength.toString(),
-        'address2': address2,
-        'address3': address3,
-        'address4': address4,
+        'voiceLength': voiceLength,
+        'address': address,
         'text': text,
         'photoList': photoList,
-        'isLike': isLike,
+        'isFavorite': isFavorite,
+        'favoriteCount': favoriteCount,
       };
 
   // Deserialize(파싱?)
@@ -40,12 +39,15 @@ class Post {
       postId: json['postId'],
       voiceUrl: json['voiceUrl'],
       voiceLength: json['voiceLength'],
-      address2: json['address2'],
-      address3: json['address3'],
-      address4: json['address4'],
+      address: (json['address2'] ?? '') +
+          ' ' +
+          (json['address3'] ?? '') +
+          ' ' +
+          (json['address4'] ?? ''),
       text: json['text'],
       photoList: List.from(json['photoList']),
-      isLike: false,
+      isFavorite: json['isfavorite'],
+      favoriteCount: json['favoriteCount'],
     );
   }
 }

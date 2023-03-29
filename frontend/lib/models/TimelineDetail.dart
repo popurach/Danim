@@ -4,11 +4,13 @@ class TimelineDetail {
   final String flag;
   final String nation;
   final List<Post> postList;
+  bool isExpand;
 
   TimelineDetail({
     required this.flag,
     required this.nation,
     required this.postList,
+    this.isExpand = false,
   });
 
   Map<String, dynamic> toJson(json) => {
