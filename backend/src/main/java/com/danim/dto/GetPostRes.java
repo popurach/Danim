@@ -1,8 +1,12 @@
 package com.danim.dto;
 
 import com.danim.entity.Post;
-import lombok.Builder;
+import lombok.*;
 
+@Data
+@Getter
+@Setter
+@ToString
 @Builder(builderMethodName = "GetPostResBuilder")
 public class GetPostRes {
     private Long timelineId;
