@@ -22,13 +22,12 @@ public class Photo {
     private String photoUrl;
 
 
-
     @Builder.Default
     @ColumnDefault("0")
     private Boolean isLive = false;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     @JsonIgnore
     private Post postId;
 }

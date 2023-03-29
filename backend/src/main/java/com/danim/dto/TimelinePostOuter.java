@@ -11,7 +11,7 @@ import java.util.List;
 public class TimelinePostOuter {
     private List<TimelinePostInner> timeline;
 
-    private List<String> nationList;
+   // private List<String> nationList;
 
     public TimelinePostOuter() {
         timeline = new ArrayList<>();

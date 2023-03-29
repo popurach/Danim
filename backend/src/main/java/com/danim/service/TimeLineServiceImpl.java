@@ -87,7 +87,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         for (Post p : post) {
             String NationName = p.getNationId().getName();
-
+            List<String>photolist=new ArrayList<>();
             if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
 
                 if (postlist.size() > 0) {
@@ -96,6 +96,10 @@ public class TimeLineServiceImpl implements TimeLineService {
                     //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
                     timelineouter.getTimeline().add(temptimeline);
                 }
+                for (Photo p1: p.getPhotoList()) {
+                    photolist.add(p1.getPhotoUrl());
+                }
+
                 //이제 새로운 타임라인 생성을 하고 국가, 국기, post를 넣어주는 작업이다
                 postlist = new ArrayList<>();
                 temptimeline = new TimelinePostInner();
@@ -103,18 +107,18 @@ public class TimeLineServiceImpl implements TimeLineService {
                 temptimeline.setNation(NationName);
                 tempnow.add(NationName);
                 temp.put(NationName, "1");
-                postlist.add(MyPostDtoRes.builder(p).build());
+                postlist.add(MyPostDtoRes.builder(p,photolist).build());
 
             } else {
                 //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
-                postlist.add(MyPostDtoRes.builder(p).build());
+                postlist.add(MyPostDtoRes.builder(p,photolist).build());
             }
         }
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
 
-        timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
+       // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
     }
 

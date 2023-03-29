@@ -45,13 +45,11 @@ public class PhotoServiceImpl implements PhotoService {
         Photo photo = Photo.builder()
                 .postId(savedPost)
                 .photoUrl(photoUrl)
-                .lat(addPostReq.getLat())
-                .lng(addPostReq.getLng())
                 .build();
         photoRepository.save(photo);
         log.info("savePhoto Transaction complete");
         return photo;
     }
 
-    ;
+    
 }
