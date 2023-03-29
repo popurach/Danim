@@ -109,7 +109,7 @@ public class PostServiceImpl implements PostService {
 
         // db에 저장된 국가인 경우 가져와서 사용, 새로운 국가인 경우 nation 저장 후 사용
         String address1 = addPostReq.getAddress1();
-        Nation nation = nationRepository.findByName(address1);
+        Nation nation = nationRepository.findFirstByName(address1);
         if (nation == null) {
             nation = new Nation();
             String flagUrl = awsS3.upload(flagFile, "Danim/Nation");

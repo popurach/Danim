@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     // 해당 포스트에 해당 유저가 좋아요 눌렀는지 여부 검색
-    Favorite findByPostIdAndUserUid(Post post, User user);
+    Favorite findFirstByPostIdAndUserUid(Post post, User user);
 
     // 포스트에 눌린 좋아요 수 검색
     Long countByPostId(Post post);
