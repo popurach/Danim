@@ -65,7 +65,7 @@ class RecordView extends StatelessWidget {
                         Expanded(
                             flex: 5,
                             child: Text(
-                                '${viewModel.locationInfo.country} ${viewModel.locationInfo.city}'))
+                                '${viewModel.locationInfo.country} ${viewModel.locationInfo.address2}'))
                       ],
                     )),
                 Container(
