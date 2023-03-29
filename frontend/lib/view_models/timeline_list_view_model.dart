@@ -1,34 +1,43 @@
 import 'package:danim/models/Timeline.dart';
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class TimelineListViewModel with ChangeNotifier {
-  List<Timeline> _timelineList = [];
   final userUid;
-  int pageNum = 0;
+  final PagingController<int, Timeline> pagingController =
+      PagingController(firstPageKey: 0);
 
   TimelineListViewModel({this.userUid}) {
     if (userUid == null) {
-      getMainTimelineList();
+      pagingController.addPageRequestListener((pageKey) {
+        getMainTimelineList(pageKey);
+      });
     } else {
-      getUserTimelineList();
+      pagingController.addPageRequestListener((pageKey) {
+        getUserTimelineList(pageKey);
+      });
     }
   }
 
-  List<Timeline> get timelineList => _timelineList;
-
-  Future<void> getMainTimelineList() async {
+  Future<void> getMainTimelineList(int pageKey) async {
     try {
-      final data =
-          await TimelineRepository().getMainTimelineByPageNum(pageNum++);
-      _timelineList = [..._timelineList, ...data];
+      final newItems =
+          await TimelineRepository().getMainTimelineByPageNum(pageKey);
+      final isLastPage = newItems.length < 15;
+      if (isLastPage) {
+        pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        pagingController.appendPage(newItems, nextPageKey);
+      }
       notifyListeners();
     } catch (e) {
       throw Exception('get timeline list fail: $e');
     }
   }
 
-  Future<void> getUserTimelineList() async {
+  Future<void> getUserTimelineList(int pageKey) async {
     // TODO 유저 타임 라인 리스트 가져오기
     // final data = await TimelineRepository().getMainTimelineByPageNum(pageNum++);
     // _timelineList = [..._timelineList, ...data];
@@ -37,7 +46,7 @@ class TimelineListViewModel with ChangeNotifier {
 
   @override
   void dispose() {
-    _timelineList = [];
+    pagingController.dispose();
     super.dispose();
   }
 }
