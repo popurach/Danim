@@ -71,11 +71,11 @@ public class UserController {
 
     // 회원 정보 수정 (프로필 이미지)
     @PutMapping("/auth/user/info")
-    public ResponseEntity<?> updateUser(@RequestPart MultipartFile profileImage) throws Exception {
+    public ResponseEntity<?> updateUser(@RequestPart MultipartFile profileImage, @RequestBody String nickname) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() != null) {
             User user = (User) auth.getPrincipal();
-            UserInfoRes userInfoRes = userService.updateUserInfo(user.getUserUid(), profileImage);
+            UserInfoRes userInfoRes = userService.updateUserInfo(user.getUserUid(), profileImage, nickname);
             return new ResponseEntity<>(userInfoRes, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.OK);
