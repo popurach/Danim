@@ -20,7 +20,7 @@ public class MainTimelinePhotoDtoRes {
     private Long timelineId;
 
     //썸네일
-    private String url;
+    private String imageUrl;
 
     //여행 제목
     private String title;
@@ -48,7 +48,7 @@ public class MainTimelinePhotoDtoRes {
         return s3;
     }
 
-    public static MainTimelinePhotoDtoResBuilder builder(TimeLine timeline, Post startpost,Post lastpost, Photo photo, User user) {
+    public static MainTimelinePhotoDtoResBuilder builder(TimeLine timeline, Post startpost, Post lastpost, Photo photo, User user) {
 
         String start = "";
         String finish = "";
@@ -61,8 +61,8 @@ public class MainTimelinePhotoDtoRes {
         }
 
         return MainTimelinePhotoDtoResBuilder().
-                timelineId(timeline.getTimelineId()).
-                url(photo.getPhotoUrl())
+                timelineId(timeline.getTimelineId())
+                .imageUrl(photo.getPhotoUrl())
                 .title(timeline.getTitle())
                 .nickname(user.getNickname())
                 .createTime(start)
