@@ -1,6 +1,5 @@
 package com.danim.dto;
 
-import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +27,11 @@ public class MyPostDtoRes {
 
     private List<String> photoList; // photoId 리스트
 
+    private Boolean isfavorite;//정보를 가지고 온 유저가 , 해당 포스트에 좋아요를 눌렀는가 여부에 대해
 
-    public static MyPostDtoResBuilder builder(Post post,List<String>photoList) {
+    private Long favoriteCount;
+
+    public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite) {
 
         return MyPostDtoResBuilder()
                 .postId(post.getPostId())
@@ -40,6 +42,8 @@ public class MyPostDtoRes {
                 .address4(post.getAddress4())
                 .text(post.getText())
                 .photoList(photoList)
+                .favoriteCount(favoriteCount)
+                .isfavorite(favorite)
                 ;
 
     }
