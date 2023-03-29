@@ -17,6 +17,6 @@ public interface UserService {
 
     TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException;
 
-    UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage) throws Exception;
+    UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage, String nickname) throws Exception;
 
 }
