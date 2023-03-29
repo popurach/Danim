@@ -17,7 +17,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AppViewModel()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -56,20 +56,24 @@ class MyHomePage extends StatelessWidget {
         },
         child: Scaffold(
           appBar: CustomAppBar(),
-          body: PageView(controller: viewModel.pageController, children: [
-            Navigator(
-              key: viewModel.homeFeedNavigatorKey,
-              onGenerateRoute: (settings) {
-                return viewModel.onHomeFeedRoute(settings);
-              },
-            ),
-            Navigator(
-              key: viewModel.myFeedNavigatorKey,
-              onGenerateRoute: (settings) {
-                return viewModel.onMyFeedRoute(settings);
-              },
-            )
-          ]),
+          body: PageView(
+            controller: viewModel.pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              Navigator(
+                key: viewModel.homeFeedNavigatorKey,
+                onGenerateRoute: (settings) {
+                  return viewModel.onHomeFeedRoute(settings);
+                },
+              ),
+              Navigator(
+                key: viewModel.myFeedNavigatorKey,
+                onGenerateRoute: (settings) {
+                  return viewModel.onMyFeedRoute(settings);
+                },
+              )
+            ],
+          ),
           floatingActionButton: const CameraFloatingActionButton(),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
