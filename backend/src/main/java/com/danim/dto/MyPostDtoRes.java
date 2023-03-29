@@ -26,10 +26,10 @@ public class MyPostDtoRes {
     private String text;
 
 
-    private List<Photo> photoList; // photoId 리스트
+    private List<String> photoList; // photoId 리스트
 
 
-    public static MyPostDtoResBuilder builder(Post post) {
+    public static MyPostDtoResBuilder builder(Post post,List<String>photoList) {
 
         return MyPostDtoResBuilder()
                 .postId(post.getPostId())
@@ -39,7 +39,7 @@ public class MyPostDtoRes {
                 .address3(post.getAddress3())
                 .address4(post.getAddress4())
                 .text(post.getText())
-                .photoList(post.getPhotoList())
+                .photoList(photoList)
                 ;
 
     }

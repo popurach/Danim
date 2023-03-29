@@ -51,5 +51,5 @@ public class PhotoServiceImpl implements PhotoService {
         return photo;
     }
 
-    ;
+    
 }
