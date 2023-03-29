@@ -24,7 +24,6 @@ var logger = Logger();
 
 class RecordViewModel extends ChangeNotifier {
   final _dio = AuthDio().getDio();
-  get dio => _dio;
 
   late List<XFile> _imageList;
 
@@ -167,7 +166,7 @@ class RecordViewModel extends ChangeNotifier {
       'audio': audioFile,
     });
 
-    Response response = await dio.post("path", data: formData);
+    Response response = await _dio.post("path", data: formData);
 
     if (response.statusCode == 200) {}
   }
@@ -193,7 +192,7 @@ class RecordViewModel extends ChangeNotifier {
                 [] as Uint8List);
             String countryCode = response.data["results"][0]["country_code"];
             final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
-            Response<Uint8List> flagResponse = await dio.get(flagUrl,
+            Response<Uint8List> flagResponse = await plainDio.get(flagUrl,
                 options: Options(responseType: ResponseType.bytes));
             newLocation.flag = flagResponse.data!;
             locationInfo = newLocation;
