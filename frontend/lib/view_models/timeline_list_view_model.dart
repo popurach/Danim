@@ -8,10 +8,10 @@ class TimelineListViewModel with ChangeNotifier {
   final PagingController<int, Timeline> pagingController =
       PagingController(firstPageKey: 0);
 
-  TimelineListViewModel({this.userUid}) {
+  TimelineListViewModel({required BuildContext context, this.userUid}) {
     if (userUid == null) {
       pagingController.addPageRequestListener((pageKey) {
-        getMainTimelineList(pageKey);
+        getMainTimelineList(context, pageKey);
       });
     } else {
       pagingController.addPageRequestListener((pageKey) {
@@ -20,10 +20,10 @@ class TimelineListViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> getMainTimelineList(int pageKey) async {
+  Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
-          await TimelineRepository().getMainTimelineByPageNum(pageKey);
+          await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
       if (isLastPage) {
         pagingController.appendLastPage(newItems);

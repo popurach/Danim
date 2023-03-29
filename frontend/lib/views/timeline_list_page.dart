@@ -10,7 +10,7 @@ class TimelineListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       ChangeNotifierProvider<TimelineListViewModel>(
-        create: (_) => TimelineListViewModel(),
+        create: (_) => TimelineListViewModel(context: context),
         child: Consumer<TimelineListViewModel>(
           builder: (context, viewModel, child) => PagedListView<int, Timeline>(
             pagingController: viewModel.pagingController,

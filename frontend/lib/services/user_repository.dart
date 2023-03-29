@@ -34,9 +34,10 @@ class UserRepository {
     }
   }
 
-  Future<UserInfo> getUserInfo() async {
+  Future<UserInfo> getUserInfo(context) async {
     try {
-      Response response = await AuthDio().getDio().get('api/auth/user/info');
+      final dio = AuthDio().getDio();
+      Response response = await dio.get('api/auth/user/info');
       final UserInfo userInfo = UserInfo.fromJson(response.data);
       return userInfo;
     } catch (error) {
