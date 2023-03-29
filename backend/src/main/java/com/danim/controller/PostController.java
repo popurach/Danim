@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/post")
@@ -32,13 +34,14 @@ public class PostController {
                                     @RequestPart List<MultipartFile> imageFiles,
                                     @RequestPart MultipartFile voiceFile,
                                      @Valid @ModelAttribute AddPostReq addPostReq) throws Exception {
-
-        log.info("addPost transaction starts");
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoList(imageFiles, savedPost);
-        Post resavedPost = postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
-        log.info("addPost transaction ends");
-        return ResponseEntity.ok(resavedPost);
+        postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
+
+        // addPost 요청에 대한 응답으로 timelineId 반환
+        Map<String, Object> res = new HashMap<>();
+        res.put("timelineId",addPostReq.getTimelineId());
+        return ResponseEntity.ok(res);
     }
 
     //포스트 삭제

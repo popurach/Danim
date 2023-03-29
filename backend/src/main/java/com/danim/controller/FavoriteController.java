@@ -1,6 +1,7 @@
 package com.danim.controller;
 
 import com.danim.dto.ChangeFavoriteStatusRes;
+import com.danim.dto.ChangeFavoriteStatusReq;
 import com.danim.entity.Post;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,14 +24,11 @@ public class FavoriteController {
     // 해당 유저가 포스트에 좋아요를 누른 경우 -> favorite 저장 (true 반환)
     // 해당 유저가 포스트에 좋아요를 취소한 경우 -> favorite 삭제 (false 반환)
     @PostMapping(value = "")
-    public ResponseEntity<?> changeFavoriteStatus(@RequestParam Long postId, @RequestParam Long userUid) throws Exception {
-        if (postId == null || userUid == null) {
-            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
-        }
+    public ResponseEntity<?> changeFavoriteStatus(@RequestBody @Valid ChangeFavoriteStatusReq changeFavoriteStatusReq) throws Exception {
         ChangeFavoriteStatusRes res = new ChangeFavoriteStatusRes();
-        res.setPostId(postId);
-        res.setFavorite(favoriteService.isFavorite(postId, userUid));
-        res.setTotalFavorite(favoriteService.countFavorite(postId));
+        res.setPostId(changeFavoriteStatusReq.getPostId());
+        res.setFavorite(favoriteService.isFavorite(changeFavoriteStatusReq.getPostId(), changeFavoriteStatusReq.getUserUid()));
+        res.setTotalFavorite(favoriteService.countFavorite(changeFavoriteStatusReq.getPostId()));
         return ResponseEntity.ok(res);
     }
 
