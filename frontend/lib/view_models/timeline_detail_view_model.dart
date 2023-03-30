@@ -1,22 +1,31 @@
 import 'package:danim/services/timeline_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 
 import '../models/TimelineDetail.dart';
 
 class TimelineDetailViewModel extends ChangeNotifier {
   final int timelineId;
+  bool _isMine = false;
+  bool _isPublic = false;
   final int expansionTileAnimationTile = 200;
   List<TimelineDetail> _timelineDetails = [];
 
-  List<TimelineDetail> get timelineDetails => _timelineDetails;
+  get isMine => _isMine;
+  get isPublic => _isPublic;
+  get timelineDetails => _timelineDetails;
 
   TimelineDetailViewModel(BuildContext context, this.timelineId) {
     loadTimelineDetails(context);
   }
 
   loadTimelineDetails(context) async {
-    _timelineDetails = await TimelineRepository()
+    final timelineInfo = await TimelineRepository()
         .getTimelineDetailsByTimelineId(context, timelineId);
+    _timelineDetails = timelineInfo.timelineDetails;
+    _isMine = _timelineDetails[0].isMine;
+    _isPublic = timelineInfo.isPublic;
     notifyListeners();
   }
 
@@ -47,5 +56,16 @@ class TimelineDetailViewModel extends ChangeNotifier {
             duration: Duration(milliseconds: expansionTileAnimationTile));
       });
     }
+  }
+
+  showPublicIcon() {
+    if (_isMine) {
+      if (_isPublic) {
+        return const Icon(Icons.lock);
+      } else {
+        return const Icon(Icons.lock_open);
+      }
+    }
+    return Container();
   }
 }

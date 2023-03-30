@@ -1,8 +1,16 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final Function moveToModifyProfile;
+  final Function logout;
+  const CustomAppBar(
+      {super.key, required this.moveToModifyProfile, required this.logout});
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -27,6 +35,7 @@ class _CustomAppBar extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final logger = Logger();
     return AppBar(
       actions: <Widget>[
         PopupMenuButton(
@@ -34,9 +43,8 @@ class _CustomAppBar extends State<CustomAppBar> {
           offset: const Offset(0, 55),
           icon: CachedNetworkImage(
             imageUrl: _profileImageUrl,
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.account_circle),
-            imageBuilder: (context, imageProvider) => Container(
+            errorWidget: (_, __, ___) => const Icon(Icons.account_circle),
+            imageBuilder: (_, imageProvider) => Container(
               width: 80.0,
               height: 80.0,
               decoration: BoxDecoration(
@@ -49,15 +57,22 @@ class _CustomAppBar extends State<CustomAppBar> {
             ),
           ),
           iconSize: 40,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-            const PopupMenuItem(
-              child: SizedBox(
+          itemBuilder: (_) => <PopupMenuEntry>[
+            PopupMenuItem(
+              onTap: () {
+                logger.d('modifyProfile clicked');
+                widget.moveToModifyProfile();
+              },
+              child: const SizedBox(
                 width: 80,
                 child: Text('프로필변경'),
               ),
             ),
-            const PopupMenuItem(
-              child: SizedBox(
+            PopupMenuItem(
+              onTap: () {
+                widget.logout();
+              },
+              child: const SizedBox(
                 width: 80,
                 child: Text('로그아웃'),
               ),

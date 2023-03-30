@@ -1,4 +1,5 @@
 import 'package:danim/view_models/timeline_detail_view_model.dart';
+import 'package:danim/views/modify_profile.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,8 @@ class AppViewModel with ChangeNotifier {
   }
 
   onMyFeedRoute(settings) {
-    //TODO 내피드 페이지 이동
+    return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => ModifyProfile(),
+    );
   }
 }

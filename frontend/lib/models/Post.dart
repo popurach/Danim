@@ -7,7 +7,6 @@ class Post {
   final List<String> photoList;
   bool isFavorite;
   int favoriteCount;
-  final bool isMine;
   bool isExpand;
 
   Post({
@@ -19,11 +18,9 @@ class Post {
     required this.photoList,
     required this.isFavorite,
     required this.favoriteCount,
-    required this.isMine,
     this.isExpand = false,
   });
 
-  // Deserialize(파싱?)
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       postId: json['postId'],
@@ -38,7 +35,6 @@ class Post {
       photoList: List.from(json['photoList']),
       isFavorite: json['isFavorite'],
       favoriteCount: json['favoriteCount'],
-      isMine: json['isMine'],
     );
   }
 }

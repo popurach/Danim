@@ -4,6 +4,8 @@ import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
+import '../models/TimelineInfo.dart';
+
 class TimelineRepository {
   TimelineRepository._internal();
 
@@ -22,13 +24,12 @@ class TimelineRepository {
     }
   }
 
-  Future<List<TimelineDetail>> getTimelineDetailsByTimelineId(
+  Future<TimelineInfo> getTimelineDetailsByTimelineId(
       context, int timelineId) async {
     try {
       final dio = await authDio(context);
       Response response = await dio.get('api/auth/timeline/$timelineId');
-      return List.from(response.data['timeline']
-          .map((json) => TimelineDetail.fromJson(json)));
+      return TimelineInfo.fromJson(response.data);
     } catch (error) {
       throw Exception('Fail to get timeline: $error');
     }

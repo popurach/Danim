@@ -3,6 +3,7 @@ import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
 import 'package:danim/views/custom_app_bar.dart';
 import 'package:danim/views/login_page.dart';
+import 'package:danim/views/modify_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -55,7 +56,12 @@ class MyHomePage extends StatelessWidget {
           return true;
         },
         child: Scaffold(
-          appBar: CustomAppBar(),
+          appBar: CustomAppBar(
+            moveToModifyProfile: () {
+              viewModel.changePage(1);
+            },
+            logout: () {},
+          ),
           body: PageView(
             controller: viewModel.pageController,
             physics: const NeverScrollableScrollPhysics(),

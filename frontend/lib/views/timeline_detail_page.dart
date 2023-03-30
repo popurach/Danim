@@ -14,6 +14,23 @@ class TimelineDetailPage extends StatelessWidget {
         builder: (context, viewModel, _) => SingleChildScrollView(
           child: Column(
             children: [
+              viewModel.isMine
+                  ? Row(
+                      children: [
+                        Text(''),
+                        Expanded(child: Container()),
+                        viewModel.showPublicIcon(),
+                        Switch(value: false, onChanged: (value) {}),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
+                    )
+                  : Container(),
               ListView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(left: 5),
@@ -81,8 +98,12 @@ class TimelineDetailPage extends StatelessWidget {
                               viewModel.changePostExpansion(
                                   timelineIndex, postIndex, isExpand);
                             },
-                            title: Text(viewModel.timelineDetails[timelineIndex]
-                                .postList[postIndex].address),
+                            title: Text(
+                              viewModel.timelineDetails[timelineIndex]
+                                  .postList[postIndex].address,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             leading: SizedBox(
                               width: 60,
                               height: 60,
@@ -106,9 +127,10 @@ class TimelineDetailPage extends StatelessWidget {
                             ),
                             children: [
                               ChangeNotifierProvider(
-                                create: (_) => PostViewModel(viewModel
-                                    .timelineDetails[timelineIndex]
-                                    .postList[postIndex]),
+                                create: (_) => PostViewModel(
+                                    viewModel.timelineDetails[timelineIndex]
+                                        .postList[postIndex],
+                                    viewModel.isMine),
                                 child: PostDetail(
                                   key: Key(viewModel
                                       .timelineDetails[timelineIndex]
@@ -125,10 +147,20 @@ class TimelineDetailPage extends StatelessWidget {
                   );
                 },
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('여행 종료'),
-              ),
+              viewModel.isMine && viewModel.isPublic
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: const Text(
+                            '여행 종료',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),

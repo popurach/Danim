@@ -4,17 +4,15 @@ import 'package:flutter/cupertino.dart';
 import '../models/Post.dart';
 
 class PostViewModel extends ChangeNotifier {
-  final Post _post;
+  final Post post;
+  final bool isMine;
 
-  PostViewModel(this._post);
-
-  Post get post => _post;
+  PostViewModel(this.post, this.isMine);
 
   changeIsFavorite(context) async {
-    final res =
-        await PostRepository().changeFavoritePost(context, _post.postId);
-    _post.isFavorite = res['favorite'];
-    _post.favoriteCount = res['totalFavorite'];
+    final res = await PostRepository().changeFavoritePost(context, post.postId);
+    post.isFavorite = res['favorite'];
+    post.favoriteCount = res['totalFavorite'];
     notifyListeners();
   }
 }

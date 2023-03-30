@@ -35,7 +35,7 @@ class PostDetail extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    viewModel.post.isMine
+                    viewModel.isMine
                         ? IconButton(
                             onPressed: () {},
                             icon: const Icon(
