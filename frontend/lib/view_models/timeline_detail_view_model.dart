@@ -5,6 +5,7 @@ import '../models/TimelineDetail.dart';
 
 class TimelineDetailViewModel extends ChangeNotifier {
   final int timelineId;
+  final int expansionTileAnimationTile = 200;
   List<TimelineDetail> _timelineDetails = [];
 
   List<TimelineDetail> get timelineDetails => _timelineDetails;
@@ -21,7 +22,7 @@ class TimelineDetailViewModel extends ChangeNotifier {
 
   changeExpansions(int timelineIndex, bool isExpand) async {
     if (!isExpand) {
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(Duration(milliseconds: expansionTileAnimationTile));
       for (var post in _timelineDetails[timelineIndex].postList) {
         post.isExpand = false;
       }
@@ -32,9 +33,19 @@ class TimelineDetailViewModel extends ChangeNotifier {
 
   changePostExpansion(int timelineIndex, int postIndex, bool isExpand) async {
     if (!isExpand) {
-      await Future.delayed(const Duration(milliseconds: 200));
+      await Future.delayed(Duration(milliseconds: expansionTileAnimationTile!));
     }
     _timelineDetails[timelineIndex].postList[postIndex].isExpand = isExpand;
     notifyListeners();
+  }
+
+  void scrollToSelectedContent(context) {
+    if (context != null) {
+      Future.delayed(Duration(milliseconds: expansionTileAnimationTile))
+          .then((value) {
+        Scrollable.ensureVisible(context,
+            duration: Duration(milliseconds: expansionTileAnimationTile));
+      });
+    }
   }
 }

@@ -13,12 +13,6 @@ class TimelineDetail {
     this.isExpand = false,
   });
 
-  Map<String, dynamic> toJson(json) => {
-        'flag': flag,
-        'nation': nation,
-        'postList': postList.map((post) => post.toJson()),
-      };
-
   factory TimelineDetail.fromJson(Map<String, dynamic> json) => TimelineDetail(
         flag: json['flag'],
         nation: json['nation'],

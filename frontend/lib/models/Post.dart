@@ -5,8 +5,9 @@ class Post {
   final String address;
   final String text;
   final List<String> photoList;
-  final bool isFavorite;
-  final int favoriteCount;
+  bool isFavorite;
+  int favoriteCount;
+  final bool isMine;
   bool isExpand;
 
   Post({
@@ -18,20 +19,9 @@ class Post {
     required this.photoList,
     required this.isFavorite,
     required this.favoriteCount,
+    required this.isMine,
     this.isExpand = false,
   });
-
-  // Serialize(직렬화)
-  Map<String, dynamic> toJson() => {
-        'postId': postId,
-        'voiceUrl': voiceUrl,
-        'voiceLength': voiceLength,
-        'address': address,
-        'text': text,
-        'photoList': photoList,
-        'isFavorite': isFavorite,
-        'favoriteCount': favoriteCount,
-      };
 
   // Deserialize(파싱?)
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -46,8 +36,9 @@ class Post {
           (json['address4'] ?? ''),
       text: json['text'],
       photoList: List.from(json['photoList']),
-      isFavorite: json['isfavorite'],
+      isFavorite: json['isFavorite'],
       favoriteCount: json['favoriteCount'],
+      isMine: json['isMine'],
     );
   }
 }

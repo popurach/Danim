@@ -1,6 +1,6 @@
 import 'package:danim/main.dart';
 import 'package:danim/models/UserInfo.dart';
-import 'package:danim/models/dto/Token.dart';
+import 'package:danim/models/Token.dart';
 import 'package:danim/services/user_repository.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,9 @@ class LoginViewModel extends ChangeNotifier {
         Token(accessToken: accessToken, refreshToken: refreshToken));
 
     const storage = FlutterSecureStorage();
+
+    final logger = Logger();
+    logger.d(ourToken.accessToken);
 
     storage.write(key: 'accessToken', value: ourToken.accessToken);
     storage.write(key: 'refreshToken', value: ourToken.refreshToken);

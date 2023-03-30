@@ -27,8 +27,6 @@ class TimelineRepository {
     try {
       final dio = await authDio(context);
       Response response = await dio.get('api/auth/timeline/$timelineId');
-      logger = Logger();
-      logger.d(response.data['timeline']);
       return List.from(response.data['timeline']
           .map((json) => TimelineDetail.fromJson(json)));
     } catch (error) {

@@ -3,7 +3,7 @@ import 'package:danim/models/UserInfo.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 
-import '../models/dto/Token.dart';
+import '../models/Token.dart';
 
 class UserRepository {
   // 싱글턴 패턴
