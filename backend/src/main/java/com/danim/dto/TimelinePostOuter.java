@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class TimelinePostOuter {
     private List<TimelinePostInner> timeline;
+    private Boolean isComplete;
 
    // private List<String> nationList;
 
