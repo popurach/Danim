@@ -71,6 +71,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
         //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
         TimelinePostOuter timelineouter = new TimelinePostOuter();
+        timelineouter.setIsComplete(now.getComplete());
 
         List<MyPostDtoRes> postlist = new ArrayList<>();
         TimelinePostInner temptimeline = new TimelinePostInner();
@@ -119,6 +120,7 @@ public class TimeLineServiceImpl implements TimeLineService {
                 temptimeline.setNation(NationName);
                 tempnow.add(NationName);
                 temp.put(NationName, "1");
+
 
                 postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite, isMine).build());
 

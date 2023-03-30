@@ -33,6 +33,8 @@ public class MyPostDtoRes {
 
     private Boolean isMine;//해당 포스트가 내것인지 여부를 파악 하기 위한 변수
 
+    private Boolean isTraveling;
+
 
     public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite,Boolean isMine) {
 
