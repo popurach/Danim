@@ -37,13 +37,20 @@ class CameraView extends StatelessWidget {
                         child: Stack(
                           children: [
                             // 카메라 화면
-                            cameraViewModel.isTaking == false ?
-                            CameraPreview(cameraViewModel.controller)
-                                : Container(
-                                color: Colors.black54,
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                )
+                            Container(
+                              width: cameraViewModel.previewWidth,
+                              height: cameraViewModel.previewHeight,
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: AnimatedContainer(
+                                    width: cameraViewModel.currentWidth,
+                                    height: cameraViewModel.currentHeight,
+                                    duration: const Duration(milliseconds: 100),
+                                    curve: Curves.fastOutSlowIn,
+                                    alignment: Alignment.bottomCenter,
+                                    child: CameraPreview(cameraViewModel.controller)),
+                              ),
                             ),
 
                             // 버튼들

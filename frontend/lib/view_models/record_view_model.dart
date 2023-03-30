@@ -7,6 +7,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
 import 'package:danim/models/PostForUpload.dart';
+import 'package:danim/services/upload_repository.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -169,8 +170,6 @@ class RecordViewModel extends ChangeNotifier {
         imageList.map((el) => MultipartFile.fromFileSync(el.path, filename: el.name, contentType: MediaType('image', 'png'))).toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath, filename: "$recordedFileName.wav", contentType: MediaType('audio', 'wav'));
 
-    logger.d(audioFile.length);
-    logger.d(audioFile.contentType);
     FormData formData = FormData.fromMap({
       'flagFile': flag,
       'imageFiles': imageFiles,
@@ -182,16 +181,16 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    Response response = await _dio.post("api/auth/post", data: formData);
-    if (response.statusCode == 200) {
+    int timelineId = await UploadRepository().uploadToServer(formData);
+    if (timelineId >= 0) {
       // 업로드가 완료되었을 때 현재 작성중인 타임라인으로 이동하는 로직
       // Navigator.pushNamed(
       //   context,
       //   '/timeline/detail/${timelineId}',
       // );
-
+    } else {
+      // 경고 표시
     }
-
   }
 
   // 위치를 받아오는 함수

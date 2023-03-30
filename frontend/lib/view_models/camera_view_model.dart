@@ -28,14 +28,23 @@ class CameraViewModel extends ChangeNotifier {
   bool _isTaking = false;
   bool get isTaking => _isTaking;
 
+  double? _previewWidth;
+  double? get previewWidth => _previewWidth;
 
-  Map<dynamic, dynamic> _locationInformation = {
-    "country":"",
-    "city":"",
-    "district":"",
-    "suburb":"",
-    "flagBytes": null
-  };
+  double? _currentWidth;
+  double? get currentWidth => _currentWidth;
+
+  double? _previewHeight;
+  double? get previewHeight => _previewHeight;
+
+  double? _currentHeight;
+  double? get currentHeight => _currentHeight;
+
+  double? _aspectRatio;
+  double? get aspectRatio => _aspectRatio;
+
+
+
 
   List<XFile> _allFileList = [];
 
@@ -47,7 +56,7 @@ class CameraViewModel extends ChangeNotifier {
 
   String get imagePath => _imagePath;
 
-  Map get locationInformation => _locationInformation;
+
 
   CameraViewModel() {
     recordViewModel = RecordViewModel(allFileList);
@@ -77,6 +86,11 @@ class CameraViewModel extends ChangeNotifier {
       _controller = CameraController(_cameras.first, ResolutionPreset.high,);
       await _controller.initialize();
       _controller.setFlashMode(FlashMode.off);
+      _previewHeight = _controller.value.previewSize?.height;
+      _previewWidth = _controller.value.previewSize?.width;
+      _aspectRatio = _previewHeight! / _previewWidth!;
+      _currentHeight = _previewHeight;
+      _currentWidth = _currentHeight! * _aspectRatio!;
       notifyListeners();
     }
   }
@@ -86,10 +100,12 @@ class CameraViewModel extends ChangeNotifier {
     if (allFileList.length < 9 ) {
       if (_isTaking == false) {
         _isTaking = true;
+        updateHeightAndWidth(_previewHeight!*0.9);
         notifyListeners();
         XFile file = await _controller.takePicture();
-        await Future.delayed(const Duration(milliseconds: 250));
+        await Future.delayed(const Duration(milliseconds: 100));
         _isTaking = false;
+        updateHeightAndWidth(_previewHeight!);
         notifyListeners();
         allFileList.add(file);
 
@@ -113,6 +129,12 @@ class CameraViewModel extends ChangeNotifier {
       }
     }
     notifyListeners(); // Add this line
+  }
+
+  void updateHeightAndWidth(double height) {
+    _currentHeight = height;
+    _currentWidth = height * _aspectRatio!;
+    notifyListeners();
   }
 
   @override
