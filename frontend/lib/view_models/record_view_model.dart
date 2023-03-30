@@ -5,21 +5,46 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
+import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/models/PostForUpload.dart';
+import 'package:danim/services/upload_repository.dart';
+import 'package:danim/utils/auth_dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
-import 'package:multiple_images_picker/multiple_images_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+
 
 import '../module/audio_player_view_model.dart';
+import 'camera_view_model.dart';
 
 var logger = Logger();
 
 class RecordViewModel extends ChangeNotifier {
+  final _dio = AuthDio().getDio();
+
   late List<XFile> _imageList;
-  late Map<dynamic, dynamic> _locationInfo;
+
+  LocationInformation _locationInfo = LocationInformation(
+      country: "", address2: "", address3: "", address4: "", flag: null);
+
+  LocationInformation get locationInfo => _locationInfo;
+
+  int _countryIndex = 0;
+  int _postCodeIndex = 0;
+
+  set locationInfo(LocationInformation newInfo) {
+    _locationInfo = newInfo;
+    notifyListeners();
+  }
+
+  bool _haveLocation = false;
+
   late String _recordedFileName;
   String _recordedFilePath = "";
   late AudioPlayerViewModel audioPlayerViewModel;
@@ -29,16 +54,13 @@ class RecordViewModel extends ChangeNotifier {
 
   List<XFile> get imageList => _imageList;
 
-  Map get locationInfo => _locationInfo;
-  set locationInfo (Map newInfo) {
-    updateLocationInformation(newInfo);
-  }
+  bool _isFirstPhotoFromGallery = false;
 
-  void updateLocationInformation(Map<dynamic, dynamic> loIn) {
-    _locationInfo = loIn;
-    notifyListeners();
-  }
+  bool get isFirstPhotoFromGallery => _isFirstPhotoFromGallery;
 
+  set isFirstPhotoFromGallery(bool newBool) {
+    _isFirstPhotoFromGallery = newBool;
+  }
 
   String get recordedFileName => _recordedFileName;
 
@@ -60,7 +82,8 @@ class RecordViewModel extends ChangeNotifier {
 
   Duration get audioPosition => _audioPosition;
 
-  RecordViewModel(this._imageList, this._locationInfo) {
+  RecordViewModel(this._imageList) {
+    getLocation();
     audioPlayerViewModel = AudioPlayerViewModel(_recordedFilePath);
   }
 
@@ -70,7 +93,6 @@ class RecordViewModel extends ChangeNotifier {
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
 
   // 사진 위치 정보 받아오는 메서드
-
 
   // 녹음 메서드
   Future<void> startRecording() async {
@@ -82,13 +104,12 @@ class RecordViewModel extends ChangeNotifier {
     if (recordedFilePath != "") {
       recordedFilePath = "";
     }
-    final filePath = '${directory.path}/$fileName.m4a';
+    final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
     await record.start(
         path: filePath,
-        encoder: AudioEncoder.aacLc,
-        bitRate: 128000, // by default
-        samplingRate: 44100);
+      encoder: AudioEncoder.wav
+    );
     recordedFileName = fileName;
   }
 
@@ -97,7 +118,7 @@ class RecordViewModel extends ChangeNotifier {
     await record.stop();
     final directory = Directory('/storage/emulated/0/Documents/records');
 
-    recordedFilePath = '${directory.path}/$recordedFileName.m4a';
+    recordedFilePath = '${directory.path}/$recordedFileName.wav';
     await audioPlayer.setSourceUrl(recordedFilePath);
     duration = (await audioPlayer.getDuration())!;
     audioPlayerViewModel.audioFilePath = recordedFilePath;
@@ -111,21 +132,28 @@ class RecordViewModel extends ChangeNotifier {
       return;
     }
 
-    // multiple_images_picker 라이브러리 사용
-    final images = await MultipleImagesPicker.pickImages(
-        // 개수 제한
-        maxImages: 9 - imageList.length);
-    // Asset들을 저장해서 경로를 만들고 xFile로 불러옴
-    for (Asset image in images) {
-      Directory externalDirectory =
-          Directory('/storage/emulated/0/Documents/photos');
-      ByteData byteData = await image.getByteData();
-      List<int> imageData = byteData.buffer.asUint8List();
-      String? fileName = image.name;
-      String tempPath = '${externalDirectory.path}/$fileName';
-      await File(tempPath).writeAsBytes(imageData);
-      XFile xFile = XFile(tempPath);
-      imageList.add(xFile);
+    if (imageList.isEmpty) {
+      isFirstPhotoFromGallery = true;
+    }
+
+    // multi_image_picker_viewr 라이브러리 사용
+    final pickerController =
+        MultiImagePickerController(maxImages: 9 - imageList.length, images: []);
+    Directory externalDirectory =
+        Directory('/storage/emulated/0/Documents/photos');
+    await pickerController.pickImages();
+    // 파일들을 저장해서 경로를 만들고 xFile로 불러옴
+    for (final image in pickerController.images) {
+      if (image.hasPath) {
+        var imageFile = File(image.path!);
+        Uint8List imageUint8 = await imageFile.readAsBytes();
+        List<int> imageData = imageUint8.toList();
+        String? fileName = image.name;
+        String tempPath = '${externalDirectory.path}/$fileName';
+        await File(tempPath).writeAsBytes(imageData);
+        XFile xFile = XFile(tempPath);
+        imageList.add(xFile);
+      }
     }
     // 변했다고 알려줌
     notifyListeners();
@@ -133,19 +161,93 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
-    final dio = Dio();
+    final flag = MultipartFile.fromBytes(
+      locationInfo.flag!,
+    filename: locationInfo.country,
+    contentType: MediaType('image','png')
+    );
     final List<MultipartFile> imageFiles =
-        imageList.map((el) => MultipartFile.fromFileSync(el.path)).toList();
-    final audioFile = await MultipartFile.fromFile(recordedFilePath);
+        imageList.map((el) => MultipartFile.fromFileSync(el.path, filename: el.name, contentType: MediaType('image', 'png'))).toList();
+    final audioFile = await MultipartFile.fromFile(recordedFilePath, filename: "$recordedFileName.wav", contentType: MediaType('audio', 'wav'));
 
     FormData formData = FormData.fromMap({
-      'images': imageFiles,
-      'audio': audioFile,
+      'flagFile': flag,
+      'imageFiles': imageFiles,
+      'voiceFile': audioFile,
+      // 임시 아이디 부여
+      'timelineId': 1,
+      'address1': locationInfo.country,
+      'address2': locationInfo.address2,
+      'address3': locationInfo.address3,
+      'address4': locationInfo.address4
     });
+    int timelineId = await UploadRepository().uploadToServer(formData);
+    if (timelineId >= 0) {
+      // 업로드가 완료되었을 때 현재 작성중인 타임라인으로 이동하는 로직
+      // Navigator.pushNamed(
+      //   context,
+      //   '/timeline/detail/${timelineId}',
+      // );
+    } else {
+      // 경고 표시
+    }
+  }
 
-    Response response = await dio.post("path", data: formData);
-
-    if (response.statusCode == 200) {}
+  // 위치를 받아오는 함수
+  void getLocation() async {
+    if (_haveLocation == false) {
+      if (imageList.isNotEmpty) {
+        if (isFirstPhotoFromGallery == false) {
+          _haveLocation = true;
+          final currentPosition = await Geolocator.getCurrentPosition();
+          final curLong = currentPosition.longitude;
+          final curLat = currentPosition.latitude;
+          final plainDio = Dio();
+          final url =
+              'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&type=street&format=json';
+          Response response = await plainDio.get(url);
+          ;
+          if (response.statusCode == 200) {
+            if (response.data["results"] != null) {
+              List keyList = await response.data["results"][0].keys.toList();
+              // 날
+              _countryIndex = keyList.indexOf("country");
+              _postCodeIndex = keyList.indexOf("postcode");
+              // country 포함 6개 불러옴
+              // 위치에 따라 응답이 조금씩 다르게 옴
+              List valueList = await response.data["results"][0].values.toList().sublist(_countryIndex,_countryIndex+6);
+              // 우편 번호 삭제
+              valueList.removeAt(_postCodeIndex-_countryIndex);
+              String countryName = valueList[0];
+              String address2Name = valueList[2];
+              String address3Name = valueList[3];
+              String address4Name;
+              if (keyList[4] == "postcode") {
+                address4Name = valueList[5];
+              } else {
+                address4Name = valueList[4];
+              }
+              if (address3Name == address4Name) {
+                address4Name = "";
+              }
+              String countryCode = valueList[1];
+              final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
+              Response<Uint8List> flagResponse = await plainDio.get(flagUrl,
+                  options: Options(responseType: ResponseType.bytes));
+              Uint8List? flagData = flagResponse.data;
+              LocationInformation newLocation = LocationInformation(
+                  country: countryName,
+                  address2: address2Name,
+                  address3: address3Name,
+                  address4: address4Name,
+                  flag: flagData);
+              locationInfo = newLocation;
+              notifyListeners();
+            }
+          }
+        }
+      }
+    }
   }
 
   void uploadConfirm(BuildContext context) {
@@ -175,5 +277,4 @@ class RecordViewModel extends ChangeNotifier {
           return alert;
         });
   }
-
 }

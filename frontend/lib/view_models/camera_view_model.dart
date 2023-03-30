@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -10,12 +11,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:logger/logger.dart';
 
 var apikey = "fcc989ff906649ea961871b106cfc061";
-var dio = Dio();
 var logger = Logger();
+final deviceInfoPlugin = DeviceInfoPlugin();
 
 class CameraViewModel extends ChangeNotifier {
   List<CameraDescription> _cameras = [];
@@ -23,13 +25,26 @@ class CameraViewModel extends ChangeNotifier {
   late String _imagePath;
   late RecordViewModel recordViewModel;
 
-  Map<dynamic, dynamic> _locationInformation = {
-    "country":"",
-    "city":"",
-    "district":"",
-    "suburb":"",
-    "flagBytes": null
-  };
+  bool _isTaking = false;
+  bool get isTaking => _isTaking;
+
+  double? _previewWidth;
+  double? get previewWidth => _previewWidth;
+
+  double? _currentWidth;
+  double? get currentWidth => _currentWidth;
+
+  double? _previewHeight;
+  double? get previewHeight => _previewHeight;
+
+  double? _currentHeight;
+  double? get currentHeight => _currentHeight;
+
+  double? _aspectRatio;
+  double? get aspectRatio => _aspectRatio;
+
+
+
 
   List<XFile> _allFileList = [];
 
@@ -41,17 +56,29 @@ class CameraViewModel extends ChangeNotifier {
 
   String get imagePath => _imagePath;
 
-  Map get locationInformation => _locationInformation;
+
 
   CameraViewModel() {
-    recordViewModel = RecordViewModel(allFileList,locationInformation);
+    recordViewModel = RecordViewModel(allFileList);
   }
 
   Future<void> initializeCamera() async {
-    await Permission.camera.request();
-    await Permission.storage.request();
-    await Permission.manageExternalStorage.request();
-    await Permission.location.request();
+    AndroidDeviceInfo deviceInfo = await deviceInfoPlugin.androidInfo;
+    final sdkInfo = deviceInfo.version.sdkInt;
+    if (sdkInfo >= 33) {
+      await Permission.camera.request();
+      await Permission.photos.request();
+      await Permission.videos.request();
+      await Permission.audio.request();
+      await Permission.manageExternalStorage.request();
+      await Permission.location.request();
+    } else {
+      await Permission.camera.request();
+      await Permission.storage.request();
+      await Permission.manageExternalStorage.request();
+      await Permission.location.request();
+    }
+
 
     final cameras = await availableCameras();
     _cameras = cameras;
@@ -59,65 +86,56 @@ class CameraViewModel extends ChangeNotifier {
       _controller = CameraController(_cameras.first, ResolutionPreset.high,);
       await _controller.initialize();
       _controller.setFlashMode(FlashMode.off);
+      _previewHeight = _controller.value.previewSize?.height;
+      _previewWidth = _controller.value.previewSize?.width;
+      _aspectRatio = _previewHeight! / _previewWidth!;
+      _currentHeight = _previewHeight;
+      _currentWidth = _currentHeight! * _aspectRatio!;
       notifyListeners();
     }
   }
 
   Future<void> takePhoto() async {
-    XFile file = await _controller.takePicture();
+
     if (allFileList.length < 9 ) {
-      allFileList.add(file);
+      if (_isTaking == false) {
+        _isTaking = true;
+        updateHeightAndWidth(_previewHeight!*0.95);
+        notifyListeners();
+        XFile file = await _controller.takePicture();
+        await _controller.pausePreview();
+        await Future.delayed(const Duration(milliseconds: 800));
+        _isTaking = false;
+        updateHeightAndWidth(_previewHeight!);
+        await _controller.resumePreview();
+        notifyListeners();
+        allFileList.add(file);
 
-      // 파일 저장할 위치 지정
-      Directory externalDirectory =
-      Directory('/storage/emulated/0/Documents/photos');
-      if (!await externalDirectory.exists()) {
-        await externalDirectory.create(recursive: true);
-      }
-
-      final List<int> imageBytes = await file.readAsBytes();
-
-      String dir = externalDirectory.path;
-      final savePath = "$dir/${file.name}";
-
-      // 파일 생성
-      final File imageFile = File(savePath);
-
-      // 파일에 이미지 저장
-      await imageFile.writeAsBytes(imageBytes);
-
-      if (allFileList.length == 1) {
-        final currentPosition = await Geolocator.getCurrentPosition();
-        final curLong = currentPosition.longitude;
-        final curLat = currentPosition.latitude;
-        final url = 'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&format=json';
-
-        Response response = await dio.get(url);
-        if (response.statusCode == 200) {
-          locationInformation["country"] = response.data["results"][0]["country"];
-          locationInformation["city"] = response.data["results"][0]["city"];
-          locationInformation["district"] = response.data["results"][0]["district"];
-          locationInformation["suburb"] = response.data["results"][0]["suburb"];
-          String countryCode = response.data["results"][0]["country_code"];
-          final flagUrl = 'https://flagcdn.com/h240/$countryCode.png';
-          Response<Uint8List> flagResponse = await dio.get(
-              flagUrl,
-              options: Options(responseType: ResponseType.bytes)
-          );
-          locationInformation["flagBytes"] = flagResponse.data;
-          recordViewModel.locationInfo = locationInformation;
-          notifyListeners();
+        // 파일 저장할 위치 지정
+        Directory externalDirectory =
+        Directory('/storage/emulated/0/Documents/photos');
+        if (!await externalDirectory.exists()) {
+          await externalDirectory.create(recursive: true);
         }
+
+        final List<int> imageBytes = await file.readAsBytes();
+
+        String dir = externalDirectory.path;
+        final savePath = "$dir/${file.name}";
+
+        // 파일 생성
+        final File imageFile = File(savePath);
+
+        // 파일에 이미지 저장
+        await imageFile.writeAsBytes(imageBytes);
+      }
     }
-      // 파일의 exif 데이터 불러와서 작성하기
-      // final exif = await Exif.fromPath(file.path);
-      // await exif.writeAttributes({
-      //   'GPSLatitude': currentPosition.latitude,
-      //   'GPSLatitudeRef': 'N',
-      //   'GPSLongitude': currentPosition.longitude,
-      //   'GPSLongitudeRef': 'W',
-      // });
-    }
+    notifyListeners(); // Add this line
+  }
+
+  Future<void> updateHeightAndWidth(double height) async {
+    _currentHeight = height;
+    _currentWidth = height * _aspectRatio!;
     notifyListeners();
   }
 
