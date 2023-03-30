@@ -34,6 +34,9 @@ public class PostController {
                                     @RequestPart List<MultipartFile> imageFiles,
                                     @RequestPart MultipartFile voiceFile,
                                      @Valid @ModelAttribute AddPostReq addPostReq) throws Exception {
+        // 입력 테스트중
+        System.out.println("flagFile:"+flagFile);
+
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoList(imageFiles, savedPost);
         postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
