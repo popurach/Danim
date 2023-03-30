@@ -16,7 +16,9 @@ class SearchBar extends StatelessWidget {
             height:
             viewModel.searchedResults.isEmpty ?
             (viewModel.searchedResults.length+1)*105
-            : (viewModel.searchedResults.length+1)*80,
+            : viewModel.searchedResults.length == 1 ?
+            (viewModel.searchedResults.length+1)*79
+            :(viewModel.searchedResults.length+1)*75,
             child: Column(
               children: [
                 // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
@@ -25,6 +27,7 @@ class SearchBar extends StatelessWidget {
                       child: Container(
                       margin: EdgeInsets.only(top: 30),
                       decoration: const BoxDecoration(
+                        color: Colors.white,
                           border: Border(
                             top: BorderSide(color: Colors.transparent, width: 2),
                             left: BorderSide(color: Colors.black54, width: 2),
@@ -64,6 +67,7 @@ class SearchBar extends StatelessWidget {
           ),
           // 검색창을 위에 띄우기 위해 children 내에서 뒤에 위치시킨다.
           Container(
+            color: Colors.white,
             height: 45,
             child: TextFormField(
               focusNode: viewModel.myfocus,

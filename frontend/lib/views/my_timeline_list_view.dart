@@ -19,31 +19,27 @@ class MyTimeLineListView extends StatelessWidget {
             create: (_) => SearchBarViewModel(),
           ),
         ],
-        child: GestureDetector(
-          onTap: () {
-            SearchBarViewModel().myfocus.unfocus();
-          },
-          child: Container(
-            margin: EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 15),
-            child: Consumer<MyTimeLineListViewModel>(
-              builder: (context, viewModel, child) =>
-                  Builder(
-                      builder: (context) {
-                        return Stack(
-                          children: [
-                            Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: SearchBar()
-                            ),
-                            Container(
+        child: Container(
+          margin: EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 15),
+          child: Consumer<MyTimeLineListViewModel>(
+            builder: (context, viewModel, child) =>
+                LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      return Stack(
+                        children: [
+                          // 검색창과 그 결과 부분을 제외한 부분을 터치하면 포커스가 해제되고 키워드를 없애 검색창을 사라지게 한다.
+                          GestureDetector(
+                            onTap: () {
+                              final searchBarViewModel = Provider.of<SearchBarViewModel>(context, listen: false);
+                              searchBarViewModel.myfocus.unfocus();
+                              searchBarViewModel.searchKeyWord="";
+                            },
+                            child: Container(
                               alignment: Alignment.center,
                               margin: EdgeInsets.only(top:65),
-
                                 child: Column(
                                   children: [
+                                    // 개인 정보가 들어가는 칸
                                     Container(
                                       height: 100,
                                       decoration: BoxDecoration(
@@ -84,6 +80,7 @@ class MyTimeLineListView extends StatelessWidget {
                                         ],
                                       ),
                                     ),
+                                    // 타임라인 리스트가 들어가는 칸
                                     Expanded(
                                         child: Container(
                                           margin: EdgeInsets.only(top: 15),
@@ -96,12 +93,19 @@ class MyTimeLineListView extends StatelessWidget {
                                     )
                                   ],
                                 )
-                            )
-                          ],
-                        );
-                      }
-                  ),
-            ),
+                            ),
+                          ),
+                          Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: SearchBar()
+                          ),
+                        ],
+                      );
+                    }
+                ),
           ),
         ),
       ),

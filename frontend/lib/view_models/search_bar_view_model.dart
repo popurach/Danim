@@ -16,6 +16,7 @@ class SearchBarViewModel extends ChangeNotifier {
   String? get searchKeyWord => _searchKeyWord;
   set searchKeyWord (String? newString) {
     _searchKeyWord = newString;
+    notifyListeners();
   }
 
   List _searchedResults = [];
@@ -39,6 +40,7 @@ class SearchBarViewModel extends ChangeNotifier {
 
   FocusNode _myfocus = FocusNode();
   FocusNode get myfocus => _myfocus;
+
 
   Future<void> searchUser(String? keyword) async {
 
