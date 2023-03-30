@@ -16,12 +16,13 @@ class TimelineDetailPage extends StatelessWidget {
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(left: 5),
                 physics: const ClampingScrollPhysics(),
                 itemCount:
                     viewModel.timelineDetails.length, // Number of nations
                 itemBuilder: (BuildContext context, int timelineIndex) {
                   return ExpansionTile(
+                    tilePadding: const EdgeInsets.only(left: 5),
                     shape: const RoundedRectangleBorder(),
                     collapsedShape: const RoundedRectangleBorder(),
                     onExpansionChanged: (isExpand) {
@@ -45,10 +46,9 @@ class TimelineDetailPage extends StatelessWidget {
                                 .timelineDetails[timelineIndex].isExpand),
                         lineXY: 0.1,
                         indicatorStyle: IndicatorStyle(
-                          width: 30,
+                          width: 40,
+                          height: 40,
                           indicator: CachedNetworkImage(
-                            width: 100,
-                            height: 100,
                             imageUrl:
                                 viewModel.timelineDetails[timelineIndex].flag,
                             imageBuilder: (context, imageProvider) => Container(
@@ -76,6 +76,7 @@ class TimelineDetailPage extends StatelessWidget {
                           return ExpansionTile(
                             shape: const RoundedRectangleBorder(),
                             collapsedShape: const RoundedRectangleBorder(),
+                            tilePadding: const EdgeInsets.only(left: 5),
                             onExpansionChanged: (isExpand) {
                               viewModel.changePostExpansion(
                                   timelineIndex, postIndex, isExpand);
@@ -95,7 +96,7 @@ class TimelineDetailPage extends StatelessWidget {
                                     (!viewModel.timelineDetails[timelineIndex]
                                         .postList[postIndex].isExpand),
                                 indicatorStyle: const IndicatorStyle(
-                                    width: 10,
+                                    width: 20,
                                     color: Colors.lightBlue,
                                     padding: EdgeInsets.only(left: 10)),
                                 endChild: Container(

@@ -17,7 +17,7 @@ class PostDetail extends StatelessWidget {
       return Row(
         children: [
           SizedBox(
-            width: 52,
+            width: 40,
             height: 500,
             child: TimelineTile(
               indicatorStyle: const IndicatorStyle(
@@ -28,7 +28,7 @@ class PostDetail extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width - 72,
+            width: MediaQuery.of(context).size.width - 60,
             height: 500,
             child: Column(
               children: [
