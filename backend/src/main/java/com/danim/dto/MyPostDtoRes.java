@@ -31,12 +31,12 @@ public class MyPostDtoRes {
 
     private Long favoriteCount;
 
-    private Boolean isMine;//해당 포스트가 내것인지 여부를 파악 하기 위한 변수
+
 
     private Boolean isTraveling;
 
 
-    public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite,Boolean isMine) {
+    public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite) {
 
         return MyPostDtoResBuilder()
                 .postId(post.getPostId())
@@ -49,7 +49,6 @@ public class MyPostDtoRes {
                 .photoList(photoList)
                 .favoriteCount(favoriteCount)
                 .isFavorite(favorite)
-                .isMine(isMine)
                 ;
 
     }

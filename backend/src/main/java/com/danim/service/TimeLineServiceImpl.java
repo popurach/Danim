@@ -119,16 +119,17 @@ public class TimeLineServiceImpl implements TimeLineService {
                 temptimeline = new TimelinePostInner();
                 temptimeline.setFlag(p.getNationUrl());
                 temptimeline.setNation(NationName);
+                temptimeline.setIsMine(isMine);
                 tempnow.add(NationName);
                 temp.put(NationName, "1");
 
 
-                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite, isMine).build());
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
 
             } else {
 
                 //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
-                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite, isMine).build());
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
             }
         }
         //가장 마지막에 남은 것들 처리해 주는 과정
