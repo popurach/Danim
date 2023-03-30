@@ -87,7 +87,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         for (Post p : post) {
             favorite_count = 0L;
             String NationName = p.getNationId().getName();
-            photolist = new ArrayList<>();
+
             isMine = false;
             favorite_count = favoriteRepository.countByPostId(p);
             favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
@@ -97,12 +97,12 @@ public class TimeLineServiceImpl implements TimeLineService {
 
             TimeLine timelinetemp = p.getTimelineId();
 
-
             if (nowUserUid.equals(timelinetemp.getUserUid().getUserUid()))
                 isMine = true;
 
             if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
-
+                temp = new HashMap<String, String>();
+                photolist = new ArrayList<>();
                 if (postlist.size() > 0) {
                     temptimeline.setPostList(postlist);
                     //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분

@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
         return returnList;
     }
 
+
     @Override
     public User getByUserUid(Long userUid) {
         return userRepository.getByUserUid(userUid);
