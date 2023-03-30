@@ -100,12 +100,14 @@ class CameraViewModel extends ChangeNotifier {
     if (allFileList.length < 9 ) {
       if (_isTaking == false) {
         _isTaking = true;
-        updateHeightAndWidth(_previewHeight!*0.9);
+        updateHeightAndWidth(_previewHeight!*0.95);
         notifyListeners();
         XFile file = await _controller.takePicture();
-        await Future.delayed(const Duration(milliseconds: 100));
+        await _controller.pausePreview();
+        await Future.delayed(const Duration(milliseconds: 800));
         _isTaking = false;
         updateHeightAndWidth(_previewHeight!);
+        await _controller.resumePreview();
         notifyListeners();
         allFileList.add(file);
 
@@ -131,7 +133,7 @@ class CameraViewModel extends ChangeNotifier {
     notifyListeners(); // Add this line
   }
 
-  void updateHeightAndWidth(double height) {
+  Future<void> updateHeightAndWidth(double height) async {
     _currentHeight = height;
     _currentWidth = height * _aspectRatio!;
     notifyListeners();
