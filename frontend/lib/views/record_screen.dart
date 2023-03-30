@@ -46,6 +46,7 @@ class RecordView extends StatelessWidget {
 
                 Container(
                     padding: EdgeInsets.only(left: 30, right: 30),
+                    height: 30,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

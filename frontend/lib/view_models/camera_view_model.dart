@@ -82,35 +82,35 @@ class CameraViewModel extends ChangeNotifier {
   }
 
   Future<void> takePhoto() async {
-    _isTaking = true;
-    XFile file = await _controller.takePicture();
-    await Future.delayed(const Duration(seconds: 2), () {
-      _isTaking = false;
-      notifyListeners();
-    });
-
 
     if (allFileList.length < 9 ) {
-      allFileList.add(file);
+      if (_isTaking == false) {
+        _isTaking = true;
+        notifyListeners();
+        XFile file = await _controller.takePicture();
+        await Future.delayed(const Duration(milliseconds: 250));
+        _isTaking = false;
+        notifyListeners();
+        allFileList.add(file);
 
-      // 파일 저장할 위치 지정
-      Directory externalDirectory =
-      Directory('/storage/emulated/0/Documents/photos');
-      if (!await externalDirectory.exists()) {
-        await externalDirectory.create(recursive: true);
+        // 파일 저장할 위치 지정
+        Directory externalDirectory =
+        Directory('/storage/emulated/0/Documents/photos');
+        if (!await externalDirectory.exists()) {
+          await externalDirectory.create(recursive: true);
+        }
+
+        final List<int> imageBytes = await file.readAsBytes();
+
+        String dir = externalDirectory.path;
+        final savePath = "$dir/${file.name}";
+
+        // 파일 생성
+        final File imageFile = File(savePath);
+
+        // 파일에 이미지 저장
+        await imageFile.writeAsBytes(imageBytes);
       }
-
-      final List<int> imageBytes = await file.readAsBytes();
-
-      String dir = externalDirectory.path;
-      final savePath = "$dir/${file.name}";
-
-      // 파일 생성
-      final File imageFile = File(savePath);
-
-      // 파일에 이미지 저장
-      await imageFile.writeAsBytes(imageBytes);
-
     }
     notifyListeners(); // Add this line
   }

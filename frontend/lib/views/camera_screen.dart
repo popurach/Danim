@@ -40,7 +40,10 @@ class CameraView extends StatelessWidget {
                             cameraViewModel.isTaking == false ?
                             CameraPreview(cameraViewModel.controller)
                                 : Container(
-                              color: Colors.black87,
+                                color: Colors.black54,
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                )
                             ),
 
                             // 버튼들
