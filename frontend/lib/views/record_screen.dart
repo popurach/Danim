@@ -46,6 +46,7 @@ class RecordView extends StatelessWidget {
 
                 Container(
                     padding: EdgeInsets.only(left: 30, right: 30),
+                    height: 30,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -55,7 +56,7 @@ class RecordView extends StatelessWidget {
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: Image.memory(
-                                        viewModel.locationInfo.flag,
+                                        viewModel.locationInfo.flag!,
                                         fit: BoxFit.fitHeight),
                                   )
                                 : Text("")),
@@ -65,7 +66,7 @@ class RecordView extends StatelessWidget {
                         Expanded(
                             flex: 5,
                             child: Text(
-                                '${viewModel.locationInfo.country} ${viewModel.locationInfo.city}'))
+                                '${viewModel.locationInfo.country} ${viewModel.locationInfo.address2}'))
                       ],
                     )),
                 Container(
