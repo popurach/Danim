@@ -29,7 +29,7 @@ public class JwtTokenProvider {
     private String secretKey = "secretKey";
 
     private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L  * 60; // access token 1분
-    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24; // refresh token 24일
+    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 2; // refresh token 24일
 
     @PostConstruct
     protected void init() {
@@ -95,6 +95,7 @@ public class JwtTokenProvider {
 
     public String getUsername(String token) {
         log.info("[getUsername : clientId] 토큰 기반 회원 구별 정보 추출");
+        log.info("getUsername, {}", Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
@@ -135,6 +136,7 @@ public class JwtTokenProvider {
 
     // refreshToken 존재 확인
     public boolean existsRefreshToken(String refreshToken) {
+        log.info("existsRefreshToken - refreshToken : {}", refreshToken);
         return userRepository.existsByRefreshToken(refreshToken);
     }
 
