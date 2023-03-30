@@ -70,7 +70,7 @@ public class TimelineController {
         User user = null;
         if (auth != null && auth.getPrincipal() != null)
             user = (User) auth.getPrincipal();
-        TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid,user);
+        TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid, user);
         log.info("타임라인 한개 조회 종료");
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
@@ -120,7 +120,6 @@ public class TimelineController {
 
 
     /*paging  하는 메서드들*/
-
 
     //메인피드 최신순 타임라인 조회 with paging +
     //어떤 유저로 받을지는 파라미터에 추가가 되어야 함
