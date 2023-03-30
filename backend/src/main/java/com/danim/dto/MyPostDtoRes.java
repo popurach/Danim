@@ -27,11 +27,14 @@ public class MyPostDtoRes {
 
     private List<String> photoList; // photoId 리스트
 
-    private Boolean isfavorite;//정보를 가지고 온 유저가 , 해당 포스트에 좋아요를 눌렀는가 여부에 대해
+    private Boolean isFavorite;//정보를 가지고 온 유저가 , 해당 포스트에 좋아요를 눌렀는가 여부에 대해
 
     private Long favoriteCount;
 
-    public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite) {
+    private Boolean isMine;//해당 포스트가 내것인지 여부를 파악 하기 위한 변수
+
+
+    public static MyPostDtoResBuilder builder(Post post,List<String>photoList,Long favoriteCount,Boolean favorite,Boolean isMine) {
 
         return MyPostDtoResBuilder()
                 .postId(post.getPostId())
@@ -43,7 +46,8 @@ public class MyPostDtoRes {
                 .text(post.getText())
                 .photoList(photoList)
                 .favoriteCount(favoriteCount)
-                .isfavorite(favorite)
+                .isFavorite(favorite)
+                .isMine(isMine)
                 ;
 
     }

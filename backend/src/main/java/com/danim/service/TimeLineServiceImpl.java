@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,8 +38,6 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
     //모든 최신 타임라인 얻어옴 , 페이징 x
     public List<TimeLine> searchTimelineOrderBylatest() throws BaseException {
-        //User now = userRepository.findById(uid).orElseThrow(() -> new Exception("존재하지 않는 유저"));
-        //List<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now).orElseThrow(() -> new Exception("모든 최신 타임라인 얻어오기 실패"));
         List<TimeLine> timeline = timeLineRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
         return timeline;
     }
@@ -48,7 +45,6 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
     //나의 타임라인 얻어옴 , 페이징 x
     public List<TimeLine> searchMyTimeline(Long uid, User now) throws BaseException {
-        //User now = userRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         List<TimeLine> timeline = timeLineRepository.findAllByUserUid(now).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         return timeline;
     }
@@ -84,17 +80,30 @@ public class TimeLineServiceImpl implements TimeLineService {
         Long favorite_count = 0L;
         Favorite favorite_temp = null;
         Boolean favorite = false;
+        Boolean isMine = false;
+        Long nowUserUid = user.getUserUid();
 
         for (Post p : post) {
-            favorite_count=0L;
-            favorite=false;
+            favorite_count = 0L;
             String NationName = p.getNationId().getName();
             photolist = new ArrayList<>();
+            isMine = false;
+            favorite_count = favoriteRepository.countByPostId(p);
+            favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
+            if (favorite_temp == null)
+                favorite = false;
+            else favorite = true;
+
+            TimeLine timelinetemp = p.getTimelineId();
+
+
+            if (nowUserUid.equals(timelinetemp.getUserUid().getUserUid()))
+                isMine = true;
+
             if (!temp.containsKey(NationName)) {//해당 부분은 여행 국가가 새로 나타난 형태를 의미를 함
 
                 if (postlist.size() > 0) {
                     temptimeline.setPostList(postlist);
-
                     //그전에 했던 국가 , 국기, List<post>를 넣어주는 작업 진행할 부분
                     timelineouter.getTimeline().add(temptimeline);
                 }
@@ -102,13 +111,6 @@ public class TimeLineServiceImpl implements TimeLineService {
                     photolist.add(p1.getPhotoUrl());
                 }
 
-                favorite_count = favoriteRepository.countByPostId(p);
-                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
-                favorite = null;
-
-                if (favorite_temp == null)
-                    favorite = false;
-                else favorite = true;
 
                 //이제 새로운 타임라인 생성을 하고 국가, 국기, post를 넣어주는 작업이다
                 postlist = new ArrayList<>();
@@ -118,16 +120,12 @@ public class TimeLineServiceImpl implements TimeLineService {
                 tempnow.add(NationName);
                 temp.put(NationName, "1");
 
-                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite, isMine).build());
 
             } else {
-                favorite_count = favoriteRepository.countByPostId(p);
-                favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
-                if (favorite_temp == null)
-                    favorite = false;
-                else favorite = true;
+
                 //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
-                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
+                postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite, isMine).build());
             }
         }
         //가장 마지막에 남은 것들 처리해 주는 과정
@@ -142,8 +140,6 @@ public class TimeLineServiceImpl implements TimeLineService {
     public void makenewTimeline(User now) throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
-        //이렇게 해서 User를 찾아옴
-        //User now = userRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
 
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
