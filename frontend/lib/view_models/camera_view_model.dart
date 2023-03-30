@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -23,6 +24,10 @@ class CameraViewModel extends ChangeNotifier {
   late CameraController _controller;
   late String _imagePath;
   late RecordViewModel recordViewModel;
+
+  bool _isTaking = false;
+  bool get isTaking => _isTaking;
+
 
   Map<dynamic, dynamic> _locationInformation = {
     "country":"",
@@ -77,7 +82,14 @@ class CameraViewModel extends ChangeNotifier {
   }
 
   Future<void> takePhoto() async {
+    _isTaking = true;
     XFile file = await _controller.takePicture();
+    await Future.delayed(const Duration(seconds: 2), () {
+      _isTaking = false;
+      notifyListeners();
+    });
+
+
     if (allFileList.length < 9 ) {
       allFileList.add(file);
 
@@ -100,7 +112,7 @@ class CameraViewModel extends ChangeNotifier {
       await imageFile.writeAsBytes(imageBytes);
 
     }
-    notifyListeners();
+    notifyListeners(); // Add this line
   }
 
   @override

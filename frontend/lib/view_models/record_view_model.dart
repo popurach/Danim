@@ -16,6 +16,8 @@ import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:record/record.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+
 
 import '../module/audio_player_view_model.dart';
 import 'camera_view_model.dart';
@@ -33,6 +35,7 @@ class RecordViewModel extends ChangeNotifier {
   LocationInformation get locationInfo => _locationInfo;
 
   int _countryIndex = 0;
+  int _postCodeIndex = 0;
 
   set locationInfo(LocationInformation newInfo) {
     _locationInfo = newInfo;
@@ -100,13 +103,12 @@ class RecordViewModel extends ChangeNotifier {
     if (recordedFilePath != "") {
       recordedFilePath = "";
     }
-    final filePath = '${directory.path}/$fileName.m4a';
+    final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
     await record.start(
         path: filePath,
-        encoder: AudioEncoder.aacLc,
-        bitRate: 128000, // by default
-        samplingRate: 44100);
+      encoder: AudioEncoder.wav
+    );
     recordedFileName = fileName;
   }
 
@@ -115,7 +117,7 @@ class RecordViewModel extends ChangeNotifier {
     await record.stop();
     final directory = Directory('/storage/emulated/0/Documents/records');
 
-    recordedFilePath = '${directory.path}/$recordedFileName.m4a';
+    recordedFilePath = '${directory.path}/$recordedFileName.wav';
     await audioPlayer.setSourceUrl(recordedFilePath);
     duration = (await audioPlayer.getDuration())!;
     audioPlayerViewModel.audioFilePath = recordedFilePath;
@@ -159,26 +161,37 @@ class RecordViewModel extends ChangeNotifier {
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context) async {
     final flag = MultipartFile.fromBytes(
-      locationInfo.flag!);
+      locationInfo.flag!,
+    filename: locationInfo.country,
+    contentType: MediaType('image','png')
+    );
     final List<MultipartFile> imageFiles =
-        imageList.map((el) => MultipartFile.fromFileSync(el.path)).toList();
-    final audioFile = await MultipartFile.fromFile(recordedFilePath,);
+        imageList.map((el) => MultipartFile.fromFileSync(el.path, filename: el.name, contentType: MediaType('image', 'png'))).toList();
+    final audioFile = await MultipartFile.fromFile(recordedFilePath, filename: "$recordedFileName.wav", contentType: MediaType('audio', 'wav'));
 
-
+    logger.d(audioFile.length);
+    logger.d(audioFile.contentType);
     FormData formData = FormData.fromMap({
       'flagFile': flag,
       'imageFiles': imageFiles,
       'voiceFile': audioFile,
+      // 임시 아이디 부여
+      'timelineId': 1,
       'address1': locationInfo.country,
       'address2': locationInfo.address2,
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-
     Response response = await _dio.post("api/auth/post", data: formData);
     if (response.statusCode == 200) {
-      logger.d(response.data);
+      // 업로드가 완료되었을 때 현재 작성중인 타임라인으로 이동하는 로직
+      // Navigator.pushNamed(
+      //   context,
+      //   '/timeline/detail/${timelineId}',
+      // );
+
     }
+
   }
 
   // 위치를 받아오는 함수
@@ -186,7 +199,6 @@ class RecordViewModel extends ChangeNotifier {
     if (_haveLocation == false) {
       if (imageList.isNotEmpty) {
         if (isFirstPhotoFromGallery == false) {
-          logger.d(locationInfo.toString());
           _haveLocation = true;
           final currentPosition = await Geolocator.getCurrentPosition();
           final curLong = currentPosition.longitude;
@@ -199,10 +211,14 @@ class RecordViewModel extends ChangeNotifier {
           if (response.statusCode == 200) {
             if (response.data["results"] != null) {
               List keyList = await response.data["results"][0].keys.toList();
+              // 날
               _countryIndex = keyList.indexOf("country");
+              _postCodeIndex = keyList.indexOf("postcode");
               // country 포함 6개 불러옴
-              List valueList = await response.data["results"][0].values
-                  .toList(_countryIndex, _countryIndex + 6);
+              // 위치에 따라 응답이 조금씩 다르게 옴
+              List valueList = await response.data["results"][0].values.toList().sublist(_countryIndex,_countryIndex+6);
+              // 우편 번호 삭제
+              valueList.removeAt(_postCodeIndex-_countryIndex);
               String countryName = valueList[0];
               String address2Name = valueList[2];
               String address3Name = valueList[3];
