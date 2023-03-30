@@ -1,4 +1,5 @@
 import 'package:danim/models/UserSearchResults.dart';
+import 'package:danim/services/search_repository.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,9 @@ class SearchBarViewModel extends ChangeNotifier {
     _searchKeyWord = newString;
   }
 
-  List<UserSearchResult> _searchedResults = [];
-  List<UserSearchResult> get searchedResults => _searchedResults;
-  set searchedResults (List<UserSearchResult> newList) {
+  List _searchedResults = [];
+  List get searchedResults => _searchedResults;
+  set searchedResults (List newList) {
     _searchedResults = newList;
   }
 
@@ -36,17 +37,13 @@ class SearchBarViewModel extends ChangeNotifier {
   }
 
 
-
   FocusNode _myfocus = FocusNode();
   FocusNode get myfocus => _myfocus;
 
   Future<void> searchUser(String? keyword) async {
-    searchKeyWord = keyword;
-    Response response = await _dio.get('api/auth/user');
 
-    if (response.statusCode == 200) {
-      logger.d(response.data);
-    }
+    _searchKeyWord = keyword;
+    _searchedResults = await SearchRepository().searchToSearchBar(keyword!);
     notifyListeners();
   }
 

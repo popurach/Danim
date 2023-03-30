@@ -31,27 +31,72 @@ class MyTimeLineListView extends StatelessWidget {
                       builder: (context) {
                         return Stack(
                           children: [
-                            SizedBox(
-                                child: SearchBar(parent: "MyTimelineList")
+                            Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: SearchBar()
                             ),
-                            // SingleChildScrollView(
-                            //   child:
-                            //     Container(
-                            //       alignment: Alignment.center,
-                            //       margin: EdgeInsets.only(top:65),
-                            //       decoration: BoxDecoration(
-                            //         border: Border.all(
-                            //           color: Colors.black54
-                            //         )
-                            //       ),
-                            //         child: Text("test"))
-                            // //   ListView.builder(
-                            // //       itemCount: viewModel.mytimelineList.length,
-                            // //       itemBuilder: (context, index) {
-                            // //         return TimelineListItem(viewModel.mytimelineList[index]);
-                            // //     }
-                            // // )
-                            // )
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top:65),
+
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        border:  Border.all(
+                                          color: Colors.black54
+                                        )
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Expanded(
+                                            flex: 4,
+                                            child: FlutterLogo()
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                              child: VerticalDivider(color: Colors.black54)),
+                                          Expanded(
+                                            flex: 7,
+                                            child: Container(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  Container(
+                                                    child: Text("text"),
+                                                  ),
+                                                  Container(
+                                                    child: Text("text"),
+                                                  ),
+                                                  Container(
+                                                    child: Text("text"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: 15),
+                                          decoration: BoxDecoration(
+                                              border:  Border.all(
+                                                  color: Colors.black54
+                                              )
+                                          ),
+                                        )
+                                    )
+                                  ],
+                                )
+                            )
                           ],
                         );
                       }

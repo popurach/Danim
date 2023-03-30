@@ -18,7 +18,6 @@ class MyTimeLineListViewModel extends ChangeNotifier {
   }
 
   MyTimeLineListViewModel() {
-    searchBarViewModel = searchBarViewModel;
     _initialize();
   }
 

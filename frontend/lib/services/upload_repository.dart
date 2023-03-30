@@ -21,7 +21,7 @@ class UploadRepository {
         return -1;
       }
     } on DioError catch (error) {
-      throw Exception('Fail to get timeline: ${error.message}');
+      throw Exception('Fail to upload to Server: ${error.message}');
     }
   }
 }
