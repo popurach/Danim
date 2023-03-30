@@ -11,7 +11,7 @@ import java.util.List;
 public class TimelinePostOuter {
     private List<TimelinePostInner> timeline;
     private Boolean isComplete;
-
+    private Boolean isPublic;
    // private List<String> nationList;
 
     public TimelinePostOuter() {

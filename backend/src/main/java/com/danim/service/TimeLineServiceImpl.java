@@ -72,6 +72,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
         TimelinePostOuter timelineouter = new TimelinePostOuter();
         timelineouter.setIsComplete(now.getComplete());
+        timelineouter.setIsPublic(now.getTimelinePublic());
 
         List<MyPostDtoRes> postlist = new ArrayList<>();
         TimelinePostInner temptimeline = new TimelinePostInner();
