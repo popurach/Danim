@@ -2,6 +2,9 @@ import 'package:danim/models/Timeline.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger();
 
 class SearchRepository {
   SearchRepository._internal();
