@@ -33,7 +33,7 @@ public interface TimeLineService {
     void deleteTimeline(Long uid) throws Exception;
 
     //타임라인 공개 <->비공개 변경 => 완료
-    void changePublic(Long uid) throws Exception;
+    Boolean changePublic(Long uid) throws Exception;
 
 
     //메인 피드상에서 타임라인 페이징 처리해서 조회하는 메서드

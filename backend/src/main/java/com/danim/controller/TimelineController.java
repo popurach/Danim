@@ -105,9 +105,10 @@ public class TimelineController {
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
         log.info("타임라인 공개<->비공개 전환 시작");
-        timeLineService.changePublic(uid);
+        Boolean check=timeLineService.changePublic(uid);
         log.info("타임라인 공개<->비공개 전환 종료");
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(check,HttpStatus.OK);
     }
 
     //타임라인삭제
