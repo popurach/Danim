@@ -13,6 +13,10 @@ public class TimelinePostOuter {
     private Boolean isComplete;
     private Boolean isPublic;
    // private List<String> nationList;
+    private Boolean isMine;
+
+    private String title;
+
 
     public TimelinePostOuter() {
         timeline = new ArrayList<>();
