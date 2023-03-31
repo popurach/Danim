@@ -3,7 +3,6 @@ import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
 import 'package:danim/views/custom_app_bar.dart';
 import 'package:danim/views/login_page.dart';
-import 'package:danim/views/modify_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -16,7 +15,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel()),
+        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0)),
       ],
       child: const MyApp(),
     ),
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppViewModel>(builder: (context, viewModel, child) {
+    return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
@@ -58,9 +57,11 @@ class MyHomePage extends StatelessWidget {
         child: Scaffold(
           appBar: CustomAppBar(
             moveToModifyProfile: () {
-              viewModel.changePage(1);
+              viewModel.goModifyProfilePage();
             },
-            logout: () {},
+            logout: () {
+              viewModel.logout(context);
+            },
           ),
           body: PageView(
             controller: viewModel.pageController,

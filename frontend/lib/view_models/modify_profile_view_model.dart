@@ -1,45 +1,57 @@
 import 'dart:io';
 
+import 'package:danim/models/UserInfo.dart';
+import 'package:danim/services/user_repository.dart';
+import 'package:danim/view_models/app_view_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ModifyProfileViewModel extends ChangeNotifier {
   final controller = TextEditingController();
-  late final _imagePath;
-  var _selectedImageFile;
-  var _nickname;
+  String _imagePath = '';
+  XFile? _selectedImageFile;
+  String _nickname = '';
 
-  checkDuplicate() {
-    // TODO check Duplicate to Server
+  ModifyProfileViewModel(profileImageUrl, nickname) {
+    _nickname = nickname;
+    _imagePath = profileImageUrl;
+    controller.text = _nickname;
     notifyListeners();
   }
 
-  ModifyProfileViewModel() {
-    // TODO get nickname and ProfileImage from Server
-    _nickname = '호준진심펀치';
-    _imagePath = 'https://picsum.photos/200/300';
-    controller.text = _nickname;
-  }
-
-  sendModifyProfile() {
-    // TODO Modify Profile request to Server
+  sendModifyProfile(BuildContext context, AppViewModel appViewModel) async {
+    final multipartFile = _selectedImageFile == null
+        ? null
+        : MultipartFile.fromFileSync(
+            _selectedImageFile!.path,
+            filename: _selectedImageFile!.name,
+            contentType: MediaType('image', 'png'),
+          );
+    final FormData formData = FormData.fromMap({
+      'profileImage': multipartFile,
+      'nickname': _nickname,
+    });
+    UserInfo newUserInfo =
+        await UserRepository().updateUserProfile(context, formData);
+    appViewModel.updateUserInfo(newUserInfo);
+    notifyListeners();
   }
 
   changeProfileImage() async {
-    final pickedFile =
+    _selectedImageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _selectedImageFile = File(pickedFile.path);
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   get isValid => RegExp('^[a-zA-Z가-힣0-9]{3,10}').hasMatch(nickname);
 
   get imagePath => _imagePath;
 
-  get selectedImageFile => _selectedImageFile;
+  get selectedImageFile =>
+      _selectedImageFile == null ? null : File(_selectedImageFile!.path);
 
   set imagePath(value) {
     _imagePath = value;

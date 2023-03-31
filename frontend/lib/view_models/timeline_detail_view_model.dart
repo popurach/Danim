@@ -1,7 +1,5 @@
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:logger/logger.dart';
 
 import '../models/TimelineDetail.dart';
 
@@ -9,11 +7,16 @@ class TimelineDetailViewModel extends ChangeNotifier {
   final int timelineId;
   bool _isMine = false;
   bool _isPublic = false;
+  bool _isComplete = false;
   final int expansionTileAnimationTile = 200;
   List<TimelineDetail> _timelineDetails = [];
 
   get isMine => _isMine;
+
   get isPublic => _isPublic;
+
+  get isComplete => _isComplete;
+
   get timelineDetails => _timelineDetails;
 
   TimelineDetailViewModel(BuildContext context, this.timelineId) {
@@ -24,8 +27,9 @@ class TimelineDetailViewModel extends ChangeNotifier {
     final timelineInfo = await TimelineRepository()
         .getTimelineDetailsByTimelineId(context, timelineId);
     _timelineDetails = timelineInfo.timelineDetails;
-    _isMine = _timelineDetails[0].isMine;
+    _isMine = timelineInfo.isMine;
     _isPublic = timelineInfo.isPublic;
+    _isComplete = timelineInfo.isComplete;
     notifyListeners();
   }
 

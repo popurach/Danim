@@ -1,7 +1,6 @@
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PostRepository {
   PostRepository._internal();
@@ -11,11 +10,9 @@ class PostRepository {
   factory PostRepository() => _instance;
 
   Future<Map<String, dynamic>> changeFavoritePost(
-      BuildContext context, int postId) async {
+      BuildContext context, int postId, userUid) async {
     try {
       final dio = await authDio(context);
-      const storage = FlutterSecureStorage();
-      final String? userUid = await storage.read(key: 'userUid');
       Response response = await dio
           .post('api/auth/like', data: {'userUid': userUid, 'postId': postId});
       return response.data;

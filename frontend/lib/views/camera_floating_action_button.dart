@@ -10,23 +10,24 @@ class CameraFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 80.0,
-        width: 80.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            child: const Icon(Icons.camera),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider(
-                    create: (_) => CameraViewModel(),
-                    child: CameraView(),
-                  ),
+      height: 70.0,
+      width: 70.0,
+      child: FittedBox(
+        child: FloatingActionButton(
+          child: const Icon(Icons.camera),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (_) => CameraViewModel(),
+                  child: CameraView(),
                 ),
-              );
-            },
-          ),
-        ));
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
