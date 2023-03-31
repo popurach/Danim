@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/views/custom_app_bar.dart';
+import 'package:danim/views/modify_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +16,22 @@ class RecordView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Consumer<RecordViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (_, viewModel, child) {
           return Scaffold(
-            appBar: CustomAppBar(),
+            appBar: CustomAppBar(
+              moveToModifyProfile: () => Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => ModifyProfile(),
+                ),
+              ),
+              logout: () => Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => ModifyProfile(),
+                ),
+              ),
+            ),
             body: Column(
               children: [
                 // 캐러셀

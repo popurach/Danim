@@ -1,5 +1,3 @@
-import 'package:danim/view_models/modify_profile_view_model.dart';
-import 'package:danim/view_models/my_timeline_list_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/my_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
@@ -23,21 +21,24 @@ class AppViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  onHomeFeedRoute(settings) {
-    Widget page;
+  onHomeFeedRoute(context, settings) {
     if (settings.name!.startsWith('/timeline/detail')) {
       final timelineId = int.parse(settings.name.split('/')[3]);
-      page = ChangeNotifierProvider(
-        create: (_) => TimelineDetailViewModel(timelineId),
-        child: TimelineDetailPage(),
+      return PageRouteBuilder(
+        pageBuilder: (context, __, ___) {
+          return ChangeNotifierProvider<TimelineDetailViewModel>(
+            create: (_) => TimelineDetailViewModel(context, timelineId),
+            child: TimelineDetailPage(),
+          );
+        },
+        transitionDuration: Duration.zero,
       );
     } else {
-      page = TimelineListPage();
+      return PageRouteBuilder(
+        pageBuilder: (_, __, ___) => TimelineListPage(),
+        transitionDuration: Duration.zero,
+      );
     }
-    return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => page,
-      transitionDuration: Duration.zero,
-    );
   }
 
   onMyFeedRoute(settings) {

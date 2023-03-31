@@ -1,44 +1,71 @@
-import 'package:danim/models/Timeline.dart';
-import 'package:danim/services/user_repository.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:danim/services/timeline_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 
-import '../models/Post.dart';
+import '../models/TimelineDetail.dart';
 
-class TimelineDetailViewModel with ChangeNotifier {
-  final int _timelineId;
-  Timeline? _timeline;
+class TimelineDetailViewModel extends ChangeNotifier {
+  final int timelineId;
+  bool _isMine = false;
+  bool _isPublic = false;
+  final int expansionTileAnimationTile = 200;
+  List<TimelineDetail> _timelineDetails = [];
 
-  Timeline? get timeline => _timeline;
+  get isMine => _isMine;
+  get isPublic => _isPublic;
+  get timelineDetails => _timelineDetails;
 
-  setTimeline() async {
-    _timeline = await UserRepository().getTimelineById(_timelineId);
+  TimelineDetailViewModel(BuildContext context, this.timelineId) {
+    loadTimelineDetails(context);
   }
 
-  TimelineDetailViewModel(this._timelineId) {
-    // setTimeline();
-    // _timeline = Timeline(
-    //     timelineId: 0,
-    //     userId: 0,
-    //     title: 'title1',
-    //     createTime: "21.02.01",
-    //     finishTime: "21.02.28",
-    //     complete: true,
-    //     imageUrl: "https://picsum.photos/id/10/500/500.jpg",
-    //     timelinePublic: true,
-    //     post: [
-    //       Post(
-    //           imageUrls: [
-    //             'https://picsum.photos/id/10/1000/1000',
-    //             'https://picsum.photos/id/11/1000/1000',
-    //             'https://picsum.photos/id/12/1000/1000',
-    //             'https://picsum.photos/id/13/1000/1000'
-    //           ],
-    //           voiceUrl: 'voiceUrl',
-    //           voiceLength: '00:15',
-    //           text: '여기가 어디요..',
-    //           isLike: false)
-    //     ]);
+  loadTimelineDetails(context) async {
+    final timelineInfo = await TimelineRepository()
+        .getTimelineDetailsByTimelineId(context, timelineId);
+    _timelineDetails = timelineInfo.timelineDetails;
+    _isMine = _timelineDetails[0].isMine;
+    _isPublic = timelineInfo.isPublic;
+    notifyListeners();
   }
 
-// TODO get timeline data from server
+  changeExpansions(int timelineIndex, bool isExpand) async {
+    if (!isExpand) {
+      await Future.delayed(Duration(milliseconds: expansionTileAnimationTile));
+      for (var post in _timelineDetails[timelineIndex].postList) {
+        post.isExpand = false;
+      }
+    }
+    _timelineDetails[timelineIndex].isExpand = isExpand;
+    notifyListeners();
+  }
+
+  changePostExpansion(int timelineIndex, int postIndex, bool isExpand) async {
+    if (!isExpand) {
+      await Future.delayed(Duration(milliseconds: expansionTileAnimationTile!));
+    }
+    _timelineDetails[timelineIndex].postList[postIndex].isExpand = isExpand;
+    notifyListeners();
+  }
+
+  void scrollToSelectedContent(context) {
+    if (context != null) {
+      Future.delayed(Duration(milliseconds: expansionTileAnimationTile))
+          .then((value) {
+        Scrollable.ensureVisible(context,
+            duration: Duration(milliseconds: expansionTileAnimationTile));
+      });
+    }
+  }
+
+  showPublicIcon() {
+    if (_isMine) {
+      if (_isPublic) {
+        return const Icon(Icons.lock);
+      } else {
+        return const Icon(Icons.lock_open);
+      }
+    }
+    return Container();
+  }
 }

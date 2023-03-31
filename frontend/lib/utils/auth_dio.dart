@@ -1,53 +1,71 @@
+import 'package:danim/views/login_page.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthDio {
-  static final AuthDio _singleton = AuthDio._internal();
+Future<Dio> authDio(BuildContext context) async {
+  final dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
 
-  late Dio _dio;
+  const storage = FlutterSecureStorage();
 
-  factory AuthDio() {
-    return _singleton;
-  }
+  dio.interceptors.clear();
 
-  AuthDio._internal() {
-    _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+  dio.interceptors.add(
+    LogInterceptor(
+        responseBody: true,
+        error: true,
+        requestHeader: false,
+        responseHeader: false,
+        request: false,
+        requestBody: false),
+  );
 
-    _dio.interceptors.add(InterceptorsWrapper(
+  dio.interceptors.add(
+    InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        final accessToken = prefs.getString('accessToken');
+        final accessToken = await storage.read(key: 'accessToken');
         options.headers['Authorization'] = 'Bearer $accessToken';
         return handler.next(options);
       },
       onError: (error, handler) async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        final refreshToken = prefs.getString('refreshToken');
-        final userUid = prefs.getInt('userUid');
-
         // accessToken 만료 됐을 때
-        if (error.response?.statusCode == 403) {
-          Response response = await _dio.post(
+        // 401이 SocketException 으로 와서 어쩔 수 없이 이렇게 처리
+        if (error.response == null || error.response?.statusCode == 401) {
+          final String? refreshToken = await storage.read(key: 'refreshToken');
+          final String? userUid = await storage.read(key: 'userUid');
+
+          final refreshDio =
+              Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+          Response response = await refreshDio.post(
             'api/login/reissuance',
             options: Options(headers: {'refreshToken': 'Bearer $refreshToken'}),
-            data: {'userUid': userUid},
+            data: {'userUid': int.parse(userUid ?? '')},
           );
           if (response.statusCode! < 400) {
-            final clonedRequest = await _dio.request(error.requestOptions.path,
+            final String? newAccessToken =
+                response.headers['Authorization']?[0].split(' ')[1];
+            storage.write(key: 'accessToken', value: newAccessToken);
+            final clonedRequest = await dio.request(error.requestOptions.path,
                 options: Options(
                     method: error.requestOptions.method,
-                    headers: error.requestOptions.headers),
+                    headers: {'Authorization': 'Bearer $newAccessToken'}),
                 data: error.requestOptions.data,
                 queryParameters: error.requestOptions.queryParameters);
             return handler.resolve(clonedRequest);
+          } else {
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => LoginPage(),
+                ),
+              );
+            }
           }
           return handler.next(error);
         }
       },
-    ));
-  }
-
-  Dio getDio() {
-    return _dio;
-  }
+    ),
+  );
+  return dio;
 }

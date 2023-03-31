@@ -1,34 +1,40 @@
 class Post {
-  final List<String> imageUrls;
+  final int postId;
   final String voiceUrl;
-  final String voiceLength;
+  final double voiceLength;
+  final String address;
   final String text;
-  final bool isLike;
+  final List<String> photoList;
+  bool isFavorite;
+  int favoriteCount;
+  bool isExpand;
 
-  Post(
-      {required this.imageUrls,
-      required this.voiceUrl,
-      required this.voiceLength,
-      required this.text,
-      required this.isLike});
+  Post({
+    required this.postId,
+    required this.voiceUrl,
+    required this.voiceLength,
+    required this.address,
+    required this.text,
+    required this.photoList,
+    required this.isFavorite,
+    required this.favoriteCount,
+    this.isExpand = false,
+  });
 
-  // Serialize(직렬화)
-  Map<String, dynamic> toJson() => {
-        'imageUrls': imageUrls,
-        'voiceUrl': voiceUrl,
-        'voiceLength': voiceLength,
-        'text': text,
-        'isLike': isLike,
-      };
-
-  // Deserialize(파싱?)
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      imageUrls: json['imageUrls'],
+      postId: json['postId'],
       voiceUrl: json['voiceUrl'],
       voiceLength: json['voiceLength'],
+      address: (json['address2'] ?? '') +
+          ' ' +
+          (json['address3'] ?? '') +
+          ' ' +
+          (json['address4'] ?? ''),
       text: json['text'],
-      isLike: json['isLike'],
+      photoList: List.from(json['photoList']),
+      isFavorite: json['isFavorite'],
+      favoriteCount: json['favoriteCount'],
     );
   }
 }
