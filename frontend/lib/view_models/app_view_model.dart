@@ -100,7 +100,7 @@ class AppViewModel with ChangeNotifier {
     } else {
       page = ChangeNotifierProvider<TimelineListViewModel>(
         create: (_) => TimelineListViewModel(context: context),
-        child: MyTimeLineListView(),
+        child: UserTimeLineListView(),
       );
     }
     return PageRouteBuilder(

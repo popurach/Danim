@@ -5,7 +5,7 @@ import 'package:danim/views/timeline_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MyTimeLineListView extends StatelessWidget {
+class UserTimeLineListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

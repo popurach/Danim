@@ -29,6 +29,9 @@ class TimelineRepository {
       // if ( userId == 내 아이디 )
       final dio = await authDio(context);
       Response response = await dio.get('api/auth/timeline/mine/$pageNum');
+
+      // else
+      // Response response = await dio.get('api/auth/timeline/other/$userId/$pageNum');
       return List.from(response.data.map((json) => Timeline.fromJson(json)));
     } on DioError catch (error) {
       throw Exception('Fail to get timeline: $error');
