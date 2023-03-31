@@ -88,10 +88,10 @@ public class TimeLineServiceImpl implements TimeLineService {
         for (Post p : post) {
             favorite_count = 0L;
             String NationName = p.getNationId().getName();
-
             isMine = false;
             favorite_count = favoriteRepository.countByPostId(p);
             favorite_temp = favoriteRepository.findFirstByPostIdAndUserUid(p, user);
+
             if (favorite_temp == null)
                 favorite = false;
             else favorite = true;
@@ -152,7 +152,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void finishTimeline(Long uid,String title) throws BaseException {
+    public void finishTimeline(Long uid, String title) throws BaseException {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         //타임라인 완료 변경 작업 진행
@@ -194,8 +194,12 @@ public class TimeLineServiceImpl implements TimeLineService {
     public List<MainTimelinePhotoDtoRes> searchTimelineOrderBylatestPaging(Pageable pageable) throws BaseException {
 
         Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
-        if (timeline.getContent().size() == 0) {
+
+
+        if (pageable.getPageNumber() != 0 && timeline.getContent().size() == 0) {
             throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+        } else if (pageable.getPageNumber() == 0 && timeline.getContent().size() == 0) {
+            return null;
         }
 
         //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
@@ -209,12 +213,12 @@ public class TimeLineServiceImpl implements TimeLineService {
             if (startpost == null || lastpost == null)
                 continue;
             //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
-            log.info("현재 timelineid"+time.getTimelineId()+"현재 post"+startpost.getPostId().toString());
+            log.info("현재 timelineid" + time.getTimelineId() + "현재 post" + startpost.getPostId().toString());
             if (startpost.getPhotoList().isEmpty())
                 throw new BaseException(ErrorMessage.NOT_EXIST_PHOTO);
             Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_PHOTO));
             //Long uid = time.getTimelineId();
-            User user = userRepository.findById(time.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
+            User user = userRepository.findById(time.getUserUid().getUserUid()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
             MainTimelinePhotoDtoRes temp = MainTimelinePhotoDtoRes.builder(time, startpost, lastpost, photo, user).build();
             list.add(temp);
         }
