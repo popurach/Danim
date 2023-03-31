@@ -92,10 +92,10 @@ public class TimelineController {
 
 
     //여행끝
-    @PutMapping("/{uid}")
-    public ResponseEntity<?> finishTimeLine(@PathVariable Long uid) throws Exception {
+    @PutMapping("/{uid}/{title}")
+    public ResponseEntity<?> finishTimeLine(@PathVariable Long uid,@PathVariable String title) throws Exception {
         log.info("여행종료 기능 시작");
-        timeLineService.finishTimeline(uid);
+        timeLineService.finishTimeline(uid,title);
         log.info("여행종료 기능 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }

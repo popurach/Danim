@@ -152,13 +152,15 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void finishTimeline(Long uid) throws BaseException {
+    public void finishTimeline(Long uid,String title) throws BaseException {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         //타임라인 완료 변경 작업 진행
 
         now.setComplete(Boolean.TRUE);
         now.setFinishTime(LocalDateTime.now());
+        now.setTitle(title);
+
         timeLineRepository.save(now);
     }
 

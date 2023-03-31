@@ -22,11 +22,11 @@ public interface TimeLineService {
     //타임라인 한개 조회=>완료
     TimelinePostOuter searchOneTimeline(Long uid,User user) throws Exception;
 
-    //여행시작 =>완료
+    //여행시작
     void makenewTimeline(User user) throws Exception;
 
-    //여행끝 =>완료
-    void finishTimeline(Long uid) throws Exception;
+    //여행끝
+    void finishTimeline(Long uid,String title) throws Exception;
 
     //타임라인삭제=>우선 놔둠
     void deleteTimeline(Long uid) throws Exception;
