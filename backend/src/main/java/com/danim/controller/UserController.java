@@ -67,6 +67,8 @@ public class UserController {
     // 회원 정보 수정 (프로필 이미지)
     @PutMapping("/auth/user/info")
     public ResponseEntity<?> updateUser(@RequestPart MultipartFile profileImage, @RequestBody String nickname) throws Exception {
+        log.info("profileImage, {}", profileImage);
+        log.info("nickname: {}", nickname);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() != null) {
             User user = (User) auth.getPrincipal();
