@@ -204,7 +204,8 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
         if (pageable.getPageNumber() != 0 && timeline.getContent().size() == 0) {
-            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+            //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+            return null;
         } else if (pageable.getPageNumber() == 0 && timeline.getContent().size() == 0) {
             return null;
         }
