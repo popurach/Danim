@@ -13,10 +13,9 @@ public interface UserService {
     // 유저 조회
     List<UserInfoRes> searchUserByNickname(String search);
 
-    User getByUserUid(Long userUId);
-
     TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException;
 
     UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage, String nickname) throws Exception;
 
+    UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception;
 }

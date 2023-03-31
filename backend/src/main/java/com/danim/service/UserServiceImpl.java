@@ -5,6 +5,7 @@ import com.danim.conponent.AwsS3;
 import com.danim.dto.UserLoginReq;
 import com.danim.dto.TokenRes;
 import com.danim.dto.UserInfoRes;
+import com.danim.entity.TimeLine;
 import com.danim.entity.User;
 import com.danim.repository.UserRepository;
 import com.danim.utils.HttpUtil;
@@ -34,6 +35,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TimeLineService timeLineService;
     public final JwtTokenProvider jwtTokenProvider;
     public final PasswordEncoder passwordEncoder;
     private final AwsS3 awsS3;
@@ -49,11 +51,6 @@ public class UserServiceImpl implements UserService {
         return returnList;
     }
 
-
-    @Override
-    public User getByUserUid(Long userUid) {
-        return userRepository.getByUserUid(userUid);
-    }
 
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
@@ -121,6 +118,18 @@ public class UserServiceImpl implements UserService {
         }
 
         return entityToResponseDTO(user);
+    }
+
+    @Override
+    public UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception {
+        User user = userRepository.getByUserUid(userUid);
+
+        return UserInfoRes.builder()
+                .userUid(user.getUserUid())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .isTraveling(timeLineService.isTraveling(userUid))
+                .build();
     }
 
     // User 객체를 UserInfoRes로 변환

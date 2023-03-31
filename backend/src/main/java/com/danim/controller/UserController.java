@@ -47,19 +47,15 @@ public class UserController {
 
     // 닉네임, 프로필 이미지 조회
     @GetMapping("/auth/user/info")
-    public ResponseEntity<?> getNicknameAndProfileImage(){
+    public ResponseEntity<?> getNicknameAndProfileImage() throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if(auth != null && auth.getPrincipal() != null){
             User user = (User)auth.getPrincipal();
-            UserInfoRes result = UserInfoRes.builder()
-                    .userUid(user.getUserUid())
-                    .nickname(user.getNickname())
-                    .profileImageUrl(user.getProfileImageUrl())
-                    .build();
+            UserInfoRes result = userService.getNicknameAndProfileImage(user.getUserUid());
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // 소셜 로그인(카카오)
