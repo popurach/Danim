@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -93,9 +94,9 @@ public class TimelineController {
 
     //여행끝
     @PutMapping("/{uid}/{title}")
-    public ResponseEntity<?> finishTimeLine(@PathVariable Long uid,@PathVariable String title) throws Exception {
+    public ResponseEntity<?> finishTimeLine(@PathVariable Long uid, @PathVariable String title) throws Exception {
         log.info("여행종료 기능 시작");
-        timeLineService.finishTimeline(uid,title);
+        timeLineService.finishTimeline(uid, title);
         log.info("여행종료 기능 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -130,7 +131,13 @@ public class TimelineController {
         Pageable pageable = PageRequest.of(page, 15, Sort.by("createTime").descending());
         List<MainTimelinePhotoDtoRes> timelinelist = timeLineService.searchTimelineOrderBylatestPaging(pageable);
         log.info("메인피드 최신순 타임라인 조회 종료");
-        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
+        if (timelinelist != null) {
+            return new ResponseEntity<>(timelinelist, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+
     }
 
 

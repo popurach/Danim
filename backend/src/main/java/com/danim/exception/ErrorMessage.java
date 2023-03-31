@@ -27,6 +27,8 @@ public enum ErrorMessage {
     NOT_PERMIT_VOICE_SAVE( "오디오 파일 저장시 에러 발생, 파일 형식을 확인을 해주세요", HttpStatus.BAD_REQUEST),
     NOT_STT_SAVE( "내부 서버 에러, SPEECH TO TEXT 과정에서 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
+
+
     UNAUTHORIZED_ACCESSTOKEN("accessToken이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
 
     NOT_EXIST_PHOTO("존재하지 않는 사진 입니다", HttpStatus.BAD_REQUEST);
