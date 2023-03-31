@@ -181,18 +181,21 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public void changePublic(Long uid) throws BaseException {
+    public Boolean changePublic(Long uid) throws BaseException {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         Boolean temp = now.getTimelinePublic();
-
+        Boolean check=false;
         //완료->비완료 , 비완료->완료 로 변경하는 작업
         if (temp) {
             now.setTimelinePublic(false);
-
+            check=false;
         } else {
             now.setTimelinePublic(true);
+            check=true;
         }
         timeLineRepository.save(now);
+
+        return check;
 
     }
 
