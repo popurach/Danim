@@ -102,11 +102,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getByUserUid(userUid);
 
         if(profileImage == null){
+            log.info("프로필 이미지 변경 X, 닉네임만 변경");
             // 프로필 이미지 변경 X, 닉네임만 변경
             user.setNickname(nickname);
         } else {
             // 프로필 이미지 변경 및 닉네임 변경
-
+            log.info("프로필 이미지 변경 및 닉네임 변경");
             // 프로필 이미지 S3에 업로드 및 imageURL 가져오기
             String ProfileImageUrl = awsS3.upload(profileImage, "Danim/profile");
 
