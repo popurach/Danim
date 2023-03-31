@@ -26,7 +26,6 @@ import 'camera_view_model.dart';
 var logger = Logger();
 
 class RecordViewModel extends ChangeNotifier {
-  final _dio = AuthDio().getDio();
 
   late List<XFile> _imageList;
 
@@ -181,7 +180,7 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    int timelineId = await UploadRepository().uploadToServer(formData);
+    int timelineId = await UploadRepository().uploadToServer(context, formData);
     if (timelineId >= 0) {
       // 업로드가 완료되었을 때 현재 작성중인 타임라인으로 이동하는 로직
       // Navigator.pushNamed(
