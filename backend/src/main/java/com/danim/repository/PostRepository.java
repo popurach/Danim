@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 지역명으로 post 조회(검색 기능)
-    Optional<List<Post>> findByAddress1OrAddress2OrAddress3OrAddress4(String location1, String location2, String location3, String location4);
+    Optional<List<Post>> findByAddress1ContainsOrAddress2ContainsOrAddress3ContainsOrAddress4Contains(String location1, String location2, String location3, String location4);
 
 //    List<Post> findByLocation(String location);
 

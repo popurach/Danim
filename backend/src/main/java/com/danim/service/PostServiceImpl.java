@@ -7,10 +7,7 @@ import com.danim.dto.GetPostRes;
 import com.danim.entity.*;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
-import com.danim.repository.NationRepository;
-import com.danim.repository.PhotoRepository;
-import com.danim.repository.PostRepository;
-import com.danim.repository.TimeLineRepository;
+import com.danim.repository.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +37,7 @@ public class PostServiceImpl implements PostService {
     private final AwsS3 awsS3;
     private final PostRepository postRepository;
     private final PhotoRepository photoRepository;
+    private final FavoriteRepository favoriteRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
 
@@ -153,10 +151,11 @@ public class PostServiceImpl implements PostService {
     // 지역명 키워드로 포스트 조회
     @Override
     public List<GetPostRes> findByLocation(String location) throws Exception {
-        List<Post> postList = postRepository.findByAddress1OrAddress2OrAddress3OrAddress4(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
+        List<Post> postList = postRepository.findByAddress1ContainsOrAddress2ContainsOrAddress3ContainsOrAddress4Contains(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
         List<GetPostRes> getPostResList = new ArrayList<>();
         for (Post post : postList) {
-            getPostResList.add(GetPostRes.builder(post).build());
+            Long totalFavorite = favoriteRepository.countByPostId(post);
+            getPostResList.add(GetPostRes.builder(post, totalFavorite).build());
         }
         return getPostResList;
     }
