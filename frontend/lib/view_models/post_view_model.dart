@@ -1,9 +1,18 @@
-import 'package:danim/models/Post.dart';
+import 'package:danim/services/post_repository.dart';
+import 'package:flutter/cupertino.dart';
 
-class PostViewModel {
-  final Post _post;
+import '../models/Post.dart';
 
-  PostViewModel(this._post);
+class PostViewModel extends ChangeNotifier {
+  final Post post;
+  final bool isMine;
 
-  Post get post => _post;
+  PostViewModel(this.post, this.isMine);
+
+  changeIsFavorite(context) async {
+    final res = await PostRepository().changeFavoritePost(context, post.postId);
+    post.isFavorite = res['favorite'];
+    post.favoriteCount = res['totalFavorite'];
+    notifyListeners();
+  }
 }

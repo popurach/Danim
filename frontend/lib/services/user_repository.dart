@@ -3,7 +3,7 @@ import 'package:danim/models/UserInfo.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 
-import '../models/dto/Token.dart';
+import '../models/Token.dart';
 
 class UserRepository {
   // 싱글턴 패턴
@@ -34,9 +34,10 @@ class UserRepository {
     }
   }
 
-  Future<UserInfo> getUserInfo() async {
+  Future<UserInfo> getUserInfo(context) async {
     try {
-      Response response = await AuthDio().getDio().get('api/auth/user/info');
+      final dio = await authDio(context);
+      Response response = await dio.get('api/auth/user/info');
       final UserInfo userInfo = UserInfo.fromJson(response.data);
       return userInfo;
     } catch (error) {

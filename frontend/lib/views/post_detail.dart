@@ -9,59 +9,97 @@ import 'package:timeline_tile/timeline_tile.dart';
 import '../module/audio_player_view_model.dart';
 
 class PostDetail extends StatelessWidget {
-  final PostViewModel viewModel;
-
-  const PostDetail({super.key, required this.viewModel});
+  const PostDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-            width: 52,
+    return Consumer<PostViewModel>(builder: (context, viewModel, _) {
+      return Row(
+        children: [
+          SizedBox(
+            width: 40,
             height: 500,
             child: TimelineTile(
               indicatorStyle: const IndicatorStyle(
-                  width: 0, padding: EdgeInsets.only(left: 10)),
+                width: 0,
+                padding: EdgeInsets.only(left: 10),
+              ),
               alignment: TimelineAlign.center,
-            )),
-        SizedBox(
-          width: MediaQuery.of(context).size.width - 72,
-          height: 500,
-          child: Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            insetPadding: const EdgeInsets.all(5),
-                            child: ChangeNotifierProvider(
-                              create: (_) =>
-                                  ImagesPageViewModel(viewModel.post.imageUrls),
-                              child: ImagesPageView(),
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 60,
+            height: 500,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    viewModel.isMine
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
                             ),
-                          );
-                        });
-                  },
-                  child: ChangeNotifierProvider(
-                    create: (_) =>
-                        ImagesPageViewModel(viewModel.post.imageUrls),
-                    child: const ImagesPageView(),
+                          )
+                        : Container(),
+                  ],
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              insetPadding: const EdgeInsets.all(5),
+                              child: ChangeNotifierProvider(
+                                create: (_) => ImagesPageViewModel(
+                                    viewModel.post.photoList),
+                                child: const ImagesPageView(),
+                              ),
+                            );
+                          });
+                    },
+                    child: ChangeNotifierProvider(
+                      create: (_) =>
+                          ImagesPageViewModel(viewModel.post.photoList),
+                      child: const ImagesPageView(),
+                    ),
                   ),
                 ),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => AudioPlayerViewModel(viewModel.post.voiceUrl),
-                child: AudioPlayerView(),
-              ),
-              Text(viewModel.post.text)
-            ],
+                SizedBox(
+                  height: 40,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          viewModel.changeIsFavorite(context);
+                        },
+                        icon: viewModel.post.isFavorite
+                            ? const Icon(Icons.favorite,
+                                color: Colors.pinkAccent)
+                            : const Icon(
+                                Icons.favorite_outline,
+                                color: Colors.black45,
+                              ),
+                      ),
+                      Text(viewModel.post.favoriteCount.toString()),
+                    ],
+                  ),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => AudioPlayerViewModel(viewModel.post.voiceUrl),
+                  child: AudioPlayerView(),
+                ),
+                Text(viewModel.post.text)
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

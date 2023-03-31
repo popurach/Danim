@@ -9,11 +9,9 @@ class ModifyProfileViewModel extends ChangeNotifier {
   late final _imagePath;
   var _selectedImageFile;
   var _nickname;
-  var _canModify = false;
 
   checkDuplicate() {
     // TODO check Duplicate to Server
-    _canModify = true;
     notifyListeners();
   }
 
@@ -40,8 +38,6 @@ class ModifyProfileViewModel extends ChangeNotifier {
   get isValid => RegExp('^[a-zA-Z가-힣0-9]{3,10}').hasMatch(nickname);
 
   get imagePath => _imagePath;
-
-  get canModify => _canModify;
 
   get selectedImageFile => _selectedImageFile;
 
