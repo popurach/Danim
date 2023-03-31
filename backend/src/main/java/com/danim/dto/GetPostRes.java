@@ -1,6 +1,7 @@
 package com.danim.dto;
 
 import com.danim.entity.Post;
+import com.danim.repository.FavoriteRepository;
 import lombok.*;
 
 @Data
@@ -11,13 +12,20 @@ import lombok.*;
 public class GetPostRes {
     private Long timelineId;
     private String thumbNail;
+    private Long postId;
+    private Long totalFavorite;
 
-    public static GetPostRes.GetPostResBuilder builder(Post post) {
+    public static GetPostRes.GetPostResBuilder builder(Post post, Long totalFavorite) {
+
         Long timelineId = post.getTimelineId().getTimelineId();
         String thumbNail = post.getPhotoList().get(0).getPhotoUrl();
+        Long postId = post.getPostId();
+        Long total = totalFavorite;
 
         return GetPostResBuilder()
                 .timelineId(timelineId)
-                .thumbNail(thumbNail);
+                .thumbNail(thumbNail)
+                .postId(postId)
+                .totalFavorite(total);
     }
 }
