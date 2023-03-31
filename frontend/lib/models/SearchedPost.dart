@@ -10,4 +10,13 @@ class SearchedPost {
     required this.timelineId,
     required this.postId
   });
+
+  factory SearchedPost.fromJson(Map<String, dynamic> json) {
+    return SearchedPost(
+      thumbnailUrl: json["thumbNail"],
+      favorite: json["totalFavorite"],
+      timelineId: json["timelineId"],
+      postId: json["postId"]
+    );
+  }
 }

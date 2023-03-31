@@ -15,7 +15,7 @@ class TimelineListViewModel with ChangeNotifier {
       });
     } else {
       pagingController.addPageRequestListener((pageKey) {
-        getUserTimelineList(pageKey);
+        getUserTimelineList(context, pageKey);
       });
     }
   }
@@ -37,10 +37,22 @@ class TimelineListViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> getUserTimelineList(int pageKey) async {
+  Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
     // TODO 유저 타임 라인 리스트 가져오기
-    // final data = await TimelineRepository().getMainTimelineByPageNum(pageNum++);
-    // _timelineList = [..._timelineList, ...data];
+    try {
+      final newItems =
+      await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
+      final isLastPage = newItems.length < 15;
+      if (isLastPage) {
+        pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        pagingController.appendPage(newItems, nextPageKey);
+      }
+      notifyListeners();
+    } catch (e) {
+      throw Exception('get timeline list fail: $e');
+    }
     notifyListeners();
   }
 

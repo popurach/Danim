@@ -24,6 +24,17 @@ class TimelineRepository {
     }
   }
 
+  Future<List<Timeline>> getUserTimelineByPageNum(context, int pageNum, userId) async {
+    try {
+      // if ( userId == 내 아이디 )
+      final dio = await authDio(context);
+      Response response = await dio.get('api/auth/timeline/mine/$pageNum');
+      return List.from(response.data.map((json) => Timeline.fromJson(json)));
+    } on DioError catch (error) {
+      throw Exception('Fail to get timeline: $error');
+    }
+  }
+
   Future<TimelineInfo> getTimelineDetailsByTimelineId(
       context, int timelineId) async {
     try {

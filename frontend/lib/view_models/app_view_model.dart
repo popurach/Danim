@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:danim/view_models/my_timeline_list_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
+import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:danim/views/my_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
@@ -98,8 +98,8 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      page = ChangeNotifierProvider<MyTimeLineListViewModel>(
-        create: (_) => MyTimeLineListViewModel(),
+      page = ChangeNotifierProvider<TimelineListViewModel>(
+        create: (_) => TimelineListViewModel(context: context),
         child: MyTimeLineListView(),
       );
     }
