@@ -2,6 +2,7 @@ import 'package:danim/models/Timeline.dart';
 import 'package:danim/models/UserInfo.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/Token.dart';
 
@@ -11,10 +12,13 @@ class UserRepository {
 
   static final UserRepository _instance = UserRepository._internal();
 
+  final storage = const FlutterSecureStorage();
+
   factory UserRepository() => _instance;
 
   final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
 
+  // 타임라인 한개 가져오기
   Future<Timeline> getTimelineById(int id) async {
     try {
       Response response = await _dio.get('api/auth/timeline/$id');
@@ -24,6 +28,7 @@ class UserRepository {
     }
   }
 
+  // 카카오 로그인
   Future<Token> kakaoLogin(Token token) async {
     try {
       Response response =
@@ -34,14 +39,27 @@ class UserRepository {
     }
   }
 
+  // 내 정보 가져오기
   Future<UserInfo> getUserInfo(context) async {
     try {
       final dio = await authDio(context);
-      Response response = await dio.get('api/auth/user/info');
-      final UserInfo userInfo = UserInfo.fromJson(response.data);
-      return userInfo;
+      Response response = await dio.get(
+        'api/auth/user/info',
+      );
+      return UserInfo.fromJson(response.data);
     } catch (error) {
       throw Exception('Fail to login: $error');
+    }
+  }
+
+  // 회원정보 변경 요청
+  Future<UserInfo> updateUserProfile(context, FormData data) async {
+    try {
+      final dio = await authDio(context);
+      Response response = await dio.post('/api/auth/user/info', data: data);
+      return UserInfo.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Fail to modify profile $e');
     }
   }
 }

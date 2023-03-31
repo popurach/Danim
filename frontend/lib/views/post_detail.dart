@@ -1,4 +1,5 @@
 import 'package:danim/module/audio_player_view.dart';
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/images_page_view_model.dart';
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/views/images_page_view.dart';
@@ -69,27 +70,30 @@ class PostDetail extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 40,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          viewModel.changeIsFavorite(context);
-                        },
-                        icon: viewModel.post.isFavorite
-                            ? const Icon(Icons.favorite,
-                                color: Colors.pinkAccent)
-                            : const Icon(
-                                Icons.favorite_outline,
-                                color: Colors.black45,
-                              ),
-                      ),
-                      Text(viewModel.post.favoriteCount.toString()),
-                    ],
-                  ),
-                ),
+                Consumer<AppViewModel>(builder: (_, appViewModel, __) {
+                  return SizedBox(
+                    height: 40,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            viewModel.changeIsFavorite(
+                                context, appViewModel.userUid);
+                          },
+                          icon: viewModel.post.isFavorite
+                              ? const Icon(Icons.favorite,
+                                  color: Colors.pinkAccent)
+                              : const Icon(
+                                  Icons.favorite_outline,
+                                  color: Colors.black45,
+                                ),
+                        ),
+                        Text(viewModel.post.favoriteCount.toString()),
+                      ],
+                    ),
+                  );
+                }),
                 ChangeNotifierProvider(
                   create: (_) => AudioPlayerViewModel(viewModel.post.voiceUrl),
                   child: AudioPlayerView(),

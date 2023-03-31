@@ -1,48 +1,25 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
-class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function moveToModifyProfile;
   final Function logout;
+
   const CustomAppBar(
       {super.key, required this.moveToModifyProfile, required this.logout});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  @override
-  State<StatefulWidget> createState() => _CustomAppBar();
-}
-
-class _CustomAppBar extends State<CustomAppBar> {
-  late String _profileImageUrl = '';
-
-  @override
-  void initState() {
-    super.initState();
-    loadProfileImage();
-  }
-
-  loadProfileImage() async {
-    const storage = FlutterSecureStorage();
-    final newProfileImage = await storage.read(key: 'profileImageUrl');
-    if (newProfileImage != null) changeProfileImageUrl(newProfileImage);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final logger = Logger();
+    final appViewModel = Provider.of<AppViewModel>(context, listen: true);
     return AppBar(
-      actions: <Widget>[
+      actions: [
         PopupMenuButton(
           tooltip: '',
           offset: const Offset(0, 55),
           icon: CachedNetworkImage(
-            imageUrl: _profileImageUrl,
+            imageUrl: appViewModel.imageUrl,
             errorWidget: (_, __, ___) => const Icon(Icons.account_circle),
             imageBuilder: (_, imageProvider) => Container(
               width: 80.0,
@@ -60,8 +37,7 @@ class _CustomAppBar extends State<CustomAppBar> {
           itemBuilder: (_) => <PopupMenuEntry>[
             PopupMenuItem(
               onTap: () {
-                logger.d('modifyProfile clicked');
-                widget.moveToModifyProfile();
+                moveToModifyProfile();
               },
               child: const SizedBox(
                 width: 80,
@@ -70,7 +46,7 @@ class _CustomAppBar extends State<CustomAppBar> {
             ),
             PopupMenuItem(
               onTap: () {
-                widget.logout();
+                logout();
               },
               child: const SizedBox(
                 width: 80,
@@ -80,13 +56,14 @@ class _CustomAppBar extends State<CustomAppBar> {
           ],
         ),
       ],
-      title: const Text("Danim"),
+      title: const Text(
+        "Danim",
+        style: TextStyle(color: Colors.white),
+      ),
+      centerTitle: true,
     );
   }
 
-  void changeProfileImageUrl(newImageUrl) {
-    setState(() {
-      _profileImageUrl = newImageUrl;
-    });
-  }
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

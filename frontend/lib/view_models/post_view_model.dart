@@ -9,8 +9,9 @@ class PostViewModel extends ChangeNotifier {
 
   PostViewModel(this.post, this.isMine);
 
-  changeIsFavorite(context) async {
-    final res = await PostRepository().changeFavoritePost(context, post.postId);
+  changeIsFavorite(context, userUid) async {
+    final res = await PostRepository()
+        .changeFavoritePost(context, post.postId, userUid);
     post.isFavorite = res['favorite'];
     post.favoriteCount = res['totalFavorite'];
     notifyListeners();

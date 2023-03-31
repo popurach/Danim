@@ -12,118 +12,123 @@ class TimelineListItem extends StatelessWidget {
     const cardHeight = 140.0;
 
     return Container(
-        margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
-        height: cardHeight,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              '/timeline/detail/${timeline.timelineId}',
-            );
-          },
-          child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: const BorderSide(color: Colors.black45, width: 1.5),
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Row(
-                children: [
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                            height: cardHeight * 0.2,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
+      margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
+      height: cardHeight,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            '/timeline/detail/${timeline.timelineId}',
+          );
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: const BorderSide(color: Colors.black45, width: 1.5),
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: Row(
+            children: [
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  children: [
+                    Container(
+                        height: cardHeight * 0.2,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 30),
+                            const Text(
+                              "Danim",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            const SizedBox(width: 10),
+                            const Icon(
+                              Icons.flight_takeoff,
+                              color: Colors.white,
+                            ),
+                            Expanded(
+                                child: Text(
+                              '${timeline.startPlace} ~ ${timeline.finishPlace}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(color: Colors.white),
+                            )),
+                            const SizedBox(width: 30)
+                          ],
+                        )),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            top: 10, right: 10, bottom: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                child: CachedNetworkImage(
+                                    imageUrl: timeline.imageUrl,
+                                    fit: BoxFit.cover),
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 30),
-                                const Text(
-                                  "Danim",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                const SizedBox(width: 10),
-                                const Icon(
-                                  Icons.flight_takeoff,
-                                  color: Colors.white,
-                                ),
-                                Expanded(
-                                    child: Text(
-                                  '${timeline.startPlace} ~ ${timeline.finishPlace}',
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(color: Colors.white),
-                                )),
-                                const SizedBox(width: 30)
-                              ],
-                            )),
-                        Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 10, right: 10, bottom: 10),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: 100,
-                                width: 100,
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  child: CachedNetworkImage(
-                                      imageUrl: timeline.imageUrl,
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Row(
                                       children: [
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 90,
-                                            child: Text(
-                                              "T   I  T  L  E",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                        const SizedBox(
+                                          width: 90,
+                                          child: Text(
+                                            "T   I  T  L  E",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Expanded(
-                                            child: Text(timeline.title),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            timeline.title,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 90,
-                                            child: Text(
-                                              "TRAVELER",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 90,
+                                          child: Text(
+                                            "TRAVELER",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Expanded(
-                                            child: Text(timeline.nickname),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        Expanded(
+                                          child: Text(timeline.nickname),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                        child: Row(
+                                  ),
+                                  Expanded(
+                                    child: Row(
                                       children: [
                                         const SizedBox(
                                           width: 90,
@@ -132,19 +137,26 @@ class TimelineListItem extends StatelessWidget {
                                                   fontWeight: FontWeight.bold)),
                                         ),
                                         Expanded(
-                                            child: Text(
-                                                '${timeline.createTime} ~ ${timeline.finishTime}'))
+                                          child: Text(
+                                              '${timeline.createTime.substring(2)} ~ ${timeline.finishTime.substring(2)}'),
+                                        )
                                       ],
-                                    )),
-                                  ])),
-                            ],
-                          ),
-                        ))
-                      ],
-                    ),
-                  )
-                ],
-              )),
-        ));
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

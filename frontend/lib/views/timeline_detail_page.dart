@@ -20,9 +20,34 @@ class TimelineDetailPage extends StatelessWidget {
                         Text(''),
                         Expanded(child: Container()),
                         viewModel.showPublicIcon(),
-                        Switch(value: false, onChanged: (value) {}),
+                        Switch(
+                            value: viewModel.isPublic, onChanged: (value) {}),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('포스트 삭제'),
+                                content: const Text('포스트를 삭제하시겠습니까?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Text(
+                                      '삭제',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('취소'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           icon: const Icon(
                             Icons.delete,
                             color: Colors.red,
@@ -35,8 +60,8 @@ class TimelineDetailPage extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(left: 5),
                 physics: const ClampingScrollPhysics(),
-                itemCount:
-                    viewModel.timelineDetails.length, // Number of nations
+                itemCount: viewModel.timelineDetails.length,
+                // Number of nations
                 itemBuilder: (BuildContext context, int timelineIndex) {
                   return ExpansionTile(
                     tilePadding: const EdgeInsets.only(left: 5),
@@ -87,8 +112,9 @@ class TimelineDetailPage extends StatelessWidget {
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: viewModel.timelineDetails[timelineIndex]
-                            .postList.length, // Number of nations
+                        itemCount: viewModel
+                            .timelineDetails[timelineIndex].postList.length,
+                        // Number of nations
                         itemBuilder: (BuildContext context, int postIndex) {
                           return ExpansionTile(
                             shape: const RoundedRectangleBorder(),
@@ -132,11 +158,11 @@ class TimelineDetailPage extends StatelessWidget {
                                         .postList[postIndex],
                                     viewModel.isMine),
                                 child: PostDetail(
-                                  key: Key(viewModel
-                                      .timelineDetails[timelineIndex]
-                                      .postList[postIndex]
-                                      .postId
-                                      .toString()),
+                                  key: Key(
+                                    viewModel.timelineDetails[timelineIndex]
+                                        .postList[postIndex].postId
+                                        .toString(),
+                                  ),
                                 ),
                               ),
                             ],
@@ -147,7 +173,7 @@ class TimelineDetailPage extends StatelessWidget {
                   );
                 },
               ),
-              viewModel.isMine && viewModel.isPublic
+              viewModel.isMine && !viewModel.isComplete
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -161,6 +187,9 @@ class TimelineDetailPage extends StatelessWidget {
                       ],
                     )
                   : Container(),
+              const SizedBox(
+                height: 40,
+              )
             ],
           ),
         ),
