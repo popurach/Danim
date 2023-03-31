@@ -13,4 +13,5 @@ public class UserInfoRes {
     private Long userUid;
     private String nickname;
     private String profileImageUrl;
+    private Boolean isTraveling;
 }

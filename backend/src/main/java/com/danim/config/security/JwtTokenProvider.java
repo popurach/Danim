@@ -28,8 +28,8 @@ public class JwtTokenProvider {
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
 
-    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L  * 60 * 60; // access token 1분
-    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24; // refresh token 24일
+    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L  * 60 * 60 * 24 * 24; // access token 24일
+    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 30; // refresh token 30일
 
     @PostConstruct
     protected void init() {
