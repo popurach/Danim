@@ -34,5 +34,5 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
 
     Page<TimeLine> findAllByUserUidAndTimelinePublic(User u, Boolean flag, Pageable pageable);
 
-    List<TimeLine> findAllByUserUidAAndComplete(User u, Boolean flag);
+    List<TimeLine> findAllByUserUidAndComplete(User u, Boolean flag);
 }
