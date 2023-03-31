@@ -316,7 +316,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
     public Boolean isTraveling(Long uid) {
         User user = userRepository.getByUserUid(uid);
-        if(timeLineRepository.findAllByUserUidAndComplete(user, true).size() != 0){
+        if(timeLineRepository.findAllByUserUidAndComplete(user, false).size() != 0){
             return true;
         }
         return false;
