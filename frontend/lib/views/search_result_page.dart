@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SearchBarView extends StatelessWidget {
+class SearchResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

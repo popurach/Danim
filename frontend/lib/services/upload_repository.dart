@@ -1,6 +1,7 @@
 import 'package:danim/models/Timeline.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 class UploadRepository {
   UploadRepository._internal();
@@ -9,12 +10,12 @@ class UploadRepository {
 
   factory UploadRepository() => _instance;
 
-  final _dio = AuthDio().getDio();
 
   // 메인피드 타임라인 리스트 가져오기
-  Future<dynamic> uploadToServer(FormData formData) async {
+  Future<dynamic> uploadToServer(BuildContext context, FormData formData) async {
     try {
-      Response response = await _dio.post("api/auth/post", data: formData);
+      final dio = await authDio(context);
+      Response response = await dio.post("api/auth/post", data: formData);
       if (response.statusCode == 200) {
         return response.data["timelineId"];
       } else {

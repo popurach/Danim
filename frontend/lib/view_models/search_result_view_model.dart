@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import '../utils/auth_dio.dart';
 
 class SearchResultViewModel extends ChangeNotifier {
-
-  final _dio = AuthDio().getDio();
-  get dio => _dio;
+  BuildContext _context;
 
   late String _keyword;
   String get keyword => _keyword;
@@ -15,13 +13,13 @@ class SearchResultViewModel extends ChangeNotifier {
   late List _searchedPosts;
   List get searchedPosts => _searchedPosts;
 
-  SearchResultViewModel(this._keyword) {
-    getPost(_keyword);
+  SearchResultViewModel(this._context,this._keyword) {
+    getPost(_context,_keyword);
     notifyListeners();
   }
 
-  void getPost(String searchKeyword) async {
-    _searchedPosts = await SearchRepository().searchPosts(searchKeyword);
+  void getPost(BuildContext context, String searchKeyword) async {
+    _searchedPosts = await SearchRepository().searchPosts(context, searchKeyword);
     notifyListeners();
   }
 

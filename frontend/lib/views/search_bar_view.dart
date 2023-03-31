@@ -1,66 +1,87 @@
 import 'dart:typed_data';
 
+import 'package:danim/view_models/search_result_view_model.dart';
+import 'package:danim/views/search_result_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Consumer<SearchBarViewModel>(builder: (context, viewModel, _) {
       return Stack(
         children: [
           SizedBox(
-            height:
-            viewModel.searchedResults.isEmpty ?
-            (viewModel.searchedResults.length+1)*105
-            : viewModel.searchedResults.length == 1 ?
-            (viewModel.searchedResults.length+1)*79
-            :(viewModel.searchedResults.length+1)*75,
+            height: viewModel.searchedResults.isEmpty
+                ? (viewModel.searchedResults.length + 1) * 105
+                : viewModel.searchedResults.length == 1
+                    ? (viewModel.searchedResults.length + 1) * 79
+                    : (viewModel.searchedResults.length + 1) * 75,
             child: Column(
               children: [
                 // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
                 viewModel.searchKeyWord != ""
                     ? Expanded(
-                      child: Container(
-                      margin: EdgeInsets.only(top: 30),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                          border: Border(
-                            top: BorderSide(color: Colors.transparent, width: 2),
-                            left: BorderSide(color: Colors.black54, width: 2),
-                            right: BorderSide(color: Colors.black54, width: 2),
-                            bottom: BorderSide(color: Colors.black54, width: 2),
-                          )),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 14),
-                        child: SizedBox(
-                          height: (viewModel.searchedResults.length+1)*75,
-                          child: ListView.builder(
-                              itemCount: viewModel.searchedResults.length +1 ,
-                              itemBuilder: (BuildContext context, int index) {
-                                if (index == 0) {
-                                  return GestureDetector(
-                                    onTap: () {},
-                                    child: ListTile(
-                                        leading: Icon(Icons.search),
-                                        title: Text(
-                                            "${viewModel.searchKeyWord}(으)로 검색...")
-                                    ),
-                                  );
-                                } else {
-                                  return ListTile(
-                                    leading: FlutterLogo(),
-                                    title: Text(viewModel.searchedResults[index-1]["nickname"]),
-                                  );
-                                }
-                              }
-                          ),
-                        ),
-                      )),
-                    )
+                        child: Container(
+                            margin: EdgeInsets.only(top: 30),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                border: Border(
+                                  top: BorderSide(
+                                      color: Colors.transparent, width: 2),
+                                  left: BorderSide(
+                                      color: Colors.black54, width: 2),
+                                  right: BorderSide(
+                                      color: Colors.black54, width: 2),
+                                  bottom: BorderSide(
+                                      color: Colors.black54, width: 2),
+                                )),
+                            child: Container(
+                              margin: EdgeInsets.only(top: 14),
+                              child: SizedBox(
+                                height:
+                                    (viewModel.searchedResults.length + 1) * 75,
+                                child: ListView.builder(
+                                    itemCount:
+                                        viewModel.searchedResults.length + 1,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (index == 0) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChangeNotifierProvider<
+                                                            SearchResultViewModel>(
+                                                          create: (_) =>
+                                                              SearchResultViewModel(
+                                                                  context,
+                                                                  viewModel.searchKeyWord!),
+                                                          child:
+                                                              SearchResultView(),
+                                                        )));
+                                          },
+                                          child: ListTile(
+                                              leading: Icon(Icons.search),
+                                              title: Text(
+                                                  "${viewModel.searchKeyWord}(으)로 검색...")),
+                                        );
+                                      } else {
+                                        return ListTile(
+                                          leading: FlutterLogo(),
+                                          title: Text(viewModel
+                                                  .searchedResults[index - 1]
+                                              ["nickname"]),
+                                        );
+                                      }
+                                    }),
+                              ),
+                            )),
+                      )
                     : const SizedBox.shrink(),
               ],
             ),
@@ -73,7 +94,7 @@ class SearchBar extends StatelessWidget {
               focusNode: viewModel.myfocus,
               keyboardType: TextInputType.text,
               onChanged: (String? keyword) async {
-                viewModel.searchUser(keyword);
+                viewModel.searchUser(context, keyword);
               },
               // 포커스 일 때 스타일 바꾸기
               decoration: const InputDecoration(

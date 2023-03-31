@@ -1,3 +1,4 @@
+import 'package:danim/view_models/my_timeline_list_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/my_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
@@ -41,16 +42,16 @@ class AppViewModel with ChangeNotifier {
     }
   }
 
-  onMyFeedRoute(settings) {
+  onMyFeedRoute(context, settings) {
     Widget page;
     if (settings.name!.startsWith('/timeline/detail')) {
       final timelineId = int.parse(settings.name.split('/')[3]);
       page = ChangeNotifierProvider(
-        create: (_) => TimelineDetailViewModel(timelineId),
+        create: (_) => TimelineDetailViewModel(context,timelineId),
         child: TimelineDetailPage(),
       );
     } else {
-      page = ChangeNotifierProvider(
+      page = ChangeNotifierProvider<MyTimeLineListViewModel>(
         create: (_) => MyTimeLineListViewModel(),
         child: MyTimeLineListView(),
       );

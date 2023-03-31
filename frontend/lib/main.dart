@@ -75,7 +75,7 @@ class MyHomePage extends StatelessWidget {
               Navigator(
                 key: viewModel.myFeedNavigatorKey,
                 onGenerateRoute: (settings) {
-                  return viewModel.onMyFeedRoute(settings);
+                  return viewModel.onMyFeedRoute(context, settings);
                 },
               )
             ],
