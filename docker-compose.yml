@@ -15,7 +15,7 @@ services:
 
   springboot:
     shm_size: '30gb'
-    build: ./backend
+    build: ./backend1
     image: backend-test
     container_name: backend-test
 
