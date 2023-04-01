@@ -16,8 +16,8 @@ services:
   springboot:
     shm_size: '30gb'
     build: ./backend
-    image: be-test
-    container_name: be-test
+    image: backend-test
+    container_name: backend-test
 
     networks:
       - test
@@ -28,5 +28,5 @@ services:
 
 
 networks:
-  famil_link:
+  test:
     driver: bridge
