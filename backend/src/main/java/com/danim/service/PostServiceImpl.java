@@ -138,6 +138,49 @@ public class PostServiceImpl implements PostService {
         return resavedPost;
     }
 
+
+
+
+    @Override
+    public Post insertPostTest(Post savedPost, List<Photo> photoList,AddPostReq addPostReq) throws Exception {
+
+
+
+
+        // timeline 객체 가져오기
+        TimeLine timeline = timelineRepository.findById(addPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+
+        // db에 저장된 국가인 경우 가져와서 사용, 새로운 국가인 경우 nation 저장 후 사용
+        String address1 = addPostReq.getAddress1();
+        Nation nation = nationRepository.findFirstByName(address1);
+        if (nation == null) {
+            nation = new Nation();
+            nation.setNationUrl("testurl입니다");
+            nation.setName(address1);
+            nationRepository.save(nation);
+        }
+
+
+        // imageURL, voiceURL db에 저장하기
+        log.info("Starting savePost transaction");
+        savedPost.setPhotoList(photoList);
+        savedPost.setVoiceUrl("테스트url");
+        savedPost.setVoiceLength(77.44);
+        savedPost.setNationUrl(nation.getNationUrl());
+        savedPost.setAddress1(addPostReq.getAddress1());
+        savedPost.setAddress2(addPostReq.getAddress2());
+        savedPost.setAddress3(addPostReq.getAddress3());
+        savedPost.setAddress4(addPostReq.getAddress4());
+        savedPost.setText("테스트 Text");
+        savedPost.setTimelineId(timeline);
+        savedPost.setNationId(nation);
+        Post resavedPost = postRepository.save(savedPost);
+        log.info("savePost Transaction complete");
+        return resavedPost;
+    }
+    
+    
+
     // 포스트 삭제 및 해당 포스트의 삭제 사진
     @Override
     @Transactional

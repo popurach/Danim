@@ -5,7 +5,10 @@ import com.danim.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +38,11 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
     Page<TimeLine> findAllByUserUidAndTimelinePublic(User u, Boolean flag, Pageable pageable);
 
     List<TimeLine> findAllByUserUidAndComplete(User u, Boolean flag);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update TimeLine set complete= :now")
+    void changeTimeline(Boolean now);
+
+
 }

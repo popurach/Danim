@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage, String nickname) throws Exception {
         User user = userRepository.getByUserUid(userUid);
 
-        if(profileImage == null){
+        if (profileImage == null) {
             log.info("프로필 이미지 변경 X, 닉네임만 변경");
             // 프로필 이미지 변경 X, 닉네임만 변경
             user.setNickname(nickname);
@@ -141,4 +141,40 @@ public class UserServiceImpl implements UserService {
                 .profileImageUrl((user.getProfileImageUrl()))
                 .build();
     }
+
+
+    public Boolean signUp() {
+        // 카카오톡 rest api (id, profile image, nickname)
+
+        User user;
+        String clientId = "1234";
+        String nickname = "테스트";
+        String profileImageUrl = "----";
+
+        // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
+        if (userRepository.getByClientId(clientId) != null) {
+            user = userRepository.getByClientId(clientId);
+            if (!passwordEncoder.matches("다님", user.getPassword())) {
+                throw new RuntimeException();
+            }
+            TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
+            userRepository.findByClientId(clientId).setRefreshToken(tokenRes.getRefreshToken());
+            return true;
+        }
+
+        // 미등록 사용자
+        TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
+        user = User.builder()
+                .nickname(nickname) // 'nickname' 값을 nickname에 저장
+                .clientId(clientId) // 'id' 값을 clientId에 저장
+                .role("USER")
+                .refreshToken(tokenRes.getRefreshToken())
+                .profileImageUrl(profileImageUrl)
+                .password(passwordEncoder.encode("다님"))
+                .build();
+        userRepository.save(user);
+        return true;
+    }
+
+
 }

@@ -1,7 +1,6 @@
 package com.danim.service;
 
 import com.danim.conponent.AwsS3;
-import com.danim.dto.AddPostReq;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
 import com.danim.repository.PhotoRepository;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Log4j2
@@ -29,6 +29,24 @@ public class PhotoServiceImpl implements PhotoService {
 
         for (MultipartFile imageFile : imageFiles) {
             Photo savedPhoto = this.savePhoto(imageFile, savedPost);
+            photoList.add(savedPhoto);
+        }
+        log.info("createPhotoList Transaction complete");
+        return photoList;
+    }
+
+    @Override
+    public List<Photo> createPhotoListTest(Post savedPost) throws Exception {
+        log.info("Starting createPhotoList transaction");
+        List<Photo> photoList = new ArrayList<>();
+
+        for(int i=0;i<7;i++) {
+            String uuid = UUID.randomUUID().toString();
+            Photo savedPhoto =  Photo.builder()
+                    .postId(savedPost)
+                    .photoUrl(uuid)
+                    .build();
+            photoRepository.save(savedPhoto);
             photoList.add(savedPhoto);
         }
         log.info("createPhotoList Transaction complete");

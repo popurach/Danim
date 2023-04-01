@@ -9,4 +9,8 @@ import java.util.List;
 
 public interface PhotoService {
     List<Photo> createPhotoList(List<MultipartFile> imageFiles, Post savedPost) throws Exception;
+
+
+
+    public List<Photo> createPhotoListTest(Post savedPost)throws Exception;
 }

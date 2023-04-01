@@ -18,4 +18,7 @@ public interface PostService {
 
     // 지역명 검색어에 따른 post 조회
     List<GetPostRes> findByLocation(String location) throws Exception;
+
+
+    Post insertPostTest(Post savedPost, List<Photo> photoList,AddPostReq addPostReq) throws Exception;
 }

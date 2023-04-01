@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -155,6 +157,24 @@ public class TimeLineServiceImpl implements TimeLineService {
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
+    }
+
+
+    @Override
+    public void makenewTimelineTemp() throws BaseException {
+        //여기서 넘어온 uid는 User의 uid아이디 입니다.
+        TimeLine timeline = new TimeLine();
+        User now=userRepository.getByUserUid(1L);
+        //새로운 타임라인 생성이 가능한다
+        timeline.setUserUid(now);
+        timeLineRepository.save(timeline);
+
+    }
+
+    @Override
+
+    public void changeTimelineFinish() {
+            timeLineRepository.changeTimeline(true);
     }
 
 

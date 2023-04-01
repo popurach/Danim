@@ -18,4 +18,8 @@ public interface UserService {
     UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage, String nickname) throws Exception;
 
     UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception;
+
+
+
+    Boolean signUp();
 }
