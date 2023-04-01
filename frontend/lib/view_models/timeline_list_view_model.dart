@@ -2,6 +2,7 @@ import 'package:danim/models/Timeline.dart';
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:logger/logger.dart';
 
 class TimelineListViewModel with ChangeNotifier {
   final userUid;
@@ -20,15 +21,18 @@ class TimelineListViewModel with ChangeNotifier {
     }
   }
 
+  final logger = Logger();
+
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
           await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
+      logger.d(newItems.length);
       if (isLastPage) {
         pagingController.appendLastPage(newItems);
       } else {
-        final nextPageKey = pageKey + newItems.length;
+        final nextPageKey = pageKey + 1;
         pagingController.appendPage(newItems, nextPageKey);
       }
       notifyListeners();

@@ -62,9 +62,15 @@ class TimelineDetailViewModel extends ChangeNotifier {
     }
   }
 
+  changeIsPublic(BuildContext context) async {
+    _isPublic =
+        await TimelineRepository().changeTimelinePublic(context, timelineId);
+    notifyListeners();
+  }
+
   showPublicIcon() {
     if (_isMine) {
-      if (_isPublic) {
+      if (!_isPublic) {
         return const Icon(Icons.lock);
       } else {
         return const Icon(Icons.lock_open);

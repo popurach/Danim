@@ -17,19 +17,25 @@ class TimelineDetailPage extends StatelessWidget {
               viewModel.isMine
                   ? Row(
                       children: [
-                        Text(''),
                         Expanded(child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(viewModel.isPublic ? '공개' : ' 비공개'),
+                        ),
                         viewModel.showPublicIcon(),
                         Switch(
-                            value: viewModel.isPublic, onChanged: (value) {}),
+                            value: viewModel.isPublic,
+                            onChanged: (_) {
+                              viewModel.changeIsPublic(context);
+                            }),
                         IconButton(
                           onPressed: () {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text('포스트 삭제'),
-                                content: const Text('포스트를 삭제하시겠습니까?'),
+                                title: const Text('타임라인 삭제'),
+                                content: const Text('타임라인을  삭제하시겠습니까?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {},
@@ -75,7 +81,14 @@ class TimelineDetailPage extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.clip,
                     ),
-                    trailing: null,
+                    trailing: Padding(
+                      padding: const EdgeInsets.only(right: 40.0),
+                      child: Text(
+                        '${viewModel.timelineDetails[timelineIndex].startDate} ~ ${viewModel.timelineDetails[timelineIndex].finishDate}',
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ),
                     leading: SizedBox(
                       width: 60,
                       height: 60,
