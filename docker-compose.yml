@@ -1,0 +1,32 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: Danim
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - /mysql:/var/lib/mysql
+    ports:
+      - 3307:3307
+    networks:
+      - test
+
+  springboot:
+    shm_size: '30gb'
+    build: ./backend
+    image: be-test
+    container_name: be-test
+
+    networks:
+      - test
+    ports:
+      - 5001:5001
+    depends_on:
+      - mysql
+
+
+networks:
+  famil_link:
+    driver: bridge
