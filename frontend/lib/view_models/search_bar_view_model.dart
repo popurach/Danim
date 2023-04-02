@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+import '../models/UserInfo.dart';
+
 var logger = Logger();
 
 class SearchBarViewModel extends ChangeNotifier {
@@ -16,9 +18,9 @@ class SearchBarViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List _searchedResults = [];
-  List get searchedResults => _searchedResults;
-  set searchedResults (List newList) {
+  List<UserInfo> _searchedResults = [];
+  List<UserInfo> get searchedResults => _searchedResults;
+  set searchedResults (List<UserInfo> newList) {
     _searchedResults = newList;
   }
 
@@ -40,9 +42,9 @@ class SearchBarViewModel extends ChangeNotifier {
 
 
   Future<void> searchUser(BuildContext context, String? keyword) async {
-
     _searchKeyWord = keyword;
     _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+    logger.d(_searchedResults);
     notifyListeners();
   }
 
