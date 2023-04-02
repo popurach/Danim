@@ -49,4 +49,15 @@ class TimelineRepository {
       throw Exception('Fail to change timeline public: $e');
     }
   }
+
+  // 여행 종료
+  Future<void> endTravel(context, int timelineId, String title) async {
+    try {
+      final dio = await authDio(context);
+      Response response =
+          await dio.put('/api/auth/timeline/$timelineId/$title');
+    } catch (e) {
+      throw Exception('Fail to end travel $e');
+    }
+  }
 }
