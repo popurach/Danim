@@ -7,6 +7,7 @@ import com.danim.dto.UserReq;
 import com.danim.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -66,8 +67,10 @@ public class UserController {
     }
 
     // 회원 정보 수정 (프로필 이미지)
-    @PutMapping("/auth/user/info")
-    public ResponseEntity<?> updateUser(@RequestPart MultipartFile profileImage, @RequestBody String nickname) throws Exception {
+    @PostMapping(value = "/auth/user/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateUser(@RequestPart(required = false) MultipartFile profileImage, @RequestPart String nickname) throws Exception {
+        log.info("profileImage, {}", profileImage);
+        log.info("nickname: {}", nickname);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() != null) {
             User user = (User) auth.getPrincipal();
