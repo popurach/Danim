@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,6 +14,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final appViewModel = Provider.of<AppViewModel>(context, listen: true);
     return AppBar(
+      leading: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: CircleAvatar(
+          foregroundImage: AssetImage('assets/images/transparent_logo.png'),
+          backgroundColor: Colors.transparent,
+        ),
+      ),
       actions: [
         PopupMenuButton(
           tooltip: '',

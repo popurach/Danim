@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/views/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +20,9 @@ class RecordView extends StatelessWidget {
           return Consumer<RecordViewModel>(
             builder: (_, recordViewModel, __) {
               return Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: const Text(
-                    'Danim',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  centerTitle: true,
+                appBar: CustomAppBar(
+                  moveToModifyProfile: () => appViewModel.goModifyProfilePage(),
+                  logout: () {},
                 ),
                 body: Column(
                   children: [

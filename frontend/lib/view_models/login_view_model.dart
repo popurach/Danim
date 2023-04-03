@@ -9,7 +9,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  Future<void> loginButtonPressed(context) async {
+  Future<void> loginButtonPressed(context, AppViewModel appViewModel) async {
     bool isInstalled = await isKakaoTalkInstalled();
     OAuthToken token = isInstalled
         ? await UserApi.instance.loginWithKakaoTalk()
@@ -27,19 +27,12 @@ class LoginViewModel extends ChangeNotifier {
     UserInfo userInfo = await UserRepository().getUserInfo(context);
 
     storage.write(key: 'userUid', value: userInfo.userUid.toString());
+    appViewModel.updateUserInfo(userInfo);
 
     Navigator.pushAndRemoveUntil(
         context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) => AppViewModel(userInfo.profileImageUrl,
-                    userInfo.nickname, userInfo.userUid),
-              ),
-            ],
-            child: MyHomePage(),
-          ),
+        MaterialPageRoute(
+          builder: (_) => MyHomePage(),
         ),
         (route) => false);
   }
