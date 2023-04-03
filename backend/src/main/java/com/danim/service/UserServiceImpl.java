@@ -127,12 +127,16 @@ public class UserServiceImpl implements UserService {
     public UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception {
         User user = userRepository.getByUserUid(userUid);
         Integer timelineNum = timeLineRepository.countAllByUserUid(user);
+        Long timeLineId = -1L;
+        if(timeLineService.isTraveling(userUid) != null){
+           timeLineId = timeLineService.isTraveling(userUid).getTimelineId();
+        }
 
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
-                .isTraveling(timeLineService.isTraveling(userUid))
+                .timeLineId(timeLineId)
                 .timelineNum(timelineNum)
                 .build();
     }

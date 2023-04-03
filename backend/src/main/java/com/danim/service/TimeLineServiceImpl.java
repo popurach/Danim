@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -342,12 +339,15 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public Boolean isTraveling(Long uid) {
+    public TimeLine isTraveling(Long uid) {
         User user = userRepository.getByUserUid(uid);
-        if (timeLineRepository.findAllByUserUidAndComplete(user, false).size() != 0) {
-            return true;
+        TimeLine timeLine;
+        try {
+            timeLine = timeLineRepository.findAllByUserUidAndComplete(user, false);
+        } catch(Exception e){
+            return null;
         }
-        return false;
+        return timeLine;
     }
 
 
