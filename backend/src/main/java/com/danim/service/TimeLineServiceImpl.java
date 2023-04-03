@@ -15,9 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -85,9 +87,9 @@ public class TimeLineServiceImpl implements TimeLineService {
         Boolean isMine = false;
         Long nowUserUid = user.getUserUid();
         int check = 0;
-        Post last=null;
+        Post last = null;
         for (Post p : post) {
-            last=p;
+            last = p;
             favorite_count = 0L;
             String NationName = p.getNationId().getName();
             isMine = false;
@@ -159,11 +161,12 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void finishTimeline(Long uid, String title) throws BaseException {
+    public void finishTimeline(Long uid, String title, User user) throws BaseException {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         //타임라인 완료 변경 작업 진행
-
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
         now.setComplete(Boolean.TRUE);
         now.setFinishTime(LocalDateTime.now());
         now.setTitle(title);
@@ -173,25 +176,31 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void deleteTimeline(Long uid) throws BaseException {
+    public void deleteTimeline(Long uid, User user) throws BaseException {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
         timeLineRepository.delete(now);
 
     }
 
     @Override
-    public Boolean changePublic(Long uid) throws BaseException {
+    public Boolean changePublic(Long uid, User user) throws BaseException {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
+
         Boolean temp = now.getTimelinePublic();
-        Boolean check=false;
+        Boolean check = false;
         //완료->비완료 , 비완료->완료 로 변경하는 작업
         if (temp) {
             now.setTimelinePublic(false);
-            check=false;
+            check = false;
         } else {
             now.setTimelinePublic(true);
-            check=true;
+            check = true;
         }
         timeLineRepository.save(now);
 
@@ -251,6 +260,8 @@ public class TimeLineServiceImpl implements TimeLineService {
             return new ArrayList<>();
             //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
         }
+
+
         //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
         List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
         //타임라인을 얻어옴, =>

@@ -25,6 +25,7 @@ public enum ErrorMessage {
     NOT_EXIST_TIMELINE_PAGING("존재하지 않는 타임라인 페이징의 페이지 입니다", HttpStatus.BAD_REQUEST),
     OVER_VOICE_TIME("제한시간(30초)를 넘긴 오디오 파일 입니다", HttpStatus.BAD_REQUEST),
     NOT_PERMIT_VOICE_SAVE( "오디오 파일 저장시 에러 발생, 파일 형식을 확인을 해주세요", HttpStatus.BAD_REQUEST),
+    NOT_PERMIT_USER( "로그인한 유저가 해당 타임라인에 접근할 권한이 없습니다", HttpStatus.BAD_REQUEST),
     NOT_STT_SAVE( "내부 서버 에러, SPEECH TO TEXT 과정에서 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
