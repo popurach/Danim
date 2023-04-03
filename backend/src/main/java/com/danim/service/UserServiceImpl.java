@@ -7,6 +7,7 @@ import com.danim.dto.TokenRes;
 import com.danim.dto.UserInfoRes;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import com.danim.utils.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TimeLineRepository timeLineRepository;
     private final TimeLineService timeLineService;
     public final JwtTokenProvider jwtTokenProvider;
     public final PasswordEncoder passwordEncoder;
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
-        // 카카오톡 rest api (id, profile image, nickname)
+//         카카오톡 rest api (id, profile image, nickname)
         HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
         RestTemplate restTemplate = HttpUtil.generateRestTemplate();
 
@@ -124,21 +126,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception {
         User user = userRepository.getByUserUid(userUid);
+        Integer timelineNum = timeLineRepository.countAllByUserUid(user);
 
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
                 .isTraveling(timeLineService.isTraveling(userUid))
+                .timelineNum(timelineNum)
                 .build();
     }
 
     // User 객체를 UserInfoRes로 변환
     private UserInfoRes entityToResponseDTO(User user) {
+        Integer timelineNum = timeLineRepository.countAllByUserUid(user);
+
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())
                 .profileImageUrl((user.getProfileImageUrl()))
+                .timelineNum(timelineNum)
                 .build();
     }
 }
