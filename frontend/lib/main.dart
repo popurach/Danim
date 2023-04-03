@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
@@ -81,7 +82,11 @@ class MyHomePage extends StatelessWidget {
               )
             ],
           ),
-          floatingActionButton: const CameraFloatingActionButton(),
+          resizeToAvoidBottomInset: true,
+          floatingActionButton: Visibility(
+            visible: !keyboardIsOpen,
+            child: CameraFloatingActionButton(),
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: CustomBottomNavigationBar(),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,7 +21,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           offset: const Offset(0, 55),
           icon: CachedNetworkImage(
             imageUrl: appViewModel.imageUrl,
-            errorWidget: (_, __, ___) => const Icon(Icons.account_circle),
+            errorWidget: (_, __, ___) => const Icon(
+              Icons.account_circle,
+              color: Colors.blueGrey,
+            ),
             imageBuilder: (_, imageProvider) => Container(
               width: 80.0,
               height: 80.0,

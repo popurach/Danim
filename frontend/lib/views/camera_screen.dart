@@ -3,6 +3,7 @@ import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../view_models/app_view_model.dart';
 import './record_screen.dart';
 import '../module/CupertinoAlertDialog.dart';
 import '../view_models/camera_view_model.dart';
@@ -12,23 +13,24 @@ class CameraView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Provider.of로 viewModel 지정
     final viewModel = Provider.of<CameraViewModel>(context, listen: false);
-    return Scaffold(
-      // FutureBuilder를 사용할 필요가 있는지 검토
-      body: FutureBuilder(
-        future: viewModel.initializeCamera(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  'Failed to initialize camera: ${snapshot.error}',
-                  textAlign: TextAlign.center,
-                ),
-              );
-            } else {
-              return SafeArea(
-                child: Consumer<CameraViewModel>(
-                  builder: (context, cameraViewModel, child) {
+    return Consumer<AppViewModel>(builder: (context, appViewModel, _) {
+      return Scaffold(
+        // FutureBuilder를 사용할 필요가 있는지 검토
+        body: FutureBuilder(
+          future: viewModel.initializeCamera(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Failed to initialize camera: ${snapshot.error}',
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              } else {
+                return SafeArea(
+                  child: Consumer<CameraViewModel>(
+                      builder: (context, cameraViewModel, child) {
                     return Scaffold(
                       body: Container(
                         color: Colors.black54,
@@ -49,7 +51,8 @@ class CameraView extends StatelessWidget {
                                     duration: const Duration(milliseconds: 100),
                                     curve: Curves.fastOutSlowIn,
                                     alignment: Alignment.bottomCenter,
-                                    child: CameraPreview(cameraViewModel.controller)),
+                                    child: CameraPreview(
+                                        cameraViewModel.controller)),
                               ),
                             ),
 
@@ -67,10 +70,11 @@ class CameraView extends StatelessWidget {
                                     const SizedBox(height: 15),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
-                                          margin: const EdgeInsets.only(left: 25.0),
+                                          margin:
+                                              const EdgeInsets.only(left: 25.0),
                                           width: 60,
                                           height: 60,
                                         ),
@@ -80,7 +84,7 @@ class CameraView extends StatelessWidget {
                                             decoration: BoxDecoration(
                                                 color: Colors.black54,
                                                 borderRadius:
-                                                BorderRadius.circular(45)),
+                                                    BorderRadius.circular(45)),
                                             child: IconButton(
                                               icon: const Icon(
                                                 Icons.camera,
@@ -88,24 +92,26 @@ class CameraView extends StatelessWidget {
                                                 size: 70,
                                               ),
                                               onPressed: () {
-                                                if (viewModel.allFileList.length <
+                                                if (viewModel
+                                                        .allFileList.length <
                                                     9) {
                                                   viewModel.takePhoto();
                                                 } else {
                                                   OneButtonCupertinoAlertDiaglog()
                                                       .showFeedBack(context,
-                                                      "이미지는 \n최대 9장까지 \n등록 가능합니다.");
+                                                          "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                                 }
                                               },
                                             )),
                                         Container(
-                                          margin:
-                                          const EdgeInsets.only(right: 25.0),
+                                          margin: const EdgeInsets.only(
+                                              right: 25.0),
                                           width: 55,
                                           height: 55,
                                           decoration: BoxDecoration(
                                             color: Colors.black54,
-                                            borderRadius: BorderRadius.circular(25),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
                                           ),
                                           // 녹음 화면으로 이동하는 버튼
                                           child: IconButton(
@@ -118,11 +124,13 @@ class CameraView extends StatelessWidget {
                                                   builder: (context) =>
                                                       ChangeNotifierProvider<
                                                           RecordViewModel>(
-                                                        create: (_) => RecordViewModel(
-                                                          cameraViewModel.allFileList,
-                                                        ),
-                                                        child: RecordView(),
-                                                      ),
+                                                    create: (_) =>
+                                                        RecordViewModel(
+                                                      cameraViewModel
+                                                          .allFileList,
+                                                    ),
+                                                    child: RecordView(),
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -138,17 +146,17 @@ class CameraView extends StatelessWidget {
                         ),
                       ),
                     );
-                  }
-                ),
+                  }),
+                );
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+          },
+        ),
+      );
+    });
   }
 }
