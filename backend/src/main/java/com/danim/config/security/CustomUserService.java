@@ -1,7 +1,6 @@
 package com.danim.config.security;
 
 import com.danim.repository.UserRepository;
-import com.danim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

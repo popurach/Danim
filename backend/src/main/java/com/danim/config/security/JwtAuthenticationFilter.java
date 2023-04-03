@@ -1,7 +1,5 @@
 package com.danim.config.security;
 
-import com.danim.exception.BaseException;
-import com.danim.exception.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

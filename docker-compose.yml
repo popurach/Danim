@@ -2,6 +2,9 @@ version: "3"
 services:
   springboot:
     shm_size: '30gb'
+    build:
+      context: .
+      dockerfile: Dockerfile
 
     image: backend-ttest
     container_name: backend-ttest
