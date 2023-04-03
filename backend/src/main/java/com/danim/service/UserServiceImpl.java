@@ -126,29 +126,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception {
         User user = userRepository.getByUserUid(userUid);
-        Integer timelineNum = timeLineRepository.countAllByUserUid(user);
-        Long timeLineId = -1L;
-        if(timeLineService.isTraveling(userUid) != null){
-           timeLineId = timeLineService.isTraveling(userUid).getTimelineId();
-        }
 
-        return UserInfoRes.builder()
-                .userUid(user.getUserUid())
-                .nickname(user.getNickname())
-                .profileImageUrl(user.getProfileImageUrl())
-                .timeLineId(timeLineId)
-                .timelineNum(timelineNum)
-                .build();
+        return entityToResponseDTO(user);
     }
 
     // User 객체를 UserInfoRes로 변환
     private UserInfoRes entityToResponseDTO(User user) {
         Integer timelineNum = timeLineRepository.countAllByUserUid(user);
+        Long timeLineId = -1L;
+        if(timeLineService.isTraveling(user.getUserUid()) != null){
+            timeLineId = timeLineService.isTraveling(user.getUserUid()).getTimelineId();
+        }
 
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())
                 .profileImageUrl((user.getProfileImageUrl()))
+                .timeLineId(timeLineId)
                 .timelineNum(timelineNum)
                 .build();
     }
