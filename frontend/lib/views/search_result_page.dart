@@ -5,20 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/widgets.dart';
 
-
 class SearchResultView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<SearchResultViewModel>(
-      builder: (context, viewModel, _) {
-        return (
-            viewModel.searchedPosts.isEmpty ?
-            Center(
-                child:
-                Text("${viewModel.keyword} 지역에 대한 검색 결과가 없습니다."))
-            :
-            GridView.custom(
+    return Consumer<SearchResultViewModel>(builder: (context, viewModel, _) {
+      return (viewModel.searchedPosts.isEmpty
+          ? Center(child: Text("${viewModel.keyword} 지역에 대한 검색 결과가 없습니다."))
+          : GridView.custom(
               gridDelegate: SliverQuiltedGridDelegate(
                 crossAxisCount: 4,
                 mainAxisSpacing: 4,
@@ -33,104 +26,64 @@ class SearchResultView extends StatelessWidget {
               ),
               childrenDelegate: SliverChildBuilderDelegate(
                 childCount: viewModel.searchedPosts.length,
-                    (BuildContext context, int index) {
-                      return GridTile(
-                                child: GestureDetector(
-                                  child: LayoutBuilder(
-                                    builder: (BuildContext context, BoxConstraints constraints) {
-                                      return Stack(
-                                        children: [
-                                          CachedNetworkImage(
-                                            width: constraints.maxWidth,
-                                            height: constraints.maxHeight,
-                                            fit: BoxFit.cover,
-                                            imageUrl: '${viewModel.searchedPosts[index]["thumbNail"]}',
-                                          ),
-                                          Positioned(
-                                            top: 8.0,
-                                            left: 8.0,
-                                            child: Container(
-                                              height: 25,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black54,
-                                                borderRadius: BorderRadius.circular(15),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(left:10),
-                                                    child: const Icon(
-                                                      Icons.favorite,
-                                                      color:Colors.red,
-                                                      size: 13,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(left: 7),
-                                                    child: Text(
-                                                      "${viewModel.searchedPosts[index]["totalFavorite"]}",
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        ]
-
-                                      );
-                                    },
-                                  ),
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                        '/timeline/detail/${viewModel.searchedPosts[index].timelineId}'
-                                    );
-                                  },
+                (BuildContext context, int index) {
+                  return GridTile(
+                    child: GestureDetector(
+                      child: LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return Stack(children: [
+                            CachedNetworkImage(
+                              width: constraints.maxWidth,
+                              height: constraints.maxHeight,
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  viewModel.searchedPosts[index].thumbnailUrl,
+                            ),
+                            Positioned(
+                              top: 8.0,
+                              left: 8.0,
+                              child: Container(
+                                height: 25,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                              );
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 13,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 7),
+                                      child: Text(
+                                        "${viewModel.searchedPosts[index].favorite}",
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 10),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ]);
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context,
+                            '/timeline/detail/${viewModel.searchedPosts[index].timelineId}');
+                      },
+                    ),
+                  );
                 },
               ),
-            )
-
-            // GridView.builder(
-            //   itemCount: viewModel.searchedPosts.length,
-            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //     crossAxisCount: 3,
-            //   ),
-            //   scrollDirection: Axis.vertical,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     return GridTile(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //         children: [
-            //           SizedBox(
-            //             width:130,
-            //             height:130,
-            //             child: GestureDetector(
-            //               child: CachedNetworkImage(
-            //                 fit: BoxFit.cover,
-            //                 imageUrl: '${viewModel.searchedPosts[index]["thumbNail"]}',
-            //               ),
-            //               onTap: () {
-            //                 Navigator.pushNamed(
-            //                   context,
-            //                     '/timeline/detail/${viewModel.searchedPosts[index]["timelineId"]}'
-            //                 );
-            //               },
-            //             ),
-            //           )
-            //         ],
-            //       ),
-            //     );
-            //   },
-            // )
-        );
-      }
-    );
+            ));
+    });
   }
 }

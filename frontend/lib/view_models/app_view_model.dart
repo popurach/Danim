@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:danim/view_models/my_timeline_list_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/my_timeline_list_view.dart';
+import 'package:danim/view_models/timeline_list_view_model.dart';
+import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:flutter/material.dart';
@@ -98,9 +98,10 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      page = ChangeNotifierProvider<MyTimeLineListViewModel>(
-        create: (_) => MyTimeLineListViewModel(),
-        child: MyTimeLineListView(),
+      logger.d(_imageUrl);
+      page = ChangeNotifierProvider<TimelineListViewModel>(
+        create: (_) => TimelineListViewModel(context: context, userUid: _userUid, profileImageUrl: _imageUrl, nickname: _nickname),
+        child: UserTimeLineListView(),
       );
     }
     return PageRouteBuilder(

@@ -25,6 +25,29 @@ class TimelineRepository {
     }
   }
 
+  Future<List<Timeline>> getUserTimelineByPageNum(context, int pageNum, userUid) async {
+    // 앱뷰모델에서 현재 기기에서 로그인한 유저 uid를 가져오기 위해서 선언
+    final appViewModel = Provider.of<AppViewModel>(context);
+    final dio = await authDio(context);
+    try {
+      // 페이지 유저 Uid == 로그인한 유저 Uid면 로그인한 유저 타임라인 리스트를 불러옴
+      if ( userUid == appViewModel.userUid ) {
+        Response response = await dio.get('api/auth/timeline/mine/$pageNum');
+        if (response.statusCode == 400) {
+          return [];
+        } else {
+          return List.from(response.data.map((json) => Timeline.fromJson(json)));
+        }
+      } else {
+        // 아니면 해당하는 유저 uid에 해당하는 타임라인 리스트를 불러옴
+        Response response = await dio.get('api/auth/timeline/other/$userUid/$pageNum');
+        return List.from(response.data.map((json) => Timeline.fromJson(json)));
+      }
+    } on DioError catch (error) {
+      throw Exception('Fail to get timeline: $error');
+    }
+  }
+
   // 타임라인 아이디로 타임라인 한개 정보 가져오기
   Future<TimelineInfo> getTimelineDetailsByTimelineId(
       context, int timelineId) async {

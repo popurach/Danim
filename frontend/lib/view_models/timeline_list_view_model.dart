@@ -1,34 +1,41 @@
 import 'package:danim/models/Timeline.dart';
 import 'package:danim/services/timeline_repository.dart';
+import 'package:danim/services/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+
+import '../models/UserInfo.dart';
+import 'app_view_model.dart';
 
 class TimelineListViewModel with ChangeNotifier {
-  final userUid;
-  final PagingController<int, Timeline> pagingController =
-      PagingController(firstPageKey: 0);
+  int? userUid;
+  String? profileImageUrl;
+  String? nickname;
 
-  TimelineListViewModel({required BuildContext context, this.userUid}) {
+  final PagingController<int, Timeline> pagingController =
+  PagingController(firstPageKey: 0);
+
+
+  TimelineListViewModel({required BuildContext context, this.userUid, this.profileImageUrl, this.nickname}) {
     if (userUid == null) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
       });
     } else {
+      // 내 페이지가 아니면
       pagingController.addPageRequestListener((pageKey) {
-        getUserTimelineList(pageKey);
-      });
+        getUserTimelineList(context, pageKey);
+      }
+      );
     }
   }
-
-  final logger = Logger();
 
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
-          await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
+      await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
-      logger.d(newItems.length);
       if (isLastPage) {
         pagingController.appendLastPage(newItems);
       } else {
@@ -41,16 +48,29 @@ class TimelineListViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> getUserTimelineList(int pageKey) async {
-    // TODO 유저 타임 라인 리스트 가져오기
-    // final data = await TimelineRepository().getMainTimelineByPageNum(pageNum++);
-    // _timelineList = [..._timelineList, ...data];
-    notifyListeners();
-  }
+    Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
+      // TODO 유저 타임 라인 리스트 가져오기
+      try {
+        final newItems =
+        await TimelineRepository().getUserTimelineByPageNum(
+            context, pageKey, userUid);
+        final isLastPage = newItems.length < 15;
+        if (isLastPage) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + newItems.length;
+          pagingController.appendPage(newItems, nextPageKey);
+        }
+        notifyListeners();
+      } catch (e) {
+        throw Exception('get timeline list fail: $e');
+      }
+      notifyListeners();
+    }
 
-  @override
-  void dispose() {
-    pagingController.dispose();
-    super.dispose();
+    @override
+    void dispose() {
+      pagingController.dispose();
+      super.dispose();
+    }
   }
-}
