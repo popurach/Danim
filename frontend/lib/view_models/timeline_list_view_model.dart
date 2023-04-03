@@ -46,22 +46,21 @@ class TimelineListViewModel with ChangeNotifier {
   }
 
   Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
-    // TODO 유저 타임 라인 리스트 가져오기
-    try {
-      final newItems = await TimelineRepository()
-          .getUserTimelineByPageNum(context, pageKey, userUid);
-      final isLastPage = newItems.length < 15;
-      if (isLastPage) {
-        pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
-      }
-      notifyListeners();
-    } catch (e) {
-      throw Exception('get timeline list fail: $e');
+    final newItems = await TimelineRepository()
+        .getUserTimelineByPageNum(context, pageKey, userUid);
+    final isLastPage = newItems.length < 15;
+    if (isLastPage) {
+      pagingController.appendLastPage(newItems);
+    } else {
+      final nextPageKey = pageKey + 1;
+      pagingController.appendPage(newItems, nextPageKey);
     }
     notifyListeners();
+    notifyListeners();
+  }
+
+  refresh(context) async {
+    pagingController.refresh();
   }
 
   @override

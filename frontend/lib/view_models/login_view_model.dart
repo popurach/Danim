@@ -28,19 +28,19 @@ class LoginViewModel extends ChangeNotifier {
 
     storage.write(key: 'userUid', value: userInfo.userUid.toString());
 
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => AppViewModel(userInfo.profileImageUrl,
-                  userInfo.nickname, userInfo.userUid),
-            ),
-          ],
-          child: MyHomePage(),
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => AppViewModel(userInfo.profileImageUrl,
+                    userInfo.nickname, userInfo.userUid),
+              ),
+            ],
+            child: MyHomePage(),
+          ),
         ),
-      ),
-    );
+        (route) => false);
   }
 }

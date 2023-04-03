@@ -10,7 +10,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ModifyProfileViewModel extends ChangeNotifier {
-  final controller = TextEditingController();
+  final textEditController = TextEditingController();
   String _imagePath = '';
   XFile? _selectedImageFile;
   String _nickname = '';
@@ -18,7 +18,7 @@ class ModifyProfileViewModel extends ChangeNotifier {
   ModifyProfileViewModel(profileImageUrl, nickname) {
     _nickname = nickname;
     _imagePath = profileImageUrl;
-    controller.text = _nickname;
+    textEditController.text = _nickname;
     notifyListeners();
   }
 

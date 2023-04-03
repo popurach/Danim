@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/post_detail.dart';
 import 'package:danim/views/post_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
