@@ -42,7 +42,14 @@ public class TestController {
     public ResponseEntity<?> makeTimeLine() throws Exception {
         //유저 한명을 받아 와서 해당 유저로 타임라인을 생성하고Y자 한다
         log.info("여행 시작 기능 시작");
-        timeLineService.makenewTimelineTemp();
+        for(int i = 1;i<100000;i++){
+            timeLineService.makenewTimelineTemp();
+            Post savedPost = postService.createPost();
+            log.info("");
+            List<Photo> photoList = photoService.createPhotoListTest(savedPost);
+            postService.insertPostTest(savedPost, photoList, AddPostReq.builder().timelineId((long) i).address1("test").build());
+            timeLineService.changeTimelineFinish();
+        }
         log.info("여행 시작 기능 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -57,7 +64,6 @@ public class TestController {
     //포스트 등록 (Address 1 - 국가 -> Address 4 - 동네)
     @PostMapping(value = "/post")
     public ResponseEntity<?> addPost(@RequestBody AddPostReq addPostReq) throws Exception {
-
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoListTest(savedPost);
         postService.insertPostTest(savedPost, photoList, addPostReq);
