@@ -44,10 +44,12 @@ public class TestController {
         log.info("여행 시작 기능 시작");
         for(int i = 1;i<100000;i++){
             timeLineService.makenewTimelineTemp();
-            Post savedPost = postService.createPost();
-            log.info("");
-            List<Photo> photoList = photoService.createPhotoListTest(savedPost);
-            postService.insertPostTest(savedPost, photoList, AddPostReq.builder().timelineId((long) i).address1("test").build());
+            for (int j = 0; j<9;j++){
+                Post savedPost = postService.createPost();
+                log.info("");
+                List<Photo> photoList = photoService.createPhotoListTest(savedPost);
+                postService.insertPostTest(savedPost, photoList, AddPostReq.builder().timelineId((long) i).address1("test").build());
+            }
             timeLineService.changeTimelineFinish();
         }
         log.info("여행 시작 기능 종료");
