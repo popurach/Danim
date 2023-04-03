@@ -1,5 +1,6 @@
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import '../models/TimelineDetail.dart';
 
@@ -8,8 +9,12 @@ class TimelineDetailViewModel extends ChangeNotifier {
   bool _isMine = false;
   bool _isPublic = false;
   bool _isComplete = false;
+  String _title = '';
   final int expansionTileAnimationTile = 200;
+  final textController = TextEditingController();
   List<TimelineDetail> _timelineDetails = [];
+
+  String get title => _title;
 
   get isMine => _isMine;
 
@@ -19,8 +24,15 @@ class TimelineDetailViewModel extends ChangeNotifier {
 
   get timelineDetails => _timelineDetails;
 
+  set title(String value) {
+    _title = value;
+    notifyListeners();
+  }
+
   TimelineDetailViewModel(BuildContext context, this.timelineId) {
     loadTimelineDetails(context);
+    textController.text = _title;
+    notifyListeners();
   }
 
   loadTimelineDetails(context) async {
@@ -44,15 +56,18 @@ class TimelineDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  changePostExpansion(int timelineIndex, int postIndex, bool isExpand) async {
+  changePostExpansion(
+      context, int timelineIndex, int postIndex, bool isExpand) async {
     if (!isExpand) {
       await Future.delayed(Duration(milliseconds: expansionTileAnimationTile!));
+    } else {
+      _scrollToSelectedContent(context);
     }
     _timelineDetails[timelineIndex].postList[postIndex].isExpand = isExpand;
     notifyListeners();
   }
 
-  void scrollToSelectedContent(context) {
+  void _scrollToSelectedContent(context) {
     if (context != null) {
       Future.delayed(Duration(milliseconds: expansionTileAnimationTile))
           .then((value) {
@@ -62,14 +77,30 @@ class TimelineDetailViewModel extends ChangeNotifier {
     }
   }
 
+  changeIsPublic(BuildContext context) async {
+    _isPublic =
+        await TimelineRepository().changeTimelinePublic(context, timelineId);
+    notifyListeners();
+  }
+
   showPublicIcon() {
     if (_isMine) {
-      if (_isPublic) {
+      if (!_isPublic) {
         return const Icon(Icons.lock);
       } else {
         return const Icon(Icons.lock_open);
       }
     }
     return Container();
+  }
+
+  resetTitle() {
+    _title = '';
+    notifyListeners();
+  }
+
+  endTimeline(context) async {
+    await TimelineRepository().endTravel(context, timelineId, _title);
+    Navigator.popAndPushNamed(context, '/');
   }
 }
