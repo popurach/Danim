@@ -6,6 +6,7 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -15,7 +16,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0)),
+        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0, '홈')),
       ],
       child: const MyApp(),
     ),
@@ -40,16 +41,19 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final logger = Logger();
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
+            viewModel.changeTitle('홈');
             viewModel.homeFeedNavigatorKey.currentState!.pop();
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
+            viewModel.changeTitle('내 다님');
             viewModel.myFeedNavigatorKey.currentState!.pop();
             return false;
           }

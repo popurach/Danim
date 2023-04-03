@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final appViewModel = Provider.of<AppViewModel>(context, listen: true);
     return AppBar(
       leading: const Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.only(left: 10),
         child: CircleAvatar(
           foregroundImage: AssetImage('assets/images/transparent_logo.png'),
           backgroundColor: Colors.transparent,
@@ -47,6 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           itemBuilder: (_) => <PopupMenuEntry>[
             PopupMenuItem(
               onTap: () {
+                appViewModel.changeTitle('프로필 변경');
                 moveToModifyProfile();
               },
               child: const SizedBox(
@@ -66,9 +67,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ],
-      title: const Text(
-        "Danim",
-        style: TextStyle(color: Colors.white),
+      title: Text(
+        appViewModel.title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(color: Colors.white),
       ),
       centerTitle: true,
     );
