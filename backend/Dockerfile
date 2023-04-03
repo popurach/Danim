@@ -1,14 +1,8 @@
 # openjdk-11-jdk 가져오기
 FROM openjdk:11-jdk
 
-WORKDIR /opt/app
-
-COPY ./ /opt/app
-
-COPY --from=build /opt/app/target/*.jar app.jar
-
 # 5000번 포트 노출
-ENV PORT 5001
+ENV PORT 5002
 EXPOSE $PORT
 
 

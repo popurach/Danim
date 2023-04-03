@@ -31,11 +31,11 @@ public class PostController {
     //포스트 등록 (Address 1 - 국가 -> Address 4 - 동네)
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
-                                    @RequestPart List<MultipartFile> imageFiles,
-                                    @RequestPart MultipartFile voiceFile,
+                                     @RequestPart List<MultipartFile> imageFiles,
+                                     @RequestPart MultipartFile voiceFile,
                                      @Valid @ModelAttribute AddPostReq addPostReq) throws Exception {
         // 입력 테스트중
-        System.out.println("flagFile:"+flagFile);
+        // System.out.println("flagFile:"+flagFile);
 
         Post savedPost = postService.createPost();
         List<Photo> photoList = photoService.createPhotoList(imageFiles, savedPost);
@@ -43,7 +43,7 @@ public class PostController {
 
         // addPost 요청에 대한 응답으로 timelineId 반환
         Map<String, Object> res = new HashMap<>();
-        res.put("timelineId",addPostReq.getTimelineId());
+        res.put("timelineId", addPostReq.getTimelineId());
         return ResponseEntity.ok(res);
     }
 
