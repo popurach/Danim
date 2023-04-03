@@ -2,13 +2,13 @@ class UserInfo {
   final int userUid;
   final String profileImageUrl;
   final String nickname;
-  final bool isTraveling;
+  final int travelingId;
 
   UserInfo({
     required this.userUid,
     required this.profileImageUrl,
     required this.nickname,
-    this.isTraveling = false,
+    this.travelingId = -1,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class UserInfo {
       userUid: json['userUid'],
       profileImageUrl: json['profileImageUrl'],
       nickname: json['nickname'],
-      isTraveling: json['isTraveling'] ?? false,
+      travelingId: json['isTraveling'] ?? -1,
     );
   }
 }
