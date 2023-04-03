@@ -40,6 +40,7 @@ public class PostServiceImpl implements PostService {
     private final FavoriteRepository favoriteRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
+    private final UserRepository userRepository;
 
 
     // 포스트 생성 및 저장
@@ -148,7 +149,7 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
     }
 
-    // 지역명 키워드로 포스트 조회
+    // 메인 피드에서 포스트 조회
     @Override
     public List<GetPostRes> findByLocation(String location) throws Exception {
         List<Post> postList = postRepository.findByAddress1ContainsOrAddress2ContainsOrAddress3ContainsOrAddress4Contains(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
@@ -158,6 +159,23 @@ public class PostServiceImpl implements PostService {
 
             // timeline이 완성되지 않은 post 제외
             if (post.getTimelineId().getComplete() == true) {
+                Long totalFavorite = favoriteRepository.countByPostId(post);
+                getPostResList.add(GetPostRes.builder(post, totalFavorite).build());
+            }
+        }
+        return getPostResList;
+    }
+
+    // 내 페이지에서 포스트 조회
+    @Override
+    public List<GetPostRes> findMyPost(String location, Long userUid) throws Exception {
+        List<Post> postList = postRepository.findByAddress1ContainsOrAddress2ContainsOrAddress3ContainsOrAddress4Contains(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
+
+        List<GetPostRes> getPostResList = new ArrayList<>();
+        for (Post post : postList) {
+
+            // 내 포스트 중에서 timeline이 완성되지 않은 post 제외
+            if (post.getTimelineId().getComplete() == true  && post.getTimelineId().getUserUid().getUserUid() == userUid) {
                 Long totalFavorite = favoriteRepository.countByPostId(post);
                 getPostResList.add(GetPostRes.builder(post, totalFavorite).build());
             }
