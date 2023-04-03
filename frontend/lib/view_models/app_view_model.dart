@@ -6,6 +6,7 @@ import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../models/UserInfo.dart';
@@ -16,24 +17,36 @@ class AppViewModel with ChangeNotifier {
   final pageController = PageController(initialPage: 0);
   final GlobalKey<NavigatorState> homeFeedNavigatorKey = GlobalKey();
   final GlobalKey<NavigatorState> myFeedNavigatorKey = GlobalKey();
+  String _title = '';
+  String _formerTitle = '';
   String _imageUrl = '';
   String _nickname = '';
   int _userUid = 0;
 
-  AppViewModel(this._imageUrl, this._nickname, this._userUid,
+  AppViewModel(this._imageUrl, this._nickname, this._userUid, this._title,
       {this.currentIndex = 0});
 
   String get imageUrl => _imageUrl;
 
+  String get title => _title;
+
   void changePage(index) {
     pageController.jumpToPage(index);
     currentIndex = index;
-    Timer(
-      const Duration(milliseconds: 100),
-      () {
-        Navigator.pushNamed(myFeedNavigatorKey.currentContext!, '/');
-      },
-    );
+
+    if (index == 0) {
+      changeTitle('홈');
+      Timer(
+        const Duration(milliseconds: 10),
+        () => Navigator.pushNamed(homeFeedNavigatorKey.currentContext!, '/'),
+      );
+    } else {
+      changeTitle('내 다님');
+      Timer(
+        const Duration(milliseconds: 10),
+        () => Navigator.pushNamed(myFeedNavigatorKey.currentContext!, '/'),
+      );
+    }
     notifyListeners();
   }
 
@@ -114,6 +127,21 @@ class AppViewModel with ChangeNotifier {
       pageBuilder: (_, __, ___) => page,
       transitionDuration: Duration.zero,
     );
+  }
+
+  final logger = Logger();
+
+  changeTitle(String newTitle) {
+    _formerTitle = _title;
+    _title = newTitle;
+    logger.d(_formerTitle, title);
+    notifyListeners();
+  }
+
+  changeTitleToFormer() {
+    logger.d(_formerTitle, _title);
+    _title = _formerTitle;
+    notifyListeners();
   }
 
   String get nickname => _nickname;

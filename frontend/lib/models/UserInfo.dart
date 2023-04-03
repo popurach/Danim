@@ -16,7 +16,7 @@ class UserInfo {
       userUid: json['userUid'],
       profileImageUrl: json['profileImageUrl'],
       nickname: json['nickname'],
-      travelingId: json['isTraveling'] ?? -1,
+      travelingId: json['travelingId'] ?? -1,
     );
   }
 }
