@@ -12,22 +12,30 @@ class TimelineListViewModel with ChangeNotifier {
   int? userUid;
   String? profileImageUrl;
   String? nickname;
+  AppViewModel? appViewModel;
 
   final PagingController<int, Timeline> pagingController =
   PagingController(firstPageKey: 0);
 
 
-  TimelineListViewModel({required BuildContext context, this.userUid, this.profileImageUrl, this.nickname}) {
+  TimelineListViewModel({required BuildContext context, this.userUid, this.profileImageUrl, this.nickname, this.appViewModel}) {
     if (userUid == null) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
       });
     } else {
-      // 내 페이지가 아니면
-      pagingController.addPageRequestListener((pageKey) {
-        getUserTimelineList(context, pageKey);
+      if (appViewModel != null) {
+        if (appViewModel?.userUid == userUid) {
+          pagingController.addPageRequestListener((pageKey) {
+            getMyTimelineList(context, pageKey);
+          });
+          } else {
+          pagingController.addPageRequestListener((pageKey) {
+            getOtherTimelineList(context, pageKey, userUid);
+          }
+          );
+        }
       }
-      );
     }
   }
 
@@ -48,12 +56,11 @@ class TimelineListViewModel with ChangeNotifier {
     }
   }
 
-    Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
-      // TODO 유저 타임 라인 리스트 가져오기
+    Future<void> getMyTimelineList(BuildContext context, int pageKey) async {
       try {
         final newItems =
-        await TimelineRepository().getUserTimelineByPageNum(
-            context, pageKey, userUid);
+        await TimelineRepository().getMyTimelineByPageNum(
+            context, pageKey);
         final isLastPage = newItems.length < 15;
         if (isLastPage) {
           pagingController.appendLastPage(newItems);
@@ -67,6 +74,22 @@ class TimelineListViewModel with ChangeNotifier {
       }
       notifyListeners();
     }
+
+  Future<void> getOtherTimelineList(BuildContext context, int pageKey, userUid) async {
+      final newItems =
+      await TimelineRepository().getOtherTimelineByPageNum(
+          context, pageKey, userUid);
+      final isLastPage = newItems.length < 15;
+      if (isLastPage) {
+        pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        pagingController.appendPage(newItems, nextPageKey);
+      }
+      notifyListeners();
+
+    notifyListeners();
+  }
 
     @override
     void dispose() {
