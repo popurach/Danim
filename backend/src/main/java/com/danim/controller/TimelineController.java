@@ -96,7 +96,11 @@ public class TimelineController {
     @PutMapping("/{uid}/{title}")
     public ResponseEntity<?> finishTimeLine(@PathVariable Long uid, @PathVariable String title) throws Exception {
         log.info("여행종료 기능 시작");
-        timeLineService.finishTimeline(uid, title);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        timeLineService.finishTimeline(uid, title,user);
         log.info("여행종료 기능 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -105,7 +109,11 @@ public class TimelineController {
     @PutMapping("/switch/{uid}")
     public ResponseEntity<?> changeTimeLinePublic(@PathVariable Long uid) throws Exception {
         log.info("타임라인 공개<->비공개 전환 시작");
-        Boolean check=timeLineService.changePublic(uid);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        Boolean check=timeLineService.changePublic(uid,user);
         log.info("타임라인 공개<->비공개 전환 종료");
 
         return new ResponseEntity<>(check,HttpStatus.OK);
@@ -115,7 +123,11 @@ public class TimelineController {
     @DeleteMapping("/{uid}")
     public ResponseEntity<?> deleteTimeLine(@PathVariable Long uid) throws Exception {
         log.info("타임라인 삭제 기능 시작");
-        timeLineService.deleteTimeline(uid);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null)
+            user = (User) auth.getPrincipal();
+        timeLineService.deleteTimeline(uid,user);
         log.info("타임라인 삭제 기능 종료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
