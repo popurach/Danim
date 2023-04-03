@@ -1,5 +1,6 @@
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import '../models/TimelineDetail.dart';
 
@@ -55,15 +56,18 @@ class TimelineDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  changePostExpansion(int timelineIndex, int postIndex, bool isExpand) async {
+  changePostExpansion(
+      context, int timelineIndex, int postIndex, bool isExpand) async {
     if (!isExpand) {
       await Future.delayed(Duration(milliseconds: expansionTileAnimationTile!));
+    } else {
+      _scrollToSelectedContent(context);
     }
     _timelineDetails[timelineIndex].postList[postIndex].isExpand = isExpand;
     notifyListeners();
   }
 
-  void scrollToSelectedContent(context) {
+  void _scrollToSelectedContent(context) {
     if (context != null) {
       Future.delayed(Duration(milliseconds: expansionTileAnimationTile))
           .then((value) {
@@ -97,6 +101,6 @@ class TimelineDetailViewModel extends ChangeNotifier {
 
   endTimeline(context) async {
     await TimelineRepository().endTravel(context, timelineId, _title);
-    Navigator.pushNamed(context, '/');
+    Navigator.popAndPushNamed(context, '/');
   }
 }

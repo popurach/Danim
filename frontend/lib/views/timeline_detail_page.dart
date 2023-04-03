@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/post_detail.dart';
+import 'package:danim/views/post_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -129,57 +130,9 @@ class TimelineDetailPage extends StatelessWidget {
                             .timelineDetails[timelineIndex].postList.length,
                         // Number of nations
                         itemBuilder: (BuildContext context, int postIndex) {
-                          return ExpansionTile(
-                            shape: const RoundedRectangleBorder(),
-                            collapsedShape: const RoundedRectangleBorder(),
-                            tilePadding: const EdgeInsets.only(left: 5),
-                            onExpansionChanged: (isExpand) {
-                              viewModel.changePostExpansion(
-                                  timelineIndex, postIndex, isExpand);
-                            },
-                            title: Text(
-                              viewModel.timelineDetails[timelineIndex]
-                                  .postList[postIndex].address,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            leading: SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: TimelineTile(
-                                isLast: (timelineIndex ==
-                                        viewModel.timelineDetails.length - 1) &&
-                                    (postIndex ==
-                                        viewModel.timelineDetails[timelineIndex]
-                                                .postList.length -
-                                            1) &&
-                                    (!viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex].isExpand),
-                                indicatorStyle: const IndicatorStyle(
-                                    width: 20,
-                                    color: Colors.lightBlue,
-                                    padding: EdgeInsets.only(left: 10)),
-                                endChild: Container(
-                                  padding: const EdgeInsets.all(8),
-                                ),
-                              ),
-                            ),
-                            children: [
-                              ChangeNotifierProvider(
-                                create: (_) => PostViewModel(
-                                    viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex],
-                                    viewModel.isMine),
-                                child: PostDetail(
-                                  key: Key(
-                                    viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex].postId
-                                        .toString(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                          return PostListItem(
+                              timelineIndex: timelineIndex,
+                              postIndex: postIndex);
                         },
                       ),
                     ],

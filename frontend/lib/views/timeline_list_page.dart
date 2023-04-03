@@ -12,12 +12,15 @@ class TimelineListPage extends StatelessWidget {
       ChangeNotifierProvider<TimelineListViewModel>(
         create: (_) => TimelineListViewModel(context: context),
         child: Consumer<TimelineListViewModel>(
-          builder: (context, viewModel, child) => PagedListView<int, Timeline>(
-            pagingController: viewModel.pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Timeline>(
-              itemBuilder: (context, item, index) => TimelineListItem(
-                key: Key(item.timelineId.toString()),
-                timeline: item,
+          builder: (context, viewModel, child) => Padding(
+            padding: const EdgeInsets.only(bottom: 33),
+            child: PagedListView<int, Timeline>(
+              pagingController: viewModel.pagingController,
+              builderDelegate: PagedChildBuilderDelegate<Timeline>(
+                itemBuilder: (context, item, index) => TimelineListItem(
+                  key: Key(item.timelineId.toString()),
+                  timeline: item,
+                ),
               ),
             ),
           ),
