@@ -152,10 +152,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<GetPostRes> findByLocation(String location) throws Exception {
         List<Post> postList = postRepository.findByAddress1ContainsOrAddress2ContainsOrAddress3ContainsOrAddress4Contains(location, location, location, location).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_KEYWORD));
+
         List<GetPostRes> getPostResList = new ArrayList<>();
         for (Post post : postList) {
-            Long totalFavorite = favoriteRepository.countByPostId(post);
-            getPostResList.add(GetPostRes.builder(post, totalFavorite).build());
+
+            // timeline이 완성되지 않은 post 제외
+            if (post.getTimelineId().getComplete() == true) {
+                Long totalFavorite = favoriteRepository.countByPostId(post);
+                getPostResList.add(GetPostRes.builder(post, totalFavorite).build());
+            }
         }
         return getPostResList;
     }
