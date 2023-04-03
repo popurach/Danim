@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/search_result_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:danim/views/search_result_page.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appViewModel = Provider.of<AppViewModel>(context, listen: false);
     return Consumer<SearchBarViewModel>(builder: (context, viewModel, _) {
       return Stack(
         children: [
@@ -28,7 +30,7 @@ class SearchBar extends StatelessWidget {
                 viewModel.searchKeyWord != ""
                     ? Expanded(
                         child: Container(
-                            margin: EdgeInsets.only(top: 30),
+                            margin: const EdgeInsets.only(top: 30),
                             decoration: const BoxDecoration(
                                 color: Colors.white,
                                 border: Border(
@@ -56,7 +58,9 @@ class SearchBar extends StatelessWidget {
                                                             SearchResultViewModel>(
                                                           create: (_) => SearchResultViewModel(
                                                                   context,
-                                                                  viewModel.searchKeyWord!),
+                                                                  viewModel.searchKeyWord!,
+                                                            userUid: viewModel.userUid
+                                                          ),
                                                           child: SearchResultView(),
                                                         )));
                                           },
@@ -78,7 +82,8 @@ class SearchBar extends StatelessWidget {
                                                                   context: context,
                                                                   userUid: viewModel.searchedResults[index - 1].userUid,
                                                                 profileImageUrl: viewModel.searchedResults[index - 1].profileImageUrl,
-                                                                nickname: viewModel.searchedResults[index-1].nickname
+                                                                nickname: viewModel.searchedResults[index-1].nickname,
+                                                                appViewModel: appViewModel
                                                               ),
                                                           child: UserTimeLineListView(),
                                                         )));

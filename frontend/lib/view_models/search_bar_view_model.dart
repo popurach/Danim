@@ -11,6 +11,8 @@ var logger = Logger();
 
 class SearchBarViewModel extends ChangeNotifier {
 
+  int? userUid;
+
   String? _searchKeyWord = "";
   String? get searchKeyWord => _searchKeyWord;
   set searchKeyWord (String? newString) {
@@ -36,6 +38,8 @@ class SearchBarViewModel extends ChangeNotifier {
     _isSearching = newBool;
   }
 
+  SearchBarViewModel({this.userUid});
+
 
   FocusNode _myfocus = FocusNode();
   FocusNode get myfocus => _myfocus;
@@ -44,7 +48,6 @@ class SearchBarViewModel extends ChangeNotifier {
   Future<void> searchUser(BuildContext context, String? keyword) async {
     _searchKeyWord = keyword;
     _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
-    logger.d(_searchedResults);
     notifyListeners();
   }
 
