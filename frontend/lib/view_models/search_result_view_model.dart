@@ -1,3 +1,4 @@
+import 'package:danim/models/SearchedPost.dart';
 import 'package:danim/services/search_repository.dart';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,8 @@ class SearchResultViewModel extends ChangeNotifier {
   final String _keyword;
   String get keyword => _keyword;
 
-  List _searchedPosts = [];
-  List get searchedPosts => _searchedPosts;
+  List<SearchedPost> _searchedPosts = [];
+  List<SearchedPost> get searchedPosts => _searchedPosts;
 
   SearchResultViewModel(this._context,this._keyword) {
     getPost(_context,_keyword);
@@ -21,7 +22,6 @@ class SearchResultViewModel extends ChangeNotifier {
 
   void getPost(BuildContext context, String searchKeyword) async {
     _searchedPosts = await SearchRepository().searchPosts(context, searchKeyword);
-    logger.d(_searchedPosts);
     notifyListeners();
   }
 
