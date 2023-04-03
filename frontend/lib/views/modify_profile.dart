@@ -60,7 +60,7 @@ class ModifyProfile extends StatelessWidget {
                     child: SizedBox(
                       height: 80,
                       child: TextField(
-                        controller: viewModel.controller,
+                        controller: viewModel.textEditController,
                         onChanged: (value) {
                           viewModel.nickname = value;
                         },

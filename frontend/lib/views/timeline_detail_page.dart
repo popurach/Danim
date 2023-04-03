@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:danim/view_models/post_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/views/post_detail.dart';
+import 'package:danim/views/post_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -17,19 +16,25 @@ class TimelineDetailPage extends StatelessWidget {
               viewModel.isMine
                   ? Row(
                       children: [
-                        Text(''),
                         Expanded(child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(viewModel.isPublic ? '공개' : ' 비공개'),
+                        ),
                         viewModel.showPublicIcon(),
                         Switch(
-                            value: viewModel.isPublic, onChanged: (value) {}),
+                            value: viewModel.isPublic,
+                            onChanged: (_) {
+                              viewModel.changeIsPublic(context);
+                            }),
                         IconButton(
                           onPressed: () {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text('포스트 삭제'),
-                                content: const Text('포스트를 삭제하시겠습니까?'),
+                                title: const Text('타임라인 삭제'),
+                                content: const Text('타임라인을  삭제하시겠습니까?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {},
@@ -75,7 +80,14 @@ class TimelineDetailPage extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.clip,
                     ),
-                    trailing: null,
+                    trailing: Padding(
+                      padding: const EdgeInsets.only(right: 40.0),
+                      child: Text(
+                        '${viewModel.timelineDetails[timelineIndex].startDate} ~ ${viewModel.timelineDetails[timelineIndex].finishDate}',
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ),
                     leading: SizedBox(
                       width: 60,
                       height: 60,
@@ -116,57 +128,9 @@ class TimelineDetailPage extends StatelessWidget {
                             .timelineDetails[timelineIndex].postList.length,
                         // Number of nations
                         itemBuilder: (BuildContext context, int postIndex) {
-                          return ExpansionTile(
-                            shape: const RoundedRectangleBorder(),
-                            collapsedShape: const RoundedRectangleBorder(),
-                            tilePadding: const EdgeInsets.only(left: 5),
-                            onExpansionChanged: (isExpand) {
-                              viewModel.changePostExpansion(
-                                  timelineIndex, postIndex, isExpand);
-                            },
-                            title: Text(
-                              viewModel.timelineDetails[timelineIndex]
-                                  .postList[postIndex].address,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            leading: SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: TimelineTile(
-                                isLast: (timelineIndex ==
-                                        viewModel.timelineDetails.length - 1) &&
-                                    (postIndex ==
-                                        viewModel.timelineDetails[timelineIndex]
-                                                .postList.length -
-                                            1) &&
-                                    (!viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex].isExpand),
-                                indicatorStyle: const IndicatorStyle(
-                                    width: 20,
-                                    color: Colors.lightBlue,
-                                    padding: EdgeInsets.only(left: 10)),
-                                endChild: Container(
-                                  padding: const EdgeInsets.all(8),
-                                ),
-                              ),
-                            ),
-                            children: [
-                              ChangeNotifierProvider(
-                                create: (_) => PostViewModel(
-                                    viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex],
-                                    viewModel.isMine),
-                                child: PostDetail(
-                                  key: Key(
-                                    viewModel.timelineDetails[timelineIndex]
-                                        .postList[postIndex].postId
-                                        .toString(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                          return PostListItem(
+                              timelineIndex: timelineIndex,
+                              postIndex: postIndex);
                         },
                       ),
                     ],
@@ -178,7 +142,48 @@ class TimelineDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('여행 제목을 입력해 주세요'),
+                                content: TextField(
+                                  controller: viewModel.textController,
+                                  onChanged: (value) {
+                                    viewModel.title = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: '제목',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      viewModel.endTimeline(context);
+                                    },
+                                    child: const Text(
+                                      '여행 종료',
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      viewModel.resetTitle();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('취소'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           child: const Text(
                             '여행 종료',
                             style: TextStyle(color: Colors.white),

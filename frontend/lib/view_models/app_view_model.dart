@@ -6,7 +6,6 @@ import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../models/UserInfo.dart';
@@ -21,8 +20,6 @@ class AppViewModel with ChangeNotifier {
   String _nickname = '';
   int _userUid = 0;
 
-  final logger = Logger();
-
   AppViewModel(this._imageUrl, this._nickname, this._userUid,
       {this.currentIndex = 0});
 
@@ -31,6 +28,12 @@ class AppViewModel with ChangeNotifier {
   void changePage(index) {
     pageController.jumpToPage(index);
     currentIndex = index;
+    Timer(
+      const Duration(milliseconds: 100),
+      () {
+        Navigator.pushNamed(myFeedNavigatorKey.currentContext!, '/');
+      },
+    );
     notifyListeners();
   }
 
@@ -98,9 +101,12 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      logger.d(_imageUrl);
       page = ChangeNotifierProvider<TimelineListViewModel>(
-        create: (_) => TimelineListViewModel(context: context, userUid: _userUid, profileImageUrl: _imageUrl, nickname: _nickname),
+        create: (_) => TimelineListViewModel(
+            context: context,
+            userUid: _userUid,
+            profileImageUrl: _imageUrl,
+            nickname: _nickname),
         child: UserTimeLineListView(),
       );
     }

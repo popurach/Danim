@@ -4,12 +4,16 @@ class TimelineDetail {
   final String flag;
   final String nation;
   final List<Post> postList;
+  final String startDate;
+  final String finishDate;
   bool isExpand;
 
   TimelineDetail({
     required this.flag,
     required this.nation,
     required this.postList,
+    required this.startDate,
+    required this.finishDate,
     this.isExpand = false,
   });
 
@@ -17,6 +21,11 @@ class TimelineDetail {
         flag: json['flag'],
         nation: json['nation'],
         postList: List.from(
-            json['postList'].map((jsonPost) => Post.fromJson(jsonPost))),
+          json['postList'].map(
+            (jsonPost) => Post.fromJson(jsonPost),
+          ),
+        ),
+        startDate: json['startDate'],
+        finishDate: json['finishDate'],
       );
 }

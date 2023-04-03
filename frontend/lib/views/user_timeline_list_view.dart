@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/models/Timeline.dart';
-import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/view_models/my_timeline_list_view_model.dart';
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/views/search_bar_view.dart';
 import 'package:danim/views/timeline_list_item.dart';
@@ -81,26 +79,29 @@ class UserTimeLineListView extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        // 타임라인 리스트가 들어가는 칸
+                        Expanded(
+                          child: PagedListView<int, Timeline>(
+                            pagingController:
+                                timelineViewModel.pagingController,
+                            builderDelegate:
+                                PagedChildBuilderDelegate<Timeline>(
+                              itemBuilder: (context, item, index) =>
+                                  TimelineListItem(
+                                key: Key(item.timelineId.toString()),
+                                timeline: item,
                               ),
                             ),
-                            // 타임라인 리스트가 들어가는 칸
-                            Expanded(
-                                child: PagedListView<int, Timeline>(
-                              pagingController:
-                                  timelineViewModel.pagingController,
-                              builderDelegate:
-                                  PagedChildBuilderDelegate<Timeline>(
-                                itemBuilder: (context, item, index) =>
-                                    TimelineListItem(
-                                  key: Key(item.timelineId.toString()),
-                                  timeline: item,
-                                ),
-                              ),
-                            ))
-                          ],
-                        )),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Positioned(
                       top: 0, left: 0, right: 0, bottom: 0, child:
