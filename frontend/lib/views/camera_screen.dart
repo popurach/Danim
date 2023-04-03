@@ -104,7 +104,7 @@ class CameraView extends StatelessWidget {
                                                       9) {
                                                     viewModel.takePhoto();
                                                   } else {
-                                                    OneButtonCupertinoAlertDiaglog()
+                                                    OneButtonCupertinoAlertDiallog()
                                                         .showFeedBack(context,
                                                             "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                                   }

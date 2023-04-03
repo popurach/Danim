@@ -16,7 +16,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0, '홈')),
+        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0, '홈', -1)),
       ],
       child: const MyApp(),
     ),

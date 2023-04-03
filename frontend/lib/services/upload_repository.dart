@@ -16,11 +16,7 @@ class UploadRepository {
     try {
       final dio = await authDio(context);
       Response response = await dio.post("api/auth/post", data: formData);
-      if (response.statusCode == 200) {
-        return response.data["timelineId"];
-      } else {
-        return -1;
-      }
+      return response;
     } on DioError catch (error) {
       throw Exception('Fail to upload to Server: ${error.message}');
     }

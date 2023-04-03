@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 
 import '../module/audio_player_view.dart';
 import '../module/audio_player_view_model.dart';
+import '../view_models/images_page_view_model.dart';
 import '../view_models/record_view_model.dart';
+import 'images_page_view.dart';
 
 class RecordView extends StatelessWidget {
   @override
@@ -28,35 +30,17 @@ class RecordView extends StatelessWidget {
                   children: [
                     // 캐러셀
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.60,
+                      height: MediaQuery.of(context).size.height * 0.575,
                       // 컨슈머로 변화 감지
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          height: MediaQuery.of(context).size.width * 1.20,
-                          enableInfiniteScroll: false,
-                          viewportFraction: 0.70,
-                          enlargeCenterPage: true,
-                          enlargeStrategy: CenterPageEnlargeStrategy.height,
-                        ),
-                        items: recordViewModel.imageList.map(
-                          (file) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  margin: const EdgeInsets.all(4),
-                                  child: Image.file(
-                                    File(file.path),
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ).toList(),
+                      child:
+                      ChangeNotifierProvider(
+                        create: (_) => ImagesPageViewModel(
+                            xFileList : recordViewModel.imageList),
+                        child: const ImagesPageView(),
                       ),
                     ),
-
                     Container(
+                      margin: const EdgeInsets.only(top:25),
                         padding: const EdgeInsets.only(left: 30, right: 30),
                         height: 30,
                         child: Row(
@@ -82,13 +66,16 @@ class RecordView extends StatelessWidget {
                                     '${recordViewModel.locationInfo.country} ${recordViewModel.locationInfo.address2}'))
                           ],
                         )),
-                    ChangeNotifierProvider<AudioPlayerViewModel>(
-                      create: (_) => recordViewModel.audioPlayerViewModel,
-                      child: AudioPlayerView(),
+                    Container(
+                      margin: EdgeInsets.only(top:10),
+                      child: ChangeNotifierProvider<AudioPlayerViewModel>(
+                        create: (_) => recordViewModel.audioPlayerViewModel,
+                        child: AudioPlayerView(),
+                      ),
                     ),
-
                     // 버튼 컨테이너
-                    Expanded(
+                    Container(
+                      padding: EdgeInsets.only(top:26),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -103,7 +90,7 @@ class RecordView extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 if (recordViewModel.imageList.length >= 9) {
-                                  OneButtonCupertinoAlertDiaglog().showFeedBack(
+                                  OneButtonCupertinoAlertDiallog().showFeedBack(
                                       context, "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                 } else {
                                   recordViewModel.uploadFileFromGallery();
@@ -145,7 +132,13 @@ class RecordView extends StatelessWidget {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                recordViewModel.uploadConfirm(context);
+                                recordViewModel.uploadConfirm(
+                                    context,
+                                    appViewModel.travelingId,
+                                  appViewModel.userUid,
+                                  appViewModel.nickname,
+                                  appViewModel.imageUrl
+                                );
                               },
                               icon: const Icon(Icons.upload, size: 28),
                               color: Colors.white,

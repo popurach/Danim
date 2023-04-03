@@ -15,7 +15,7 @@ class ImagesPageView extends StatelessWidget {
         PageView(
           scrollBehavior: AppScrollBehavior(),
           controller: viewModel.controller,
-          children: viewModel.cachedImagedList,
+          children: viewModel.imageList,
         ),
         Align(
           alignment: const AlignmentDirectional(0, -0.9),
@@ -23,7 +23,7 @@ class ImagesPageView extends StatelessWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
             child: SmoothPageIndicator(
               controller: viewModel.controller,
-              count: viewModel.cachedImagedList.length,
+              count: viewModel.imageList.length,
               onDotClicked: (index) {
                 viewModel.controller.animateToPage(index,
                     duration: const Duration(milliseconds: 300),

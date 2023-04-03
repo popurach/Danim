@@ -7,6 +7,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
 import 'package:danim/models/PostForUpload.dart';
+import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/services/upload_repository.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:danim/view_models/app_view_model.dart';
@@ -158,12 +159,12 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   // 파일을 서버로 업로드하기
-  Future<void> postFiles(BuildContext context) async {
+  Future<void> postFiles(BuildContext context, int travelingId, int userUid, String nickname, String profileImageUrl) async {
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
-        filename: locationInfo.country, contentType: MediaType('image', 'png'));
+        filename: locationInfo.country, contentType: MediaType('image', 'jpk'));
     final List<MultipartFile> imageFiles = imageList
         .map((el) => MultipartFile.fromFileSync(el.path,
-            filename: el.name, contentType: MediaType('image', 'png')))
+            filename: el.name, contentType: MediaType('image', 'jpk')))
         .toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath,
         filename: "$recordedFileName.wav",
@@ -173,33 +174,32 @@ class RecordViewModel extends ChangeNotifier {
       'flagFile': flag,
       'imageFiles': imageFiles,
       'voiceFile': audioFile,
-      // 임시 아이디 부여
-      'timelineId': 1,
+      'timelineId': travelingId,
       'address1': locationInfo.country,
       'address2': locationInfo.address2,
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    final timelineId = await UploadRepository().uploadToServer(context, formData);
-    final appViewModel = Provider.of<AppViewModel>(context, listen: false);
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
-                  create: (_) => TimelineListViewModel(
-                      context: context,
-                      userUid: appViewModel.userUid,
-                      profileImageUrl: appViewModel.imageUrl,
-                      nickname: appViewModel.nickname),
-                  child: UserTimeLineListView(),
-                )),
-        (route) => false).then((value) {
-      Navigator.pushNamed(
+    Response response = await UploadRepository().uploadToServer(context, formData);
+      Navigator.pushAndRemoveUntil(
           context,
-          '/timeline/detail/${timelineId}'
-      );
-    });
+          MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
+                create: (_) => TimelineListViewModel(
+                    context: context,
+                    userUid: userUid,
+                    profileImageUrl: profileImageUrl,
+                    nickname: nickname),
+                child: UserTimeLineListView(),
+              )),
+              (route) => false).then((value) {
+        Navigator.pushNamed(
+            context,
+            '/timeline/detail/${travelingId}'
+        );
+      });
   }
+
 
   // 위치를 받아오는 함수
   void getLocation() async {
@@ -260,7 +260,7 @@ class RecordViewModel extends ChangeNotifier {
     }
   }
 
-  void uploadConfirm(BuildContext context) {
+  void uploadConfirm(BuildContext context, int travelingId, int userUid, String nickname, String profileImageUrl) {
     final alert = CupertinoAlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
@@ -270,7 +270,7 @@ class RecordViewModel extends ChangeNotifier {
         CupertinoDialogAction(
             child: const Text("참"),
             onPressed: () {
-              postFiles(context);
+              postFiles(context, travelingId, userUid, nickname, profileImageUrl);
               Navigator.of(context).pop();
             }),
         CupertinoDialogAction(

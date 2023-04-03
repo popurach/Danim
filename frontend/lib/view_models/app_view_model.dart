@@ -22,8 +22,9 @@ class AppViewModel with ChangeNotifier {
   String _imageUrl = '';
   String _nickname = '';
   int _userUid = 0;
+  int _travelingId = -1;
 
-  AppViewModel(this._imageUrl, this._nickname, this._userUid, this._title,
+  AppViewModel(this._imageUrl, this._nickname, this._userUid, this._title, this._travelingId,
       {this.currentIndex = 0});
 
   String get imageUrl => _imageUrl;
@@ -54,6 +55,7 @@ class AppViewModel with ChangeNotifier {
     _imageUrl = userInfo.profileImageUrl;
     _nickname = userInfo.nickname;
     _userUid = userInfo.userUid;
+    _travelingId = userInfo.travelingId;
     notifyListeners();
   }
 
@@ -147,4 +149,6 @@ class AppViewModel with ChangeNotifier {
   String get nickname => _nickname;
 
   int get userUid => _userUid;
+
+  int get travelingId => _travelingId;
 }

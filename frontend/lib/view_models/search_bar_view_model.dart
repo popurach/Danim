@@ -1,7 +1,4 @@
-import 'package:danim/models/UserSearchResults.dart';
 import 'package:danim/services/search_repository.dart';
-import 'package:danim/utils/auth_dio.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -24,6 +21,7 @@ class SearchBarViewModel extends ChangeNotifier {
   List<UserInfo> get searchedResults => _searchedResults;
   set searchedResults (List<UserInfo> newList) {
     _searchedResults = newList;
+    notifyListeners();
   }
 
   List? _posts;
@@ -50,6 +48,7 @@ class SearchBarViewModel extends ChangeNotifier {
     _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
     notifyListeners();
   }
+
 
   @override
   void dispose() {
