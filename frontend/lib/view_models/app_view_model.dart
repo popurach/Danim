@@ -4,6 +4,7 @@ import 'package:danim/services/timeline_repository.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
+import 'package:danim/views/home_feed_page.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
@@ -30,23 +31,12 @@ class AppViewModel with ChangeNotifier {
 
   UserInfo get userInfo => _userInfo;
 
+  final logger = Logger();
+
   void changePage(index) {
     pageController.jumpToPage(index);
     currentIndex = index;
-
-    if (index == 0) {
-      changeTitle('홈');
-      Timer(
-        const Duration(milliseconds: 10),
-        () => Navigator.pushNamed(homeFeedNavigatorKey.currentContext!, '/'),
-      );
-    } else {
-      changeTitle('내 다님');
-      Timer(
-        const Duration(milliseconds: 10),
-        () => Navigator.pushNamed(myFeedNavigatorKey.currentContext!, '/'),
-      );
-    }
+    changeTitle(index == 0 ? '홈' : '내 다님');
     notifyListeners();
   }
 
@@ -112,12 +102,11 @@ class AppViewModel with ChangeNotifier {
         },
         transitionDuration: Duration.zero,
       );
-    }
-    else {
-      // return PageRouteBuilder(
-      //   pageBuilder: (_, __, ___) => TimelineListPage(),
-      //   transitionDuration: Duration.zero,
-      // );
+    } else {
+      return PageRouteBuilder(
+        pageBuilder: (_, __, ___) => HomeFeedPage(),
+        transitionDuration: Duration.zero,
+      );
     }
   }
 
@@ -134,10 +123,7 @@ class AppViewModel with ChangeNotifier {
     } else {
       page = ChangeNotifierProvider<UserTimelineListViewModel>(
         create: (_) => UserTimelineListViewModel(
-          context: context,
-          myInfo: userInfo,
-          userInfo: userInfo
-        ),
+            context: context, myInfo: userInfo, userInfo: userInfo),
         child: UserTimeLineListView(),
       );
     }
@@ -157,5 +143,4 @@ class AppViewModel with ChangeNotifier {
     _title = _formerTitle;
     notifyListeners();
   }
-
 }

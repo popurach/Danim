@@ -15,17 +15,18 @@ class ImagesPageViewModel extends ChangeNotifier {
       for (var imageUrl in imagesUrl!) {
         imageList.add(CachedNetworkImage(
           imageUrl: imageUrl,
+          placeholder: (_, __) =>
+              Image.asset('assets/images/default_image.png'),
           fit: BoxFit.cover,
         ));
       }
     } else if (imagesUrl == null && xFileList != null) {
-      for (var xfile in xFileList!) {
+      for (var xFile in xFileList!) {
         imageList.add(Image.file(
-            File(xfile.path),
+          File(xFile.path),
           fit: BoxFit.cover,
         ));
       }
     }
-
   }
 }

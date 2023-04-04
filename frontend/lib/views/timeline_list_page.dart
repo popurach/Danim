@@ -8,10 +8,9 @@ import '../models/Timeline.dart';
 import '../view_models/timeline_list_view_model.dart';
 
 class TimelineListPage extends StatelessWidget {
-  final List<Timeline> timelineList;
-  final Function refresh;
   final PagingController<int, Timeline> pagingController;
-  const TimelineListPage({super.key, required this.timelineList, required this.refresh, required this.pagingController});
+
+  const TimelineListPage({super.key, required this.pagingController});
 
   @override
   Widget build(BuildContext context) =>
@@ -20,7 +19,7 @@ class TimelineListPage extends StatelessWidget {
           create: (_) => TimelineListViewModel(context: context),
           child: RefreshIndicator(
             onRefresh: () async {
-              refresh(context);
+              pagingController.refresh();
             },
             child: PagedListView<int, Timeline>(
               shrinkWrap: true,

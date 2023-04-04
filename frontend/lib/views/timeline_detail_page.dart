@@ -32,14 +32,15 @@ class TimelineDetailPage extends StatelessWidget {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
-                              builder: (context) => AlertDialog(
+                              builder: (ctx) => AlertDialog(
                                 title: const Text('타임라인 삭제'),
                                 content: const Text('타임라인을  삭제하시겠습니까?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       viewModel.deleteTimeline(context);
-                                      Navigator.pop(context);
+                                      Navigator.pop(ctx);
+                                      Navigator.popAndPushNamed(context, '/');
                                     },
                                     child: const Text(
                                       '삭제',
@@ -48,7 +49,7 @@ class TimelineDetailPage extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(ctx);
                                     },
                                     child: const Text('취소'),
                                   ),
