@@ -1,3 +1,4 @@
+import 'package:danim/models/UserInfo.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
@@ -6,7 +7,6 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -16,7 +16,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0, '홈')),
+        ChangeNotifierProvider(
+            create: (_) => AppViewModel(
+                UserInfo(
+                  userUid: -1,
+                  profileImageUrl: '',
+                  nickname: '',
+                ),
+                '홈')),
       ],
       child: const MyApp(),
     ),
@@ -41,7 +48,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final logger = Logger();
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(

@@ -15,8 +15,10 @@ class TimelineInfo {
 
   factory TimelineInfo.fromJson(Map<String, dynamic> json) {
     return TimelineInfo(
-      timelineDetails: List.from(json['timeline']
-          .map((timelineDetail) => TimelineDetail.fromJson(timelineDetail))),
+      timelineDetails: json['timeline'] == null
+          ? []
+          : List.from(json['timeline'].map(
+              (timelineDetail) => TimelineDetail.fromJson(timelineDetail))),
       isPublic: json['isPublic'],
       isComplete: json['isComplete'],
       isMine: json['isMine'],

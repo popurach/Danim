@@ -18,30 +18,14 @@ class TimelineListPage extends StatelessWidget {
               onRefresh: () async {
                 viewModel.refresh(context);
               },
-              child: WillPopScope(
-                onWillPop: () async {
-                  appViewModel.changeTitle('홈');
-                  return true;
-                },
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      PagedListView<int, Timeline>(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        pagingController: viewModel.pagingController,
-                        builderDelegate: PagedChildBuilderDelegate<Timeline>(
-                          itemBuilder: (context, item, index) =>
-                              TimelineListItem(
-                            key: Key(item.timelineId.toString()),
-                            timeline: item,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 31,
-                      ),
-                    ],
+              child: PagedListView<int, Timeline>(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                pagingController: viewModel.pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Timeline>(
+                  itemBuilder: (context, item, index) => TimelineListItem(
+                    key: Key(item.timelineId.toString()),
+                    timeline: item,
                   ),
                 ),
               ),
