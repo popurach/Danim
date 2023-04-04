@@ -4,6 +4,7 @@ import com.danim.dto.AddPostReq;
 import com.danim.dto.GetPostRes;
 import com.danim.entity.Photo;
 import com.danim.entity.Post;
+import com.danim.entity.User;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
 import com.danim.service.PhotoService;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,14 +61,34 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    //지역명 키워드로 포스트 조회
-    @GetMapping("/{location}")
+    //메인페이지에서 포스트 조회
+    @GetMapping("/main/{location}")
     public ResponseEntity<?> getPost(@PathVariable String location) throws Exception {
         if (location == null) {
             log.info("location 값 없음");
             throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
         }
         List<GetPostRes> getPostResList = postService.findByLocation(location);
+        return ResponseEntity.ok(getPostResList);
+    }
+
+    //내 페이지에서 포스트 조회
+    @GetMapping("/mine/{myLocation}")
+    public ResponseEntity<?> getMyPost(@PathVariable String myLocation) throws Exception {
+        // accessToken에서 user 가져오기
+        Long userUid = null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null && auth.getPrincipal() != null) {
+            User user = (User) auth.getPrincipal();
+            userUid = user.getUserUid();
+        }
+
+        // 응답
+        if (myLocation == null) {
+            log.info("location 값 없음");
+            throw new BaseException(ErrorMessage.VALIDATION_FAIL_EXCEPTION);
+        }
+        List<GetPostRes> getPostResList = postService.findMyPost(myLocation, userUid);
         return ResponseEntity.ok(getPostResList);
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -77,7 +76,11 @@ public class TimeLineServiceImpl implements TimeLineService {
         timelineouter.setIsPublic(now.getTimelinePublic());
 
         List<MyPostDtoRes> postlist = new ArrayList<>();
+
+
         TimelinePostInner temptimeline = new TimelinePostInner();
+
+
         Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
         List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
         List<String> photolist = new ArrayList<>();
@@ -87,9 +90,9 @@ public class TimeLineServiceImpl implements TimeLineService {
         Boolean isMine = false;
         Long nowUserUid = user.getUserUid();
         int check = 0;
-        Post last=null;
+        Post last = null;
         for (Post p : post) {
-            last=p;
+            last = p;
             favorite_count = 0L;
             String NationName = p.getNationId().getName();
             isMine = false;
@@ -138,29 +141,43 @@ public class TimeLineServiceImpl implements TimeLineService {
             }
         }
 
-        temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
+        if (last != null)
+            temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
+        else {
+            temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
+        }
+
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
-        timelineouter.setIsMine(isMine);
-        timelineouter.setTitle(now.getTitle());
 
+        timelineouter.setTitle(now.getTitle());
+        if (post.size() == 0) {
+            timelineouter.setTimeline(null);
+            if (now.getUserUid().getUserUid().equals(user.getUserUid()))
+                isMine = true;
+        }
+        timelineouter.setIsMine(isMine);
         // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
     }
 
     @Override
-    public void makenewTimeline(User now) throws BaseException {
+    public Long makenewTimeline(User now) throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
 
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
+        Long u1 = timeLineRepository.findLastTimelineId();
+        //System.out.println(u1);
+        return u1;
     }
 
 
     @Override
+<<<<<<< HEAD
     public void makenewTimelineTemp() throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
@@ -180,10 +197,14 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     @Override
     public void finishTimeline(Long uid, String title) throws BaseException {
+=======
+    public void finishTimeline(Long uid, String title, User user) throws BaseException {
+>>>>>>> 1fe7b43aa7b20fc10d3a44ec66b0159a9cb103c2
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         //타임라인 완료 변경 작업 진행
-
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
         now.setComplete(Boolean.TRUE);
         now.setFinishTime(LocalDateTime.now());
         now.setTitle(title);
@@ -193,25 +214,31 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void deleteTimeline(Long uid) throws BaseException {
+    public void deleteTimeline(Long uid, User user) throws BaseException {
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
         timeLineRepository.delete(now);
 
     }
 
     @Override
-    public Boolean changePublic(Long uid) throws BaseException {
+    public Boolean changePublic(Long uid, User user) throws BaseException {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+
+        if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
+            throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
+
         Boolean temp = now.getTimelinePublic();
-        Boolean check=false;
+        Boolean check = false;
         //완료->비완료 , 비완료->완료 로 변경하는 작업
         if (temp) {
             now.setTimelinePublic(false);
-            check=false;
+            check = false;
         } else {
             now.setTimelinePublic(true);
-            check=true;
+            check = true;
         }
         timeLineRepository.save(now);
 
@@ -268,8 +295,11 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         Page<TimeLine> timeline = timeLineRepository.findAllByUserUidOrderByCreateTimeDesc(now, pageable);
         if (timeline.getContent().size() == 0) {
-            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+            return new ArrayList<>();
+            //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
         }
+
+
         //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
         List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
         //타임라인을 얻어옴, =>
@@ -308,13 +338,15 @@ public class TimeLineServiceImpl implements TimeLineService {
         User user = userRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         Page<TimeLine> timeline = timeLineRepository.findAllByUserUidAndTimelinePublic(user, true, pageable);
         if (timeline.getContent().size() == 0) {
-            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE);
+            return new ArrayList<>();
+            //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE);
         }
         Photo photo = null;
         Post post = null;
         MainTimelinePhotoDtoRes temp = null;
         if (timeline.getContent().size() == 0) {
-            throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+            return new ArrayList<>();
+            //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
         }
         //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
         List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
@@ -348,12 +380,15 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public Boolean isTraveling(Long uid) {
+    public TimeLine isTraveling(Long uid) {
         User user = userRepository.getByUserUid(uid);
-        if (timeLineRepository.findAllByUserUidAndComplete(user, false).size() != 0) {
-            return true;
+        TimeLine timeLine;
+        try {
+            timeLine = timeLineRepository.findAllByUserUidAndComplete(user, false);
+        } catch (Exception e) {
+            return null;
         }
-        return false;
+        return timeLine;
     }
 
 

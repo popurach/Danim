@@ -7,6 +7,7 @@ import com.danim.dto.TokenRes;
 import com.danim.dto.UserInfoRes;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import com.danim.utils.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TimeLineRepository timeLineRepository;
     private final TimeLineService timeLineService;
     public final JwtTokenProvider jwtTokenProvider;
     public final PasswordEncoder passwordEncoder;
@@ -54,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
+<<<<<<< HEAD
         // 카카오톡 rest api (id, profile image, nickname)
 //        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
 //        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
@@ -66,6 +69,20 @@ public class UserServiceImpl implements UserService {
 //        String clientId = json.get("id").asText();
 //        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
 //        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+=======
+//         카카오톡 rest api (id, profile image, nickname)
+        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
+        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
+
+        JsonNode json = new ObjectMapper().readTree(response.getBody());
+
+        String clientId = json.get("id").asText();
+        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+>>>>>>> 1fe7b43aa7b20fc10d3a44ec66b0159a9cb103c2
 
         User user;
         String clientId = "2725446611";
@@ -125,20 +142,23 @@ public class UserServiceImpl implements UserService {
     public UserInfoRes getNicknameAndProfileImage(Long userUid) throws Exception {
         User user = userRepository.getByUserUid(userUid);
 
-        return UserInfoRes.builder()
-                .userUid(user.getUserUid())
-                .nickname(user.getNickname())
-                .profileImageUrl(user.getProfileImageUrl())
-                .isTraveling(timeLineService.isTraveling(userUid))
-                .build();
+        return entityToResponseDTO(user);
     }
 
     // User 객체를 UserInfoRes로 변환
     private UserInfoRes entityToResponseDTO(User user) {
+        Integer timelineNum = timeLineRepository.countAllByUserUid(user);
+        Long timeLineId = -1L;
+        if(timeLineService.isTraveling(user.getUserUid()) != null){
+            timeLineId = timeLineService.isTraveling(user.getUserUid()).getTimelineId();
+        }
+
         return UserInfoRes.builder()
                 .userUid(user.getUserUid())
                 .nickname(user.getNickname())
                 .profileImageUrl((user.getProfileImageUrl()))
+                .timeLineId(timeLineId)
+                .timelineNum(timelineNum)
                 .build();
     }
 
