@@ -28,8 +28,6 @@ class TimelineRepository {
   }
 
   Future<List<Timeline>> getMyTimelineByPageNum(context, int pageNum) async {
-    // 앱뷰모델에서 현재 기기에서 로그인한 유저 uid를 가져오기 위해서 선언
-    final appViewModel = Provider.of<AppViewModel>(context);
     final dio = await authDio(context);
     try {
       Response response = await dio.get('api/auth/timeline/mine/$pageNum');

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:danim/services/timeline_repository.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
+import 'package:danim/view_models/user_timeline_list_view_model.dart';
+import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
@@ -110,11 +112,12 @@ class AppViewModel with ChangeNotifier {
         },
         transitionDuration: Duration.zero,
       );
-    } else {
-      return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => TimelineListPage(),
-        transitionDuration: Duration.zero,
-      );
+    }
+    else {
+      // return PageRouteBuilder(
+      //   pageBuilder: (_, __, ___) => TimelineListPage(),
+      //   transitionDuration: Duration.zero,
+      // );
     }
   }
 
@@ -129,12 +132,11 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      page = ChangeNotifierProvider<TimelineListViewModel>(
-        create: (_) => TimelineListViewModel(
+      page = ChangeNotifierProvider<UserTimelineListViewModel>(
+        create: (_) => UserTimelineListViewModel(
           context: context,
-          userUid: _userInfo.userUid,
-          profileImageUrl: _userInfo.profileImageUrl,
-          nickname: _userInfo.nickname,
+          myInfo: userInfo,
+          userInfo: userInfo
         ),
         child: UserTimeLineListView(),
       );
@@ -155,4 +157,5 @@ class AppViewModel with ChangeNotifier {
     _title = _formerTitle;
     notifyListeners();
   }
+
 }

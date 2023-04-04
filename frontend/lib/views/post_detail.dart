@@ -58,7 +58,7 @@ class PostDetail extends StatelessWidget {
                               insetPadding: const EdgeInsets.all(5),
                               child: ChangeNotifierProvider(
                                 create: (_) => ImagesPageViewModel(
-                                    viewModel.post.photoList),
+                                  imagesUrl : viewModel.post.photoList),
                                 child: const ImagesPageView(),
                               ),
                             );
@@ -66,7 +66,7 @@ class PostDetail extends StatelessWidget {
                     },
                     child: ChangeNotifierProvider(
                       create: (_) =>
-                          ImagesPageViewModel(viewModel.post.photoList),
+                          ImagesPageViewModel(imagesUrl: viewModel.post.photoList),
                       child: const ImagesPageView(),
                     ),
                   ),

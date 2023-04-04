@@ -1,29 +1,25 @@
-import 'package:danim/models/Timeline.dart';
-import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
-import 'app_view_model.dart';
+import '../models/UserInfo.dart';
+import '../models/Timeline.dart';
+import '../services/timeline_repository.dart';
 
 var logger = Logger();
 
-class TimelineListViewModel with ChangeNotifier {
-  int userUid;
-  int? myUid;
+class UserTimelineListViewModel extends ChangeNotifier {
+  BuildContext context;
+  UserInfo userInfo;
+  UserInfo myInfo;
 
-  final PagingController<int, Timeline> pagingController =
-  PagingController(firstPageKey: 0);
-
-  TimelineListViewModel(
-      {required BuildContext context, this.userUid=-1, this.myUid}) {
-    logger.d(userUid, myUid);
-    if (userUid == -1) {
+  UserTimelineListViewModel({required this.context, required this.myInfo, required this.userInfo}) {
+    if (userInfo.userUid == -1) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
       });
-    } else if (userUid != -1 && myUid != null) {
-      if (userUid == myUid) {
+    } else if (userInfo.userUid != -1) {
+      if (userInfo.userUid == myInfo.userUid) {
         pagingController.addPageRequestListener((pageKey) {
           getMyTimelineList(context, pageKey);
         });
@@ -34,6 +30,10 @@ class TimelineListViewModel with ChangeNotifier {
       }
     }
   }
+
+  final PagingController<int, Timeline> pagingController =
+  PagingController(firstPageKey: 0);
+
 
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
@@ -54,7 +54,7 @@ class TimelineListViewModel with ChangeNotifier {
 
   Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
     final newItems = await TimelineRepository()
-        .getOtherTimelineByPageNum(context, pageKey, userUid);
+        .getOtherTimelineByPageNum(context, pageKey, userInfo.userUid);
     final isLastPage = newItems.length < 15;
     if (isLastPage) {
       pagingController.appendLastPage(newItems);

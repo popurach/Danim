@@ -61,7 +61,6 @@ class CameraView extends StatelessWidget {
                                           cameraViewModel.controller)),
                                 ),
                               ),
-
                               // 버튼들
                               Positioned(
                                 // 위치 지정
@@ -104,7 +103,7 @@ class CameraView extends StatelessWidget {
                                                       9) {
                                                     viewModel.takePhoto();
                                                   } else {
-                                                    OneButtonCupertinoAlertDiaglog()
+                                                    OneButtonCupertinoAlertDiallog()
                                                         .showFeedBack(context,
                                                             "이미지는 \n최대 9장까지 \n등록 가능합니다.");
                                                   }
@@ -149,6 +148,47 @@ class CameraView extends StatelessWidget {
                                             );
                                           })
                                         ],
+                                      ),
+                                      // 플래시 모드 변경
+                                      Container(
+                                        height: 30,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.auto)},
+                                                icon: const Icon(
+                                                    Icons.flash_auto,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.off)},
+                                              icon: const Icon(
+                                                Icons.flash_off,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.always)},
+                                              icon: const Icon(
+                                                Icons.flash_on,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.torch)},
+                                              icon: const Icon(
+                                                Icons.flashlight_on,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
