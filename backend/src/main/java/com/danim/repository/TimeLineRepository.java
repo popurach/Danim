@@ -5,6 +5,7 @@ import com.danim.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,4 +36,9 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
     Page<TimeLine> findAllByUserUidAndTimelinePublic(User u, Boolean flag, Pageable pageable);
 
     TimeLine findAllByUserUidAndComplete(User u, Boolean flag);
+
+    // @Query(value = "select u from User u where u.nickname like %:search% order by u.nickname")
+    @Query(value = "select timeline_id from time_line order by timeline_id desc limit 1", nativeQuery = true)
+    Long findLastTimelineId();
+
 }

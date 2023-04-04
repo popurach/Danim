@@ -23,7 +23,7 @@ public interface TimeLineService {
     TimelinePostOuter searchOneTimeline(Long uid,User user) throws Exception;
 
     //여행시작
-    void makenewTimeline(User user) throws Exception;
+    Long makenewTimeline(User user) throws Exception;
 
     //여행끝
     void finishTimeline(Long uid,String title,User user) throws Exception;
