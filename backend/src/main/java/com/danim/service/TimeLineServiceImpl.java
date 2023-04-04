@@ -142,9 +142,11 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         if (last != null)
             temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
-        else
+        else {
             temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
-
+            if(now.getUserUid().equals(user.getUserUid()))
+                isMine=true;
+        }
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
