@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/post_list_item.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -32,14 +32,15 @@ class TimelineDetailPage extends StatelessWidget {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
-                              builder: (context) => AlertDialog(
+                              builder: (ctx) => AlertDialog(
                                 title: const Text('타임라인 삭제'),
                                 content: const Text('타임라인을  삭제하시겠습니까?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       viewModel.deleteTimeline(context);
-                                      Navigator.pop(context);
+                                      Navigator.pop(ctx);
+                                      Navigator.popAndPushNamed(context, '/');
                                     },
                                     child: const Text(
                                       '삭제',
@@ -48,7 +49,7 @@ class TimelineDetailPage extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(ctx);
                                     },
                                     child: const Text('취소'),
                                   ),
@@ -105,19 +106,11 @@ class TimelineDetailPage extends StatelessWidget {
                         indicatorStyle: IndicatorStyle(
                           width: 40,
                           height: 40,
-                          indicator: CachedNetworkImage(
-                            imageUrl:
-                                viewModel.timelineDetails[timelineIndex].flag,
-                            imageBuilder: (context, imageProvider) => Container(
-                              width: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                          indicator: ExtendedImage.network(
+                            viewModel.timelineDetails[timelineIndex].flag,
+                            fit: BoxFit.cover,
+                            cache: true,
+                            borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),

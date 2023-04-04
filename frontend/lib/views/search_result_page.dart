@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/search_result_view_model.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SearchResultView extends StatelessWidget {
   @override
@@ -33,12 +32,8 @@ class SearchResultView extends StatelessWidget {
                         builder:
                             (BuildContext context, BoxConstraints constraints) {
                           return Stack(children: [
-                            CachedNetworkImage(
-                              width: constraints.maxWidth,
-                              height: constraints.maxHeight,
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  viewModel.searchedPosts[index].thumbnailUrl,
+                            ExtendedImage.network(
+                              viewModel.searchedPosts[index].thumbnailUrl,
                             ),
                             Positioned(
                               top: 8.0,

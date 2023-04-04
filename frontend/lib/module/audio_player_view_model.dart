@@ -7,7 +7,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   String? _audioFilePath = null;
   late bool _playStarted = false;
   late bool _isPlaying = false;
-  late Duration _duration = Duration(seconds: 0);
+  late Duration _duration = const Duration(microseconds: 0);
 
   final AudioPlayer audioPlayer = AudioPlayer();
   Duration _audioPosition = Duration.zero;
@@ -47,7 +47,9 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 재생 시작
   Future<void> playRecordedFile() async {
-    if (isPlaying == true || getAudioFilePath == null || getAudioFilePath!.isEmpty) {
+    if (isPlaying == true ||
+        getAudioFilePath == null ||
+        getAudioFilePath!.isEmpty) {
       return;
     } else {
       await audioPlayer.play(DeviceFileSource(_audioFilePath!));
@@ -76,13 +78,12 @@ class AudioPlayerViewModel extends ChangeNotifier {
   // 일시정지
   Future<void> pauseRecordedFile() async {
     if (isPlaying == true) {
-        audioPlayer.pause();
-        isPlaying = false;
-        notifyListeners();
-      } else {
+      audioPlayer.pause();
+      isPlaying = false;
+      notifyListeners();
+    } else {
       return;
     }
-
   }
 
   // 계속 재생
@@ -94,7 +95,6 @@ class AudioPlayerViewModel extends ChangeNotifier {
     } else {
       return;
     }
-
   }
 
   // 완전 멈춤
@@ -106,7 +106,6 @@ class AudioPlayerViewModel extends ChangeNotifier {
     } else {
       return;
     }
-
   }
 
   // 위치 갱신

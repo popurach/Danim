@@ -181,22 +181,20 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    Response response = await UploadRepository().uploadToServer(context, formData);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
-                create: (_) => TimelineListViewModel(
-                    context: context,
-                    myUid: userInfo.userUid),
-                child: UserTimeLineListView(),
-              )),
-              (route) => false).then((value) {
-        Navigator.pushNamed(
-            context,
-            '/timeline/detail/${userInfo.timeLineId}'
-        );
-      });
+    // Response response =
+    //     await UploadRepository().uploadToServer(context, formData);
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
+    //         create: (_) => TimelineListViewModel(
+    //             context: context, myUid: userInfo.userUid),
+    //         child: UserTimeLineListView(),
+    //       ),
+    //     ),
+    //     (route) => false).then((value) {
+    //   Navigator.pushNamed(context, '/timeline/detail/${userInfo.timeLineId}');
+    // });
   }
 
   // 위치를 받아오는 함수

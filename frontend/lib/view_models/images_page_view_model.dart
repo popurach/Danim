@@ -3,9 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-
-var logger = Logger();
 
 class ImagesPageViewModel extends ChangeNotifier {
   List<String>? imagesUrl;
@@ -23,5 +20,6 @@ class ImagesPageViewModel extends ChangeNotifier {
         ));
       }
     }
+
   }
 }

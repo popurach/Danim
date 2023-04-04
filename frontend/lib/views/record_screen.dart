@@ -67,7 +67,7 @@ class RecordView extends StatelessWidget {
                           ],
                         )),
                     Container(
-                      margin: EdgeInsets.only(top:10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: ChangeNotifierProvider<AudioPlayerViewModel>(
                         create: (_) => recordViewModel.audioPlayerViewModel,
                         child: AudioPlayerView(),
@@ -75,7 +75,7 @@ class RecordView extends StatelessWidget {
                     ),
                     // 버튼 컨테이너
                     Container(
-                      padding: EdgeInsets.only(top:26),
+                      padding: const EdgeInsets.only(top: 26),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
