@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:danim/services/timeline_repository.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:danim/views/home_feed_page.dart';
-import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
-import 'package:danim/views/timeline_list_page.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';

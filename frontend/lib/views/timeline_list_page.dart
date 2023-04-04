@@ -5,7 +5,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Timeline.dart';
-import '../view_models/timeline_list_view_model.dart';
 
 class TimelineListPage extends StatelessWidget {
   final PagingController<int, Timeline> pagingController;
@@ -15,21 +14,18 @@ class TimelineListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Consumer<AppViewModel>(builder: (_, appViewModel, __) {
-        return ChangeNotifierProvider<TimelineListViewModel>(
-          create: (_) => TimelineListViewModel(context: context),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              pagingController.refresh();
-            },
-            child: PagedListView<int, Timeline>(
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              pagingController: pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Timeline>(
-                itemBuilder: (context, item, index) => TimelineListItem(
-                  key: Key(item.timelineId.toString()),
-                  timeline: item,
-                ),
+        return RefreshIndicator(
+          onRefresh: () async {
+            pagingController.refresh();
+          },
+          child: PagedListView<int, Timeline>(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            pagingController: pagingController,
+            builderDelegate: PagedChildBuilderDelegate<Timeline>(
+              itemBuilder: (context, item, index) => TimelineListItem(
+                key: Key(item.timelineId.toString()),
+                timeline: item,
               ),
             ),
           ),

@@ -7,8 +7,6 @@ import 'package:danim/views/user_information_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view_models/timeline_list_view_model.dart';
-
 class UserTimeLineListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,19 +46,10 @@ class UserTimeLineListView extends StatelessWidget {
                                   ),
                                   // 타임라인 리스트가 들어가는 칸
                                   Expanded(
-                                    child: ChangeNotifierProvider(
-                                      create: (_) => TimelineListViewModel(
-                                        context: context,
-                                        userUid: userTimelineListViewModel
-                                            .userInfo.userUid,
-                                        myUid: userTimelineListViewModel
-                                            .myInfo.userUid,
-                                      ),
-                                      child: TimelineListPage(
-                                        pagingController:
-                                            userTimelineListViewModel
-                                                .pagingController,
-                                      ),
+                                    child: TimelineListPage(
+                                      pagingController:
+                                          userTimelineListViewModel
+                                              .pagingController,
                                     ),
                                   )
                                 ],
