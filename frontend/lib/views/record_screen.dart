@@ -32,15 +32,14 @@ class RecordView extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.575,
                       // 컨슈머로 변화 감지
-                      child:
-                      ChangeNotifierProvider(
+                      child: ChangeNotifierProvider(
                         create: (_) => ImagesPageViewModel(
-                            xFileList : recordViewModel.imageList),
+                            xFileList: recordViewModel.imageList),
                         child: const ImagesPageView(),
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top:25),
+                        margin: const EdgeInsets.only(top: 25),
                         padding: const EdgeInsets.only(left: 30, right: 30),
                         height: 30,
                         child: Row(
@@ -67,7 +66,7 @@ class RecordView extends StatelessWidget {
                           ],
                         )),
                     Container(
-                      margin: EdgeInsets.only(top:10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: ChangeNotifierProvider<AudioPlayerViewModel>(
                         create: (_) => recordViewModel.audioPlayerViewModel,
                         child: AudioPlayerView(),
@@ -75,7 +74,7 @@ class RecordView extends StatelessWidget {
                     ),
                     // 버튼 컨테이너
                     Container(
-                      padding: EdgeInsets.only(top:26),
+                      padding: const EdgeInsets.only(top: 26),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -133,8 +132,8 @@ class RecordView extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 recordViewModel.uploadConfirm(
-                                    context,
-                                    appViewModel.userInfo,
+                                  context,
+                                  appViewModel.userInfo,
                                 );
                               },
                               icon: const Icon(Icons.upload, size: 28),

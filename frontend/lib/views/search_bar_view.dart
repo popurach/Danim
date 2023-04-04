@@ -1,14 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/search_result_view_model.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:danim/views/search_result_page.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:flutter/material.dart';
-
-import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatelessWidget {
@@ -44,7 +41,7 @@ class SearchBar extends StatelessWidget {
                                         color: Colors.black54, width: 2),
                                   )),
                               child: Container(
-                                margin: EdgeInsets.only(top: 14),
+                                margin: const EdgeInsets.only(top: 14),
                                 child: SizedBox(
                                   height:
                                       (viewModel.searchedResults.length + 1) *
@@ -76,7 +73,8 @@ class SearchBar extends StatelessWidget {
                                                           )));
                                             },
                                             child: ListTile(
-                                                leading: Icon(Icons.search),
+                                                leading:
+                                                    const Icon(Icons.search),
                                                 title: Text(
                                                     "${viewModel.searchKeyWord}(으)로 검색...")),
                                           );
