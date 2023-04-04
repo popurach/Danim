@@ -1,9 +1,9 @@
 package com.danim.service;
 
-import com.danim.conponent.AwsS3;
-import com.danim.conponent.ClovaSpeechClient;
+import com.danim.conponent.*;
 import com.danim.dto.AddPostReq;
 import com.danim.dto.GetPostRes;
+import com.danim.dto.WordInfo;
 import com.danim.entity.*;
 import com.danim.exception.BaseException;
 import com.danim.exception.ErrorMessage;
@@ -21,12 +21,15 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -40,8 +43,9 @@ public class PostServiceImpl implements PostService {
     private final FavoriteRepository favoriteRepository;
     private final TimeLineRepository timelineRepository;
     private final NationRepository nationRepository;
-
-
+    private final BadWordFilter badWordFilter;
+    private final MultiFileToFile multiFileToFile;
+    private final Http http;
     // 포스트 생성 및 저장
     @Override
     public Post createPost() throws Exception {
@@ -92,18 +96,34 @@ public class PostServiceImpl implements PostService {
         // voiceFile -> text 변환 : clova speech api 요청 보내기
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
         ClovaSpeechClient.NestRequestEntity requestEntity = new ClovaSpeechClient.NestRequestEntity();
-        final String result = clovaSpeechClient.url(voiceUrl, requestEntity);
+//        String result = clovaSpeechClient.url(voiceUrl, requestEntity);
 
+        String result = clovaSpeechClient.upload(multiFileToFile.transTo(voiceFile),requestEntity);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode rootNode = objectMapper.readTree(result);
+        String text = rootNode.get("text").asText();
+
+        List<WordInfo> fastApiReq = new ArrayList<>();
+
+        for(JsonNode t :rootNode.get("segments")){
+            for(int i = 0;i<t.get("words").size();i++){
+                fastApiReq.add(WordInfo.builder()
+                        .startTime(t.get("words").get(i).get(0).asLong())
+                        .endTime(t.get("words").get(i).get(1).asLong())
+                        .word((t.get("words").get(i).get(2).asText())).build());
+            }
+        }
+        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq).toString(),voiceFile.getBytes().toString()));
         // voiceFile -> text 변환 : 응답 결과 확인
-        System.out.println(result);
+        log.info("Clova info :{}",result);
         if (result.contains("\"result\":\"FAILED\"")) {
             new BaseException(ErrorMessage.NOT_STT_SAVE);
         }
 
         // voiceFile -> text 변환 : 응답받은 json 파일에서 text 추출
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(result);
-        String text = rootNode.get("text").asText();
+
+
 
         // timeline 객체 가져오기
         TimeLine timeline = timelineRepository.findById(addPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
