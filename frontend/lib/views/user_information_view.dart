@@ -1,6 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +18,12 @@ class UserInformationView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-                flex: 4,
-                child: CachedNetworkImage(
-                  placeholder: (_, __) =>
-                      Image.asset('assets/images/default_images.png'),
-                  imageUrl: userTimelineListViewModel.userInfo.profileImageUrl,
-                )),
+              flex: 4,
+              child: ExtendedImage.network(
+                userTimelineListViewModel.userInfo.profileImageUrl,
+                cache: true,
+              ),
+            ),
             const Expanded(
                 flex: 1, child: VerticalDivider(color: Colors.black54)),
             Expanded(

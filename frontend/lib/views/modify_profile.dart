@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/modify_profile_view_model.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,18 +26,12 @@ class ModifyProfile extends StatelessWidget {
                           ? FileImage(viewModel.selectedImageFile)
                           : null,
                       child: viewModel.selectedImageFile == null
-                          ? CachedNetworkImage(
-                              imageUrl: viewModel.imagePath,
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.account_circle),
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
+                          ? ExtendedImage.network(
+                              viewModel.imagePath,
+                              shape: BoxShape.circle,
+                              cache: true,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30.0)),
                             )
                           : null,
                     ),

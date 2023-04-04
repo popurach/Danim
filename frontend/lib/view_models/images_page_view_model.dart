@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class ImagesPageViewModel extends ChangeNotifier {
@@ -13,12 +13,13 @@ class ImagesPageViewModel extends ChangeNotifier {
   ImagesPageViewModel({this.imagesUrl, this.xFileList}) {
     if (imagesUrl != null && xFileList == null) {
       for (var imageUrl in imagesUrl!) {
-        imageList.add(CachedNetworkImage(
-          imageUrl: imageUrl,
-          placeholder: (_, __) =>
-              Image.asset('assets/images/default_image.png'),
-          fit: BoxFit.cover,
-        ));
+        imageList.add(
+          ExtendedImage.network(
+            imageUrl,
+            cache: true,
+            fit: BoxFit.cover,
+          ),
+        );
       }
     } else if (imagesUrl == null && xFileList != null) {
       for (var xFile in xFileList!) {
