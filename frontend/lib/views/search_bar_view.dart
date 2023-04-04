@@ -6,7 +6,10 @@ import 'package:danim/views/search_result_page.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+
+var logger = Logger();
 
 class SearchBar extends StatelessWidget {
   @override
@@ -152,6 +155,9 @@ class SearchBar extends StatelessWidget {
                   color: Colors.white,
                   height: 45,
                   child: TextFormField(
+                    onTap: () {
+                      logger.d(viewModel.myfocus.hasFocus);
+                    },
                     focusNode: viewModel.myfocus,
                     keyboardType: TextInputType.text,
                     onChanged: (String? keyword) async {

@@ -4,7 +4,10 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
+import 'package:danim/main.dart';
 import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +16,13 @@ import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
+import '../services/upload_repository.dart';
+import '../views/user_timeline_list_view.dart';
 import 'camera_view_model.dart';
 
 var logger = Logger();
@@ -174,18 +180,15 @@ class RecordViewModel extends ChangeNotifier {
     });
     // Response response =
     //     await UploadRepository().uploadToServer(context, formData);
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
-    //         create: (_) => TimelineListViewModel(
-    //             context: context, myUid: userInfo.userUid),
-    //         child: UserTimeLineListView(),
-    //       ),
-    //     ),
-    //     (route) => false).then((value) {
-    //   Navigator.pushNamed(context, '/timeline/detail/${userInfo.timeLineId}');
-    // });
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider<AppViewModel>(
+                  create: (_) => AppViewModel(userInfo, "홈"),
+                  child: MyHomePage(),
+                ),
+              ),
+              (route) => false);
   }
 
   // 위치를 받아오는 함수
@@ -246,7 +249,7 @@ class RecordViewModel extends ChangeNotifier {
     }
   }
 
-  void uploadConfirm(BuildContext context, UserInfo userInfo) {
+  void uploadConfirm(BuildContext context, UserInfo myInfo) {
     final alert = CupertinoAlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
@@ -256,7 +259,7 @@ class RecordViewModel extends ChangeNotifier {
         CupertinoDialogAction(
             child: const Text("참"),
             onPressed: () {
-              postFiles(context, userInfo);
+              postFiles(context, myInfo);
               Navigator.of(context).pop();
             }),
         CupertinoDialogAction(
