@@ -27,21 +27,25 @@ import java.util.Map;
 @Component
 @Slf4j
 public class Http {
-    public static final MediaType MEDIA_TYPE_MARKDOWN
-            = MediaType.parseMediaType("multipart/form-data");
+    public static final MediaType MEDIA_TYPE = MediaType.parseMediaType("audio/wav");
 
     private final OkHttpClient client = new OkHttpClient();
+
     public ResponseBody Post(String toUrl, String method, List<WordInfo> words, MultipartFile voice) throws Exception {
+        String pa="test.wav";
         OkHttpClient client = new OkHttpClient();
-        log.info("data info : {}",voice.getContentType());
+        log.info("data info : {}", voice.getContentType());
+        File pa1=new File(pa);
         Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("words",gson.toJson(words));
-        jsonObject.addProperty("voice",gson.toJson(voice));
-        RequestBody formBody = new FormBody.Builder()
-                .add("words", gson.toJson(words))
-                .add("voice",gson.toJson(voice))
+        RequestBody formBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("words", gson.toJson(words))
+
+//                .addFormDataPart("voice",new File("test.wav")))
+                .addFormDataPart("file", "voicefile", RequestBody.create(okhttp3.MediaType.parse("audio/wav"), new File(pa)))
                 .build();
+
+
         Request request = new Request.Builder()
                 .url(toUrl)
                 .post(formBody)
@@ -49,9 +53,9 @@ public class Http {
 
 
         Response response = client.newCall(request).execute();
-        if(!response.isSuccessful())throw new ConnectException();
+        if (!response.isSuccessful()) throw new ConnectException();
         ResponseBody body = response.body();
-        log.info("flask api info : {}",body);
+        log.info("flask api info : {}", body);
         return body;
     }
 }
