@@ -112,11 +112,12 @@ class AppViewModel with ChangeNotifier {
         },
         transitionDuration: Duration.zero,
       );
-    } else {
-      return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => TimelineListPage(),
-        transitionDuration: Duration.zero,
-      );
+    }
+    else {
+      // return PageRouteBuilder(
+      //   pageBuilder: (_, __, ___) => TimelineListPage(),
+      //   transitionDuration: Duration.zero,
+      // );
     }
   }
 
@@ -131,18 +132,12 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      page = ChangeNotifierProvider<TimelineListViewModel>(
-        create: (_) => TimelineListViewModel(
-          context: context,
-          userUid: _userInfo.userUid,
-          profileImageUrl: _userInfo.profileImageUrl,
-          nickname: _userInfo.nickname,
-        ),
       page = ChangeNotifierProvider<UserTimelineListViewModel>(
         create: (_) => UserTimelineListViewModel(
           context: context,
           myInfo: userInfo,
-            ),
+          userInfo: userInfo
+        ),
         child: UserTimeLineListView(),
       );
     }
@@ -163,9 +158,4 @@ class AppViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  String get nickname => _nickname;
-
-  int get userUid => _userUid;
-
-  int get travelingId => _travelingId;
 }

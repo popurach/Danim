@@ -2,8 +2,11 @@ import 'package:danim/models/Timeline.dart';
 import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:logger/logger.dart';
 
 import 'app_view_model.dart';
+
+var logger = Logger();
 
 class TimelineListViewModel with ChangeNotifier {
   int userUid;
@@ -14,6 +17,7 @@ class TimelineListViewModel with ChangeNotifier {
 
   TimelineListViewModel(
       {required BuildContext context, this.userUid=-1, this.myUid}) {
+    logger.d(userUid, myUid);
     if (userUid == -1) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);

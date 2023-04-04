@@ -22,6 +22,7 @@ import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
+import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
 import '../views/user_timeline_list_view.dart';
 import 'camera_view_model.dart';
@@ -173,7 +174,7 @@ class RecordViewModel extends ChangeNotifier {
       'flagFile': flag,
       'imageFiles': imageFiles,
       'voiceFile': audioFile,
-      'timelineId': userInfo.travelingId,
+      'timelineId': userInfo.timeLineId,
       'address1': locationInfo.country,
       'address2': locationInfo.address2,
       'address3': locationInfo.address3,
@@ -192,7 +193,7 @@ class RecordViewModel extends ChangeNotifier {
               (route) => false).then((value) {
         Navigator.pushNamed(
             context,
-            '/timeline/detail/${userInfo.travelingId}'
+            '/timeline/detail/${userInfo.timeLineId}'
         );
       });
   }

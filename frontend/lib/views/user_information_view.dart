@@ -22,7 +22,8 @@ class UserInformationView extends StatelessWidget {
             children: [
               Expanded(
                   flex: 4,
-                  child: CachedNetworkImage(
+                  child:
+                  CachedNetworkImage(
                     imageUrl: userTimelineListViewModel.userInfo.profileImageUrl,
                   )),
               const Expanded(
@@ -35,13 +36,13 @@ class UserInformationView extends StatelessWidget {
                   mainAxisAlignment:
                   MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(userTimelineListViewModel.userInfo.nickname),
+                    Text(userTimelineListViewModel.userInfo!.nickname),
                     Column(
                       mainAxisAlignment:
                       MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(userTimelineListViewModel.userInfo.travelNum),
-                        userTimelineListViewModel.userInfo.travelingId == -1  ?
+                        Text("총 여행 수 들어갈 예정"),
+                        userTimelineListViewModel.userInfo?.timeLineId == -1  ?
                         Text("휴식중")
                             : Text("여행중")
                       ],
