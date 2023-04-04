@@ -19,4 +19,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     // 해당 유저가 좋아요 누른 포스트 검색
     Optional<List<Favorite>> findAllByUserUid(User user);
+
+    //포스트 삭제되면 포스트에 연결된 좋아요도 삭제
+    void deleteAllByPostId(Post post);
 }
