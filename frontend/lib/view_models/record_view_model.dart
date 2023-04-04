@@ -23,6 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
+import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
 import '../views/user_timeline_list_view.dart';
 import 'camera_view_model.dart';
@@ -159,7 +160,7 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   // 파일을 서버로 업로드하기
-  Future<void> postFiles(BuildContext context, int travelingId, int userUid, String nickname, String profileImageUrl) async {
+  Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
         filename: locationInfo.country, contentType: MediaType('image', 'jpk'));
     final List<MultipartFile> imageFiles = imageList
@@ -174,7 +175,7 @@ class RecordViewModel extends ChangeNotifier {
       'flagFile': flag,
       'imageFiles': imageFiles,
       'voiceFile': audioFile,
-      'timelineId': travelingId,
+      'timelineId': userInfo.travelingId,
       'address1': locationInfo.country,
       'address2': locationInfo.address2,
       'address3': locationInfo.address3,
@@ -187,15 +188,13 @@ class RecordViewModel extends ChangeNotifier {
               builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
                 create: (_) => TimelineListViewModel(
                     context: context,
-                    userUid: userUid,
-                    profileImageUrl: profileImageUrl,
-                    nickname: nickname),
+                    myUid: userInfo.userUid),
                 child: UserTimeLineListView(),
               )),
               (route) => false).then((value) {
         Navigator.pushNamed(
             context,
-            '/timeline/detail/${travelingId}'
+            '/timeline/detail/${userInfo.travelingId}'
         );
       });
   }
@@ -260,7 +259,7 @@ class RecordViewModel extends ChangeNotifier {
     }
   }
 
-  void uploadConfirm(BuildContext context, int travelingId, int userUid, String nickname, String profileImageUrl) {
+  void uploadConfirm(BuildContext context, UserInfo userInfo) {
     final alert = CupertinoAlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
@@ -270,7 +269,7 @@ class RecordViewModel extends ChangeNotifier {
         CupertinoDialogAction(
             child: const Text("참"),
             onPressed: () {
-              postFiles(context, travelingId, userUid, nickname, profileImageUrl);
+              postFiles(context, userInfo);
               Navigator.of(context).pop();
             }),
         CupertinoDialogAction(

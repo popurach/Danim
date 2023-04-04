@@ -36,7 +36,7 @@ class SearchBarViewModel extends ChangeNotifier {
     _isSearching = newBool;
   }
 
-  SearchBarViewModel({this.userUid});
+  SearchBarViewModel();
 
 
   FocusNode _myfocus = FocusNode();

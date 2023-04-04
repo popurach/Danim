@@ -134,10 +134,7 @@ class RecordView extends StatelessWidget {
                               onPressed: () {
                                 recordViewModel.uploadConfirm(
                                     context,
-                                    appViewModel.travelingId,
-                                  appViewModel.userUid,
-                                  appViewModel.nickname,
-                                  appViewModel.imageUrl
+                                    appViewModel.userInfo,
                                 );
                               },
                               icon: const Icon(Icons.upload, size: 28),

@@ -44,8 +44,6 @@ class CameraViewModel extends ChangeNotifier {
   double? get aspectRatio => _aspectRatio;
 
 
-
-
   List<XFile> _allFileList = [];
 
   List<XFile> get allFileList => _allFileList;
