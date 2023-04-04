@@ -72,6 +72,8 @@ public class TimelineController {
         if (auth != null && auth.getPrincipal() != null)
             user = (User) auth.getPrincipal();
         TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid, user);
+        if (timeline==null)
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         log.info("타임라인 한개 조회 종료");
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
@@ -86,9 +88,10 @@ public class TimelineController {
         User user = null;
         if (auth != null && auth.getPrincipal() != null)
             user = (User) auth.getPrincipal();
-        timeLineService.makenewTimeline(user);
+        Long now=timeLineService.makenewTimeline(user);
         log.info("여행 시작 기능 종료");
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(now,HttpStatus.OK);
+
     }
 
 

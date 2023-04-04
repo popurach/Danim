@@ -65,6 +65,8 @@ public class TimeLineServiceImpl implements TimeLineService {
         //이제 그 다음으로 해당 되는 타임라인을 포스트를 얻어 올거임
         List<Post> post = postRepository.findAllByTimelineIdOrderByCreateTimeAsc(now);
         //이제 찾아 왔으므로 넘겨 줘야함
+        if (post.size()==0)
+            return null;
 
 
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
@@ -147,13 +149,16 @@ public class TimeLineServiceImpl implements TimeLineService {
     }
 
     @Override
-    public void makenewTimeline(User now) throws BaseException {
+    public Long makenewTimeline(User now) throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
 
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
+        Long u1= timeLineRepository.findLastTimelineId();
+        //System.out.println(u1);
+        return u1;
     }
 
 
