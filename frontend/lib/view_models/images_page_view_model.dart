@@ -23,10 +23,12 @@ class ImagesPageViewModel extends ChangeNotifier {
       }
     } else if (imagesUrl == null && xFileList != null) {
       for (var xFile in xFileList!) {
-        imageList.add(Image.file(
-          File(xFile.path),
-          fit: BoxFit.cover,
-        ));
+        imageList.add(
+          Image.file(
+            File(xFile.path),
+            fit: BoxFit.cover,
+          ),
+        );
       }
     }
   }

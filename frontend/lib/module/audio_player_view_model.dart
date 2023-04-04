@@ -1,10 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
   // 파일 경로
-  String? _audioFilePath = null;
+  String? _audioFilePath;
   late bool _playStarted = false;
   late bool _isPlaying = false;
   late Duration _duration = const Duration(microseconds: 0);
@@ -43,7 +42,17 @@ class AudioPlayerViewModel extends ChangeNotifier {
   }
 
   // optional parameter
-  AudioPlayerViewModel(this._audioFilePath);
+  AudioPlayerViewModel(this._audioFilePath) {
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      duration = newDuration;
+      notifyListeners();
+    });
+    if (_audioFilePath != null) initDuration();
+  }
+
+  Future<void> initDuration() async {
+    await audioPlayer.setSourceUrl(_audioFilePath!);
+  }
 
   // 재생 시작
   Future<void> playRecordedFile() async {
@@ -65,11 +74,6 @@ class AudioPlayerViewModel extends ChangeNotifier {
       // 음성 파일에서의 현재 위치 갱신
       audioPlayer.onPositionChanged.listen((curPos) {
         audioPosition = curPos;
-        notifyListeners();
-      });
-
-      audioPlayer.onDurationChanged.listen((newDuration) {
-        duration = newDuration;
         notifyListeners();
       });
     }
@@ -118,5 +122,18 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> seekTo(Duration position) async {
     await audioPlayer.seek(position);
     updateAudioPosition(position);
+  }
+
+  getDurationTimeToString() {
+    return timeToString(duration.inSeconds);
+  }
+
+  getAudioPosTimeToString() {
+    return timeToString(audioPosition.inSeconds);
+  }
+
+  timeToString(int time) {
+    if (time <= 9) return '00:0$time';
+    return '00:$time';
   }
 }
