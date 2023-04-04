@@ -117,7 +117,7 @@ public class PostServiceImpl implements PostService {
                         .word((t.get("words").get(i).get(2).asText())).build());
             }
         }
-        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq).toString(),voiceFile.getBytes().toString()));
+        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),voiceFile));
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
         if (result.contains("\"result\":\"FAILED\"")) {
