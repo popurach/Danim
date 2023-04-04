@@ -56,6 +56,20 @@ public class UserServiceImpl implements UserService {
 
     // 카카오 로그인 연동
     public TokenRes signUpKakao(UserLoginReq userLoginReq) throws JsonProcessingException {
+<<<<<<< HEAD
+        // 카카오톡 rest api (id, profile image, nickname)
+//        HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
+//        RestTemplate restTemplate = HttpUtil.generateRestTemplate();
+//
+//        HttpEntity<String> request = new HttpEntity<>(headers);
+//        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
+//
+//        JsonNode json = new ObjectMapper().readTree(response.getBody());
+//
+//        String clientId = json.get("id").asText();
+//        String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
+//        String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+=======
 //         카카오톡 rest api (id, profile image, nickname)
         HttpHeaders headers = HttpUtil.generateHttpHeadersForJWT(userLoginReq.getAccessToken());
         RestTemplate restTemplate = HttpUtil.generateRestTemplate();
@@ -68,11 +82,12 @@ public class UserServiceImpl implements UserService {
         String clientId = json.get("id").asText();
         String profileImageUrl = json.get("kakao_account").get("profile").get("profile_image_url").asText();
         String nickname = json.get("kakao_account").get("profile").get("nickname").asText();
+>>>>>>> 1fe7b43aa7b20fc10d3a44ec66b0159a9cb103c2
 
         User user;
-//        String clientId = "1234";
-//        String nickname = "이영차";
-//        String profileImageUrl = "http://k.kakaocdn.net/dn/rkzVf/btrJlo4CzEH/nF4GlVkeOKaU7HSYw0k1aK/img_640x640.jpg";
+        String clientId = "2725446611";
+        String nickname = "송지율";
+        String profileImageUrl = "http://k.kakaocdn.net/dn/dIUOxh/btrOfbMpO9p/JikTtvK5PtI5Wi6RMyPkDK/img_640x640.jpg";
 
         // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
         if (userRepository.getByClientId(clientId) != null) {
@@ -103,7 +118,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoRes updateUserInfo(Long userUid, MultipartFile profileImage, String nickname) throws Exception {
         User user = userRepository.getByUserUid(userUid);
 
-        if(profileImage == null){
+        if (profileImage == null) {
             log.info("프로필 이미지 변경 X, 닉네임만 변경");
             // 프로필 이미지 변경 X, 닉네임만 변경
             user.setNickname(nickname);
@@ -146,4 +161,40 @@ public class UserServiceImpl implements UserService {
                 .timelineNum(timelineNum)
                 .build();
     }
+
+
+    public Boolean signUp() {
+        // 카카오톡 rest api (id, profile image, nickname)
+
+        User user;
+        String clientId = "1234";
+        String nickname = "테스트";
+        String profileImageUrl = "----";
+
+        // 카카오에서 받아 온 데이터(clientId)로 이미 등록된 유저인지 확인
+        if (userRepository.getByClientId(clientId) != null) {
+            user = userRepository.getByClientId(clientId);
+            if (!passwordEncoder.matches("다님", user.getPassword())) {
+                throw new RuntimeException();
+            }
+            TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
+            userRepository.findByClientId(clientId).setRefreshToken(tokenRes.getRefreshToken());
+            return true;
+        }
+
+        // 미등록 사용자
+        TokenRes tokenRes = jwtTokenProvider.createtoken(clientId, "USER");
+        user = User.builder()
+                .nickname(nickname) // 'nickname' 값을 nickname에 저장
+                .clientId(clientId) // 'id' 값을 clientId에 저장
+                .role("USER")
+                .refreshToken(tokenRes.getRefreshToken())
+                .profileImageUrl(profileImageUrl)
+                .password(passwordEncoder.encode("다님"))
+                .build();
+        userRepository.save(user);
+        return true;
+    }
+
+
 }

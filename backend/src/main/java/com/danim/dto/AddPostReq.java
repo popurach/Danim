@@ -6,9 +6,11 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Builder
 public class AddPostReq {
     @NotNull(message = "[Request] timelineId 값을 입력해주세요.")
     private Long timelineId;

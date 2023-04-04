@@ -48,7 +48,10 @@ public interface TimeLineService {
     //타임 라인 하나 불러올시에, 썸네일, 시작 위치 끝나는 위치,
     TimeLine isTraveling(Long uid);
 
+    void makenewTimelineTemp();
 
+
+    void changeTimelineFinish();
 
 
 }

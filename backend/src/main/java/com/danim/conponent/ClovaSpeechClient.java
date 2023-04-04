@@ -1,5 +1,7 @@
 package com.danim.conponent;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,7 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import org.springframework.stereotype.Component;
 
+@Getter
+@Setter
+@Component
 public class ClovaSpeechClient {
     private static final String SECRET = "5363cc2f4577446abede2f0c96814b44";
     private static final String INVOKE_URL = "https://clovaspeech-gw.ncloud.com/external/v1/4852/8e3d76eb02eca805c974a9640baf24a8f604b7981f5f71a4a4cbba091938c32e";
