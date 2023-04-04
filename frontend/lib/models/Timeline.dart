@@ -38,8 +38,12 @@ class Timeline {
       timelineId: json['timelineId'],
       nickname: json['nickname'],
       title: json['title'],
-      createTime: json['createTime'],
-      finishTime: json['finishTime'],
+      createTime: json['createTime'].length > 2
+          ? json['createTime'].substring(2)
+          : json['createTime'],
+      finishTime: json['finishTime'].length > 2
+          ? json['finishTime'].substring(2)
+          : json['finishTime'],
       imageUrl: json['imageUrl'],
       startPlace: json['startPlace'],
       finishPlace: json['finishPlace'],

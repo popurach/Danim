@@ -1,11 +1,13 @@
 import 'package:danim/main.dart';
 import 'package:danim/models/Token.dart';
 import 'package:danim/models/UserInfo.dart';
+import 'package:danim/services/search_repository.dart';
 import 'package:danim/services/user_repository.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -28,6 +30,9 @@ class LoginViewModel extends ChangeNotifier {
 
     storage.write(key: 'userUid', value: userInfo.userUid.toString());
     appViewModel.updateUserInfo(userInfo);
+
+    logger = Logger();
+    logger.d(ourToken.accessToken);
 
     Navigator.pushAndRemoveUntil(
         context,

@@ -11,8 +11,8 @@ class ModifyProfile extends StatelessWidget {
       builder: (context, appViewModel, _) {
         return ChangeNotifierProvider<ModifyProfileViewModel>(
           create: (_) => ModifyProfileViewModel(
-            appViewModel.imageUrl,
-            appViewModel.nickname,
+            appViewModel.userInfo.profileImageUrl,
+            appViewModel.userInfo.nickname,
           ),
           child: Consumer<ModifyProfileViewModel>(
             builder: (context, viewModel, child) {

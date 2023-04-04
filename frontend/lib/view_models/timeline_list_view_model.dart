@@ -6,22 +6,21 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'app_view_model.dart';
 
 class TimelineListViewModel with ChangeNotifier {
-  int? userUid;
+  int userUid;
   String? profileImageUrl;
   String? nickname;
   AppViewModel? appViewModel;
 
   final PagingController<int, Timeline> pagingController =
-  PagingController(firstPageKey: 0);
+      PagingController(firstPageKey: 0);
 
   TimelineListViewModel(
       {required BuildContext context,
-        this.userUid,
-        this.profileImageUrl,
-        this.nickname,
-        this.appViewModel
-      }) {
-    if (userUid == null) {
+      this.userUid = -1,
+      this.profileImageUrl,
+      this.nickname,
+      this.appViewModel}) {
+    if (userUid == -1) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
       });
@@ -36,7 +35,7 @@ class TimelineListViewModel with ChangeNotifier {
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
-      await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
+          await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
       if (isLastPage) {
         pagingController.appendLastPage(newItems);

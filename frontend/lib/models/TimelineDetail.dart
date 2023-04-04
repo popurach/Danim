@@ -25,7 +25,9 @@ class TimelineDetail {
             (jsonPost) => Post.fromJson(jsonPost),
           ),
         ),
-        startDate: json['startDate'],
-        finishDate: json['finishDate'],
+        startDate:
+            json['startDate'] == null ? '' : json['startDate'].substring(2),
+        finishDate:
+            json['finishDate'] == null ? '' : json['finishDate'].substring(2),
       );
 }

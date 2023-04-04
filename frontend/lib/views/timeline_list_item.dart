@@ -83,9 +83,17 @@ class TimelineListItem extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10)),
-                                  child: CachedNetworkImage(
-                                      imageUrl: timeline.imageUrl,
-                                      fit: BoxFit.cover),
+                                  child: timeline.imageUrl.isNotEmpty
+                                      ? CachedNetworkImage(
+                                          imageUrl: timeline.imageUrl,
+                                          fit: BoxFit.cover)
+                                      : Container(
+                                          color: Colors.black12,
+                                          child: Image.asset(
+                                            'assets/images/default_image.png',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -143,7 +151,7 @@ class TimelineListItem extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Text(
-                                                '${timeline.createTime.substring(2)} ~ ${timeline.finishTime.substring(2)}'),
+                                                '${timeline.createTime} ~ ${timeline.finishTime}'),
                                           )
                                         ],
                                       ),

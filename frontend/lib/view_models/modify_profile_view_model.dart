@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 
 class ModifyProfileViewModel extends ChangeNotifier {
   final textEditController = TextEditingController();
@@ -37,6 +38,25 @@ class ModifyProfileViewModel extends ChangeNotifier {
     UserInfo newUserInfo =
         await UserRepository().updateUserProfile(context, formData);
     appViewModel.updateUserInfo(newUserInfo);
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('변경 완료'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                '확인',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     notifyListeners();
   }
 

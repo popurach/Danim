@@ -15,7 +15,6 @@ class PostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expansionTileKey = GlobalKey();
     return Consumer<TimelineDetailViewModel>(builder: (_, viewModel, __) {
       return ExpansionTile(
         shape: const RoundedRectangleBorder(),

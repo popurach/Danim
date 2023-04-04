@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -6,21 +5,19 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
-import 'package:danim/models/PostForUpload.dart';
 import 'package:danim/services/upload_repository.dart';
-import 'package:danim/utils/auth_dio.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
-import 'package:intl/intl.dart';
-import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
 
 import '../module/audio_player_view_model.dart';
 import '../views/user_timeline_list_view.dart';
@@ -180,25 +177,31 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    final timelineId = await UploadRepository().uploadToServer(context, formData);
-    final appViewModel = Provider.of<AppViewModel>(context, listen: false);
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
-                  create: (_) => TimelineListViewModel(
-                      context: context,
-                      userUid: appViewModel.userUid,
-                      profileImageUrl: appViewModel.imageUrl,
-                      nickname: appViewModel.nickname),
-                  child: UserTimeLineListView(),
-                )),
-        (route) => false).then((value) {
-      Navigator.pushNamed(
+    int timelineId;
+    if (context.mounted) {
+      timelineId = await UploadRepository().uploadToServer(context, formData);
+    } else {
+      return;
+    }
+
+    if (context.mounted) {
+      final appViewModel = Provider.of<AppViewModel>(context, listen: false);
+      Navigator.pushAndRemoveUntil(
           context,
-          '/timeline/detail/${timelineId}'
-      );
-    });
+          MaterialPageRoute(
+              builder: (context) =>
+                  ChangeNotifierProvider<TimelineListViewModel>(
+                    create: (_) => TimelineListViewModel(
+                        context: context,
+                        userUid: appViewModel.userInfo.userUid,
+                        profileImageUrl: appViewModel.userInfo.profileImageUrl,
+                        nickname: appViewModel.userInfo.nickname),
+                    child: UserTimeLineListView(),
+                  )),
+          (route) => false).then((value) {
+        Navigator.pushNamed(context, '/timeline/detail/$timelineId');
+      });
+    }
   }
 
   // 위치를 받아오는 함수
@@ -212,9 +215,8 @@ class RecordViewModel extends ChangeNotifier {
           final curLat = currentPosition.latitude;
           final plainDio = Dio();
           final url =
-              'https://api.geoapify.com/v1/geocode/reverse?lat=${curLat}&lon=${curLong}&apiKey=${apikey}&lang=ko&type=street&format=json';
+              'https://api.geoapify.com/v1/geocode/reverse?lat=$curLat&lon=$curLong&apiKey=$apikey&lang=ko&type=street&format=json';
           Response response = await plainDio.get(url);
-          ;
           if (response.statusCode == 200) {
             if (response.data["results"] != null) {
               List keyList = await response.data["results"][0].keys.toList();
