@@ -152,7 +152,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         timelineouter.setTitle(now.getTitle());
         if (post.size() == 0) {
             timelineouter.setTimeline(null);
-            if (now.getUserUid().equals(user.getUserUid()))
+            if (now.getUserUid().getUserUid().equals(user.getUserUid()))
                 isMine = true;
         }
         timelineouter.setIsMine(isMine);
