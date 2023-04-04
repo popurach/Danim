@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,23 +30,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: PopupMenuButton(
             tooltip: '',
             offset: const Offset(0, 55),
-            icon: CachedNetworkImage(
-              imageUrl: appViewModel.userInfo.profileImageUrl,
-              errorWidget: (_, __, ___) => const Icon(
-                Icons.account_circle,
-                color: Colors.blueGrey,
-              ),
-              imageBuilder: (_, imageProvider) => Container(
-                width: 80.0,
-                height: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+            icon: ExtendedImage.network(
+              appViewModel.userInfo.profileImageUrl,
+              width: 50,
+              height: 50,
+              shape: BoxShape.circle,
+              fit: BoxFit.cover,
+              cache: true,
+              borderRadius: BorderRadius.circular(30.0),
             ),
             iconSize: 40,
             itemBuilder: (_) => <PopupMenuEntry>[

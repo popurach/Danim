@@ -1,29 +1,27 @@
-import 'package:danim/models/Timeline.dart';
-import 'package:danim/services/timeline_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:logger/logger.dart';
 
-import 'app_view_model.dart';
+import '../models/Timeline.dart';
+import '../services/timeline_repository.dart';
 
-var logger = Logger();
-
-class TimelineListViewModel with ChangeNotifier {
-  int userUid;
-  int? myUid;
+class HomeFeedViewModel extends ChangeNotifier {
+  int searchedUserUid;
+  final int myUserUid;
 
   final PagingController<int, Timeline> pagingController =
-  PagingController(firstPageKey: 0);
+      PagingController(firstPageKey: 0);
 
-  TimelineListViewModel(
-      {required BuildContext context, this.userUid=-1, this.myUid}) {
-    logger.d(userUid, myUid);
-    if (userUid == -1) {
+  HomeFeedViewModel({
+    required BuildContext context,
+    this.searchedUserUid = -1,
+    required this.myUserUid,
+  }) {
+    if (searchedUserUid == -1) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
       });
-    } else if (userUid != -1 && myUid != null) {
-      if (userUid == myUid) {
+    } else if (searchedUserUid != -1 && myUserUid != -1) {
+      if (searchedUserUid == myUserUid) {
         pagingController.addPageRequestListener((pageKey) {
           getMyTimelineList(context, pageKey);
         });
@@ -38,7 +36,7 @@ class TimelineListViewModel with ChangeNotifier {
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
-      await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
+          await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
       if (isLastPage) {
         pagingController.appendLastPage(newItems);
@@ -54,7 +52,7 @@ class TimelineListViewModel with ChangeNotifier {
 
   Future<void> getUserTimelineList(BuildContext context, int pageKey) async {
     final newItems = await TimelineRepository()
-        .getOtherTimelineByPageNum(context, pageKey, userUid);
+        .getOtherTimelineByPageNum(context, pageKey, searchedUserUid);
     final isLastPage = newItems.length < 15;
     if (isLastPage) {
       pagingController.appendLastPage(newItems);
@@ -66,8 +64,8 @@ class TimelineListViewModel with ChangeNotifier {
   }
 
   Future<void> getMyTimelineList(BuildContext context, int pageKey) async {
-    final newItems = await TimelineRepository()
-        .getMyTimelineByPageNum(context, pageKey);
+    final newItems =
+        await TimelineRepository().getMyTimelineByPageNum(context, pageKey);
     final isLastPage = newItems.length < 15;
     if (isLastPage) {
       pagingController.appendLastPage(newItems);

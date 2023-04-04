@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -6,11 +5,6 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
-import 'package:danim/models/PostForUpload.dart';
-import 'package:danim/module/CupertinoAlertDialog.dart';
-import 'package:danim/services/upload_repository.dart';
-import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +13,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
-import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
-import '../views/user_timeline_list_view.dart';
 import 'camera_view_model.dart';
 
 var logger = Logger();
@@ -180,22 +172,20 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    Response response = await UploadRepository().uploadToServer(context, formData);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
-                create: (_) => TimelineListViewModel(
-                    context: context,
-                    myUid: userInfo.userUid),
-                child: UserTimeLineListView(),
-              )),
-              (route) => false).then((value) {
-        Navigator.pushNamed(
-            context,
-            '/timeline/detail/${userInfo.timeLineId}'
-        );
-      });
+    // Response response =
+    //     await UploadRepository().uploadToServer(context, formData);
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => ChangeNotifierProvider<TimelineListViewModel>(
+    //         create: (_) => TimelineListViewModel(
+    //             context: context, myUid: userInfo.userUid),
+    //         child: UserTimeLineListView(),
+    //       ),
+    //     ),
+    //     (route) => false).then((value) {
+    //   Navigator.pushNamed(context, '/timeline/detail/${userInfo.timeLineId}');
+    // });
   }
 
   // 위치를 받아오는 함수
