@@ -30,48 +30,51 @@ class LoginPage extends StatelessWidget {
             builder: (ctx, viewModel, child) {
               return SafeArea(
                 minimum: const EdgeInsets.symmetric(horizontal: 32),
-                child: Container(
-                  constraints: const BoxConstraints.expand(),
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                          'assets/images/default_image.png'), // 배경 이미지
-                    ),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        // The user CANNOT close this dialog  by pressing outsite it
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) {
-                          return Dialog(
-                            backgroundColor: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // The loading indicator
-                                  Lottie.asset(
-                                      'assets/lottie/around_the_world.json',
-                                      frameRate: FrameRate.max),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  // Some text
-                                  const Text('로그인 중...')
-                                ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.all(20.0),
+                        child: Lottie.asset(
+                            'assets/lottie/boarding_pass_ticket.json')),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          // The user CANNOT close this dialog  by pressing outsite it
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) {
+                            return Dialog(
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // The loading indicator
+                                    Lottie.asset(
+                                        'assets/lottie/around_the_world.json',
+                                        frameRate: FrameRate.max),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    // Some text
+                                    const Text('로그인 중...')
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                      viewModel.loginButtonPressed(context, appViewModel);
-                    },
-                    child: Image.asset('assets/images/kakao_login.png'),
-                  ),
+                            );
+                          },
+                        );
+                        viewModel.loginButtonPressed(context, appViewModel);
+                      },
+                      child: Image.asset(
+                        'assets/images/kakao_login.png',
+                        height: 90,
+                      ),
+                    ),
+                  ],
                 ),
               );
             },

@@ -55,6 +55,7 @@ class MyHomePage extends StatelessWidget {
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
+          bool ret = false;
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
             viewModel.changeTitle('홈');
@@ -65,8 +66,35 @@ class MyHomePage extends StatelessWidget {
             viewModel.changeTitle('내 다님');
             viewModel.myFeedNavigatorKey.currentState!.pop();
             return false;
+          } else if (!Navigator.canPop(context)) {
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('다님 종료'),
+                content: const Text('다님을  종료하시겠습니까?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      ret = true;
+                    },
+                    child: const Text(
+                      '종료',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('취소'),
+                  ),
+                ],
+              ),
+            );
           }
-          return true;
+          return ret;
         },
         child: Scaffold(
           appBar: CustomAppBar(
