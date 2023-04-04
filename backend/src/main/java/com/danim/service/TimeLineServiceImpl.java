@@ -177,7 +177,6 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-<<<<<<< HEAD
     public void makenewTimelineTemp() throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
@@ -196,10 +195,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void finishTimeline(Long uid, String title) throws BaseException {
-=======
     public void finishTimeline(Long uid, String title, User user) throws BaseException {
->>>>>>> 1fe7b43aa7b20fc10d3a44ec66b0159a9cb103c2
 
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
         //타임라인 완료 변경 작업 진행
