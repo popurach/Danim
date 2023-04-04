@@ -36,7 +36,7 @@ class RecordView extends StatelessWidget {
                       ChangeNotifierProvider(
                         create: (_) => ImagesPageViewModel(
                             xFileList : recordViewModel.imageList),
-                        child: const ImagesPageView(),
+                        child: ImagesPageView(),
                       ),
                     ),
                     Container(

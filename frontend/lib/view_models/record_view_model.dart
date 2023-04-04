@@ -10,6 +10,7 @@ import 'package:danim/models/PostForUpload.dart';
 import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/services/upload_repository.dart';
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/view_models/images_page_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -127,17 +128,17 @@ class RecordViewModel extends ChangeNotifier {
   // 갤러리에서 파일 가져오기
   Future<void> uploadFileFromGallery() async {
     // 길이가 9 이상이면 작동하지 않음
-    if (imageList.length >= 9) {
+    if (_imageList.length >= 9) {
       return;
     }
 
-    if (imageList.isEmpty) {
+    if (_imageList.isEmpty) {
       isFirstPhotoFromGallery = true;
     }
 
     // multi_image_picker_viewr 라이브러리 사용
     final pickerController =
-        MultiImagePickerController(maxImages: 9 - imageList.length, images: []);
+        MultiImagePickerController(maxImages: 9 - _imageList.length, images: []);
     Directory externalDirectory =
         Directory('/storage/emulated/0/Documents/photos');
     await pickerController.pickImages();
@@ -151,7 +152,7 @@ class RecordViewModel extends ChangeNotifier {
         String tempPath = '${externalDirectory.path}/$fileName';
         await File(tempPath).writeAsBytes(imageData);
         XFile xFile = XFile(tempPath);
-        imageList.add(xFile);
+        _imageList.add(xFile);
       }
     }
     // 변했다고 알려줌
@@ -161,10 +162,10 @@ class RecordViewModel extends ChangeNotifier {
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
-        filename: locationInfo.country, contentType: MediaType('image', 'jpk'));
+        filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
     final List<MultipartFile> imageFiles = imageList
         .map((el) => MultipartFile.fromFileSync(el.path,
-            filename: el.name, contentType: MediaType('image', 'jpk')))
+            filename: el.name, contentType: MediaType('image', 'jpg')))
         .toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath,
         filename: "$recordedFileName.wav",
