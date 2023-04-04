@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:danim/services/timeline_repository.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/view_models/timeline_list_view_model.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/timeline_list_page.dart';
+import 'package:danim/views/user_timeline_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -18,19 +20,15 @@ class AppViewModel with ChangeNotifier {
   final pageController = PageController(initialPage: 0);
   final GlobalKey<NavigatorState> homeFeedNavigatorKey = GlobalKey();
   final GlobalKey<NavigatorState> myFeedNavigatorKey = GlobalKey();
+  UserInfo _userInfo;
   String _title = '';
   String _formerTitle = '';
-  String _imageUrl = '';
-  String _nickname = '';
-  int _userUid = 0;
-  int _travelingId = -1;
 
-  AppViewModel(this._imageUrl, this._nickname, this._userUid, this._title, this._travelingId,
-      {this.currentIndex = 0});
-
-  String get imageUrl => _imageUrl;
+  AppViewModel(this._userInfo, this._title, {this.currentIndex = 0});
 
   String get title => _title;
+
+  UserInfo get userInfo => _userInfo;
 
   void changePage(index) {
     pageController.jumpToPage(index);
@@ -53,10 +51,7 @@ class AppViewModel with ChangeNotifier {
   }
 
   updateUserInfo(UserInfo userInfo) {
-    _imageUrl = userInfo.profileImageUrl;
-    _nickname = userInfo.nickname;
-    _userUid = userInfo.userUid;
-    _travelingId = userInfo.travelingId;
+    _userInfo = userInfo;
     notifyListeners();
   }
 
@@ -67,8 +62,28 @@ class AppViewModel with ChangeNotifier {
     Timer(
       const Duration(milliseconds: 100),
       () {
-        Navigator.pushNamed(
+        Navigator.popAndPushNamed(
             myFeedNavigatorKey.currentContext!, '/modify/profile');
+      },
+    );
+  }
+
+  startTravel(context) async {
+    int timelineId = await TimelineRepository().startTravel(context);
+    userInfo.timeLineId = timelineId;
+    notifyListeners();
+    _goToTravelingTimelinePage(timelineId);
+  }
+
+  _goToTravelingTimelinePage(int timelineId) {
+    pageController.jumpToPage(1);
+    currentIndex = 1;
+    notifyListeners();
+    Timer(
+      const Duration(milliseconds: 100),
+      () {
+        Navigator.popAndPushNamed(
+            myFeedNavigatorKey.currentContext!, '/timeline/detail/$timelineId');
       },
     );
   }
@@ -76,14 +91,13 @@ class AppViewModel with ChangeNotifier {
   logout(BuildContext context) {
     // const storage = FlutterSecureStorage();
     // storage.deleteAll();
-    // logger.d('context of logout');
     // logger.d(context);
-    // Navigator.pushReplacement(
-    //   context,
-    //   PageRouteBuilder(
-    //     pageBuilder: (_, __, ___) => LoginPage(),
-    //   ),
-    // );
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (_) => LoginPage(),
+    //     ),
+    //     (routes) => false);
   }
 
   onHomeFeedRoute(context, settings) {
@@ -117,6 +131,13 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
+      page = ChangeNotifierProvider<TimelineListViewModel>(
+        create: (_) => TimelineListViewModel(
+          context: context,
+          userUid: _userInfo.userUid,
+          profileImageUrl: _userInfo.profileImageUrl,
+          nickname: _userInfo.nickname,
+        ),
       page = ChangeNotifierProvider<UserTimelineListViewModel>(
         create: (_) => UserTimelineListViewModel(
           context: context,
@@ -131,17 +152,13 @@ class AppViewModel with ChangeNotifier {
     );
   }
 
-  final logger = Logger();
-
   changeTitle(String newTitle) {
     _formerTitle = _title;
     _title = newTitle;
-    logger.d(_formerTitle, title);
     notifyListeners();
   }
 
   changeTitleToFormer() {
-    logger.d(_formerTitle, _title);
     _title = _formerTitle;
     notifyListeners();
   }

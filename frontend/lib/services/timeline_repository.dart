@@ -30,18 +30,20 @@ class TimelineRepository {
   Future<List<Timeline>> getMyTimelineByPageNum(context, int pageNum) async {
     final dio = await authDio(context);
     try {
-        Response response = await dio.get('api/auth/timeline/mine/$pageNum');
-        return List.from(response.data.map((json) => Timeline.fromJson(json)));
+      Response response = await dio.get('api/auth/timeline/mine/$pageNum');
+      return List.from(response.data.map((json) => Timeline.fromJson(json)));
     } on DioError catch (error) {
       throw Exception('Fail to get timeline: $error');
     }
   }
 
-  Future<List<Timeline>> getOtherTimelineByPageNum(context, int pageNum, userUid) async {
+  Future<List<Timeline>> getOtherTimelineByPageNum(
+      context, int pageNum, userUid) async {
     // 앱뷰모델에서 현재 기기에서 로그인한 유저 uid를 가져오기 위해서 선언
     final dio = await authDio(context);
     try {
-      Response response = await dio.get('api/auth/timeline/other/$userUid/$pageNum');
+      Response response =
+          await dio.get('api/auth/timeline/other/$userUid/$pageNum');
       return List.from(response.data.map((json) => Timeline.fromJson(json)));
     } on DioError catch (error) {
       throw Exception('Fail to get timeline: $error');
@@ -77,10 +79,30 @@ class TimelineRepository {
   Future<void> endTravel(context, int timelineId, String title) async {
     try {
       final dio = await authDio(context);
-      Response response =
-          await dio.put('/api/auth/timeline/$timelineId/$title');
+      await dio.put('/api/auth/timeline/$timelineId/$title');
     } catch (e) {
       throw Exception('Fail to end travel $e');
+    }
+  }
+
+  //여행 시작
+  Future<int> startTravel(context) async {
+    try {
+      final dio = await authDio(context);
+      Response response = await dio.post('api/auth/timeline');
+      return response.data;
+    } catch (e) {
+      throw Exception('Fail to start travel $e');
+    }
+  }
+
+  // 타임라인 삭제
+  Future<void> deleteTimeline(context, timelineId) async {
+    try {
+      final dio = await authDio(context);
+      await dio.delete('/api/auth/timeline/$timelineId');
+    } catch (e) {
+      throw Exception('Fail to delete timeline $e');
     }
   }
 }

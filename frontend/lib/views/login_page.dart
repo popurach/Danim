@@ -10,8 +10,15 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: CircleAvatar(
+            foregroundImage: AssetImage('assets/images/transparent_logo.png'),
+            backgroundColor: Colors.transparent,
+          ),
+        ),
         title: const Text(
-          'Danim',
+          '로그인',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,

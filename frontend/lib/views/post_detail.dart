@@ -1,3 +1,4 @@
+import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:danim/module/audio_player_view.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/images_page_view_model.dart';
@@ -76,18 +77,28 @@ class PostDetail extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        IconButton(
+                        AnimatedIconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          initialIcon: viewModel.post.isFavorite ? 1 : 0,
                           onPressed: () {
                             viewModel.changeIsFavorite(
-                                context, appViewModel.userUid);
+                                context, appViewModel.userInfo.userUid);
                           },
-                          icon: viewModel.post.isFavorite
-                              ? const Icon(Icons.favorite,
-                                  color: Colors.pinkAccent)
-                              : const Icon(
-                                  Icons.favorite_outline,
-                                  color: Colors.black45,
-                                ),
+                          icons: const <AnimatedIconItem>[
+                            AnimatedIconItem(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            AnimatedIconItem(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.pinkAccent,
+                              ),
+                            ),
+                          ],
                         ),
                         Text(viewModel.post.favoriteCount.toString()),
                       ],

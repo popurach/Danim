@@ -37,7 +37,10 @@ class TimelineDetailPage extends StatelessWidget {
                                 content: const Text('타임라인을  삭제하시겠습니까?'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      viewModel.deleteTimeline(context);
+                                      Navigator.pop(context);
+                                    },
                                     child: const Text(
                                       '삭제',
                                       style: TextStyle(color: Colors.red),

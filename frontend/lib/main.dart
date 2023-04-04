@@ -16,7 +16,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel('', '', 0, '홈', -1)),
+        ChangeNotifierProvider(
+            create: (_) => AppViewModel(
+                UserInfo(
+                  userUid: -1,
+                  profileImageUrl: '',
+                  nickname: '',
+                ),
+                '홈')),
       ],
       child: const MyApp(),
     ),

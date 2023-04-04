@@ -3,6 +3,8 @@ import 'package:danim/services/timeline_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'app_view_model.dart';
+
 class TimelineListViewModel with ChangeNotifier {
   int userUid;
   int? myUid;
