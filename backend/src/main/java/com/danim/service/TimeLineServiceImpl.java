@@ -79,7 +79,6 @@ public class TimeLineServiceImpl implements TimeLineService {
         TimelinePostInner temptimeline = new TimelinePostInner();
 
 
-
         Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
         List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
         List<String> photolist = new ArrayList<>();
@@ -144,17 +143,19 @@ public class TimeLineServiceImpl implements TimeLineService {
             temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
         else {
             temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
-            if(now.getUserUid().equals(user.getUserUid()))
-                isMine=true;
         }
+
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
-        timelineouter.setIsMine(isMine);
-        timelineouter.setTitle(now.getTitle());
-        if (post.size()==0)
-            timelineouter.setTimeline(null);
 
+        timelineouter.setTitle(now.getTitle());
+        if (post.size() == 0) {
+            timelineouter.setTimeline(null);
+            if (now.getUserUid().equals(user.getUserUid()))
+                isMine = true;
+        }
+        timelineouter.setIsMine(isMine);
         // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
     }
