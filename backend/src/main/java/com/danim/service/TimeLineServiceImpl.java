@@ -67,8 +67,6 @@ public class TimeLineServiceImpl implements TimeLineService {
         //이제 찾아 왔으므로 넘겨 줘야함
 
 
-
-
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
         //타임 라인 하나를 넘겨 주는데 어떻게 넘겨 줄지 문제가 되네
         TimelinePostOuter timelineouter = new TimelinePostOuter();
@@ -77,7 +75,11 @@ public class TimeLineServiceImpl implements TimeLineService {
 
         List<MyPostDtoRes> postlist = new ArrayList<>();
 
+
         TimelinePostInner temptimeline = new TimelinePostInner();
+
+
+
         Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
         List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
         List<String> photolist = new ArrayList<>();
@@ -137,13 +139,19 @@ public class TimeLineServiceImpl implements TimeLineService {
                 postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
             }
         }
-        if (last!=null)
+
+        if (last != null)
             temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
+        else
+            temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
+
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
         timelineouter.setIsMine(isMine);
         timelineouter.setTitle(now.getTitle());
+        if (post.size()==0)
+            timelineouter.setTimeline(null);
 
         // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
@@ -153,7 +161,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     public Long makenewTimeline(User now) throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
-        
+
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
