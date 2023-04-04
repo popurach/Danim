@@ -30,7 +30,15 @@ class LoginPage extends StatelessWidget {
             builder: (ctx, viewModel, child) {
               return SafeArea(
                 minimum: const EdgeInsets.symmetric(horizontal: 32),
-                child: Center(
+                child: Container(
+                  constraints: const BoxConstraints.expand(),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                          'assets/images/default_image.png'), // 배경 이미지
+                    ),
+                  ),
                   child: InkWell(
                     onTap: () {
                       showDialog(
