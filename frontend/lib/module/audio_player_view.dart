@@ -48,20 +48,13 @@ class AudioPlayerView extends StatelessWidget {
                         onChanged: (double value) {},
                       ),
               ),
-              viewModel.audioPosition.inSeconds.toInt() <= 9
-                  ? Text(
-                      '00:0${viewModel.audioPosition.inSeconds.toInt()} /',
-                    )
-                  : Text(
-                      '00:${viewModel.audioPosition.inSeconds.toInt()} /',
-                    ),
-              viewModel.duration.inSeconds.toInt() <= 9
-                  ? Text(
-                      '00:0${viewModel.duration.inSeconds.toInt()}',
-                    )
-                  : Text(
-                      '00:${viewModel.duration.inSeconds.toInt()}',
-                    ),
+              Text(
+                '${viewModel.getAudioPosTimeToString()} /',
+              ),
+
+              Text(
+                '${viewModel.getDurationTimeToString()}',
+              ),
               const SizedBox(
                 width: 10,
               )

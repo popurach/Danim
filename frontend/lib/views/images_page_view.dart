@@ -10,29 +10,33 @@ class ImagesPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ImagesPageViewModel>(builder: (context, viewModel, child) {
-      return Stack(children: [
-        PageView(
-          scrollBehavior: AppScrollBehavior(),
-          controller: viewModel.controller,
-          children: viewModel.imageList,
-        ),
-        Align(
-          alignment: const AlignmentDirectional(0, -0.9),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-            child: SmoothPageIndicator(
+    return Consumer<ImagesPageViewModel>(
+      builder: (context, viewModel, child) {
+        return Stack(
+          children: [
+            PageView(
+              scrollBehavior: AppScrollBehavior(),
               controller: viewModel.controller,
-              count: viewModel.imageList.length,
-              onDotClicked: (index) {
-                viewModel.controller.animateToPage(index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.ease);
-              },
+              children: viewModel.imageList,
             ),
-          ),
-        ),
-      ]);
-    });
+            Align(
+              alignment: const AlignmentDirectional(0, -0.9),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                child: SmoothPageIndicator(
+                  controller: viewModel.controller,
+                  count: viewModel.imageList.length,
+                  onDotClicked: (index) {
+                    viewModel.controller.animateToPage(index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease);
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
