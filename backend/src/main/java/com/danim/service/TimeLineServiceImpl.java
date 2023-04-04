@@ -65,8 +65,8 @@ public class TimeLineServiceImpl implements TimeLineService {
         //이제 그 다음으로 해당 되는 타임라인을 포스트를 얻어 올거임
         List<Post> post = postRepository.findAllByTimelineIdOrderByCreateTimeAsc(now);
         //이제 찾아 왔으므로 넘겨 줘야함
-        if (post.size()==0)
-            return null;
+
+
 
 
         //딕셔너리 형태로 해서 있으면 넣고 없으면 제외를 하도록 하자
@@ -76,6 +76,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         timelineouter.setIsPublic(now.getTimelinePublic());
 
         List<MyPostDtoRes> postlist = new ArrayList<>();
+
         TimelinePostInner temptimeline = new TimelinePostInner();
         Map<String, String> temp = new HashMap<String, String>();//그전에 국가 이름이 존재 하지 않는지 파악 하기 위해
         List<String> tempnow = new ArrayList<>();//여행한 국가의 모든 국가 리스트를 순서대로 겹치지 않게 파악하기 위해 해주는 작업
@@ -136,8 +137,8 @@ public class TimeLineServiceImpl implements TimeLineService {
                 postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
             }
         }
-
-        temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
+        if (last!=null)
+            temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
         //가장 마지막에 남은 것들 처리해 주는 과정
         temptimeline.setPostList(postlist);
         timelineouter.getTimeline().add(temptimeline);
@@ -152,11 +153,11 @@ public class TimeLineServiceImpl implements TimeLineService {
     public Long makenewTimeline(User now) throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
-
+        
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
-        Long u1= timeLineRepository.findLastTimelineId();
+        Long u1 = timeLineRepository.findLastTimelineId();
         //System.out.println(u1);
         return u1;
     }
@@ -349,7 +350,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         TimeLine timeLine;
         try {
             timeLine = timeLineRepository.findAllByUserUidAndComplete(user, false);
-        } catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
         return timeLine;
