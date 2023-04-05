@@ -52,21 +52,22 @@ class PostDetail extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              insetPadding: const EdgeInsets.all(5),
-                              child: ChangeNotifierProvider(
-                                create: (_) => ImagesPageViewModel(
-                                  imagesUrl : viewModel.post.photoList),
-                                child: const ImagesPageView(),
-                              ),
-                            );
-                          });
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            insetPadding: const EdgeInsets.all(5),
+                            child: ChangeNotifierProvider(
+                              create: (_) => ImagesPageViewModel(
+                                  imagesUrl: viewModel.post.photoList),
+                              child: const ImagesPageView(),
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: ChangeNotifierProvider(
-                      create: (_) =>
-                          ImagesPageViewModel(imagesUrl: viewModel.post.photoList),
+                      create: (_) => ImagesPageViewModel(
+                          imagesUrl: viewModel.post.photoList),
                       child: const ImagesPageView(),
                     ),
                   ),
