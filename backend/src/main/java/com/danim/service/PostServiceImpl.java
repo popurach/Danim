@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
         AudioFormat format = audioInputStream.getFormat();
         long frameLength = audioInputStream.getFrameLength();
         double durationInSeconds = (frameLength / format.getFrameRate());
-        Files.delete(target);//파일을 삭제하는 코드임
+
         int check_time = (int) durationInSeconds;
         //System.out.println("Duration: " + durationInSeconds + " seconds");
         if (check_time > 30) {
@@ -94,7 +94,6 @@ public class PostServiceImpl implements PostService {
         }
 
         // voiceFile S3에 올리고 voiceURL 가져오기
-        String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
 
         // voiceFile -> text 변환 : clova speech api 요청 보내기
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
@@ -117,7 +116,14 @@ public class PostServiceImpl implements PostService {
                         .word((t.get("words").get(i).get(2).asText())).build());
             }
         }
-        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),voiceFile));
+        String voiceUrl="";
+
+//        if(!fastApiReq.isEmpty()) voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
+//        else voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
+        
+        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),file));
+
+        Files.delete(target);//파일을 삭제하는 코드임
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
         if (result.contains("\"result\":\"FAILED\"")) {

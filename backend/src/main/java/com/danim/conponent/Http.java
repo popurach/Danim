@@ -31,9 +31,8 @@ public class Http {
             = MediaType.parseMediaType("multipart/form-data");
 
     private final OkHttpClient client = new OkHttpClient();
-    public ResponseBody Post(String toUrl, String method, List<WordInfo> words, MultipartFile voice) throws Exception {
+    public ResponseBody Post(String toUrl, String method, List<WordInfo> words, File voice) throws Exception {
         OkHttpClient client = new OkHttpClient();
-        log.info("data info : {}",voice.getContentType());
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("words",gson.toJson(words));
