@@ -181,14 +181,6 @@ class CameraView extends StatelessWidget {
                                                     ),
                                                   ),
                                                   IconButton(
-                                                    onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.always)},
-                                                    icon: const Icon(
-                                                      Icons.flash_on,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                  IconButton(
                                                     onPressed: () => {cameraViewModel.controller.setFlashMode(FlashMode.torch)},
                                                     icon: const Icon(
                                                       Icons.flashlight_on,

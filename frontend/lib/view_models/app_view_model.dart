@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:danim/services/timeline_repository.dart';
+import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:danim/views/home_feed_page.dart';
@@ -125,9 +126,19 @@ class AppViewModel with ChangeNotifier {
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();
     } else {
-      page = ChangeNotifierProvider<UserTimelineListViewModel>(
-        create: (_) => UserTimelineListViewModel(
-            context: context, myInfo: userInfo, userInfo: userInfo),
+      page = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<UserTimelineListViewModel>(
+            create: (_) => UserTimelineListViewModel(
+                context: context,
+                myInfo: userInfo,
+                userInfo: userInfo
+            ),
+          ),
+          ChangeNotifierProvider<SearchBarViewModel>(
+              create: (_) => SearchBarViewModel(),
+          ),
+        ],
         child: UserTimeLineListView(),
       );
     }

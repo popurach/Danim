@@ -42,12 +42,17 @@ class SearchBarViewModel extends ChangeNotifier {
   FocusNode _myfocus = FocusNode();
   FocusNode get myfocus => _myfocus;
 
+  UnfocusDisposition disposition = UnfocusDisposition.scope;
+
 
   Future<void> searchUser(BuildContext context, String? keyword) async {
     _searchKeyWord = keyword;
-    _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+    if (keyword != "") {
+      _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+    }
     notifyListeners();
   }
+
 
 
   @override
