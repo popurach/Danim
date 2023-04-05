@@ -133,7 +133,7 @@ class AppViewModel with ChangeNotifier {
                 context: context, myInfo: userInfo, userInfo: userInfo),
           ),
           ChangeNotifierProvider<SearchBarViewModel>(
-              create: (_) => SearchBarViewModel(isMyFeed: true),
+            create: (_) => SearchBarViewModel(isMyFeed: true),
           ),
         ],
         child: MyFeedView(),

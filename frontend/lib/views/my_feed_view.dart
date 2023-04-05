@@ -62,7 +62,7 @@ class MyFeedView extends StatelessWidget {
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: ChangeNotifierProvider<SearchBarViewModel>(
-                        create: (_) => SearchBarViewModel(),
+                        create: (_) => SearchBarViewModel(isMyFeed: true),
                         child: SearchBar(),
                       ),
                     ),

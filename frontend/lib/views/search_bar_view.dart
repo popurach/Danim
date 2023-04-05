@@ -1,9 +1,9 @@
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/view_models/my_feed_view_model.dart';
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/search_result_view_model.dart';
-import 'package:danim/view_models/my_feed_view_model.dart';
-import 'package:danim/views/search_result_page.dart';
 import 'package:danim/views/my_feed_view.dart';
+import 'package:danim/views/search_result_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -21,113 +21,18 @@ class SearchBar extends StatelessWidget {
             return Stack(
               children: [
                 SizedBox(
-                  height: viewModel.searchedResults.isEmpty
-                      ? (viewModel.searchedResults.length + 1) * 105
-                      : viewModel.searchedResults.length == 1
-                          ? (viewModel.searchedResults.length + 1) * 79
-                          : viewModel.searchedResults.length >= 2 &&
-                                  viewModel.searchedResults.length <= 4
-                              ? (viewModel.searchedResults.length + 1) * 75
-                              : 450,
+                  height: !viewModel.isMyFeed
+                      ? viewModel.searchedResults.isEmpty
+                          ? (viewModel.searchedResults.length + 1) * 105
+                          : viewModel.searchedResults.length == 1
+                              ? (viewModel.searchedResults.length + 1) * 79
+                              : viewModel.searchedResults.length >= 2 &&
+                                      viewModel.searchedResults.length <= 4
+                                  ? (viewModel.searchedResults.length + 1) * 75
+                                  : 450
+                      : 105,
                   child: Column(
                     children: [
-                      // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
-                      viewModel.myfocus.hasFocus &&
-                              viewModel.searchKeyWord != ""
-                          ? Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 30),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border(
-                                      top: BorderSide(
-                                          color: Colors.transparent, width: 2),
-                                      left: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                      right: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                      bottom: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                    )),
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 14),
-                                  child: SizedBox(
-                                    height:
-                                        (viewModel.searchedResults.length + 1) *
-                                            75,
-                                    child: ListView.builder(
-                                      itemCount:
-                                          viewModel.searchedResults.length + 1,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        if (index == 0) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChangeNotifierProvider<
-                                                          SearchResultViewModel>(
-                                                    create: (_) =>
-                                                        SearchResultViewModel(
-                                                            context,
-                                                            viewModel
-                                                                .searchKeyWord!,
-                                                            userUid: viewModel
-                                                                .userUid),
-                                                    child: SearchResultView(),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: ListTile(
-                                              leading: const Icon(Icons.search),
-                                              title: Text(
-                                                  "${viewModel.searchKeyWord}(으)로 검색..."),
-                                            ),
-                                          );
-                                        } else {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MultiProvider(
-                                                          providers: [
-                                                            ChangeNotifierProvider<
-                                                                UserTimelineListViewModel>(
-                                                              create: (_) => UserTimelineListViewModel(
-                                                                  context:
-                                                                      context,
-                                                                  myInfo: appViewModel
-                                                                      .userInfo,
-                                                                  userInfo: viewModel
-                                                                          .searchedResults[
-                                                                      index -
-                                                                          1]),
-                                                            ),
-                                                            ChangeNotifierProvider<
-                                                                SearchBarViewModel>(
-                                                              create: (_) =>
-                                                                  SearchBarViewModel(),
-                                                            ),
-                                                          ],
-                                                          child:
-                                                              UserTimeLineListView(),
-                                                        )),
-                  height:
-                  !viewModel.isMyFeed ?
-                  viewModel.searchedResults.isEmpty
-                      ? (viewModel.searchedResults.length + 1) * 105
-                      : viewModel.searchedResults.length == 1
-                          ? (viewModel.searchedResults.length + 1) * 79
-                          : viewModel.searchedResults.length >= 2 &&
-                                  viewModel.searchedResults.length <= 4
-                              ? (viewModel.searchedResults.length + 1) * 75
-                              : 450
-                  : 105,
                       !viewModel.isMyFeed
                           ?
                           // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
@@ -137,18 +42,19 @@ class SearchBar extends StatelessWidget {
                                   child: Container(
                                     margin: const EdgeInsets.only(top: 30),
                                     decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border(
-                                          top: BorderSide(
-                                              color: Colors.transparent,
-                                              width: 2),
-                                          left: BorderSide(
-                                              color: Colors.black54, width: 2),
-                                          right: BorderSide(
-                                              color: Colors.black54, width: 2),
-                                          bottom: BorderSide(
-                                              color: Colors.black54, width: 2),
-                                        )),
+                                      color: Colors.white,
+                                      border: Border(
+                                        top: BorderSide(
+                                            color: Colors.transparent,
+                                            width: 2),
+                                        left: BorderSide(
+                                            color: Colors.black54, width: 2),
+                                        right: BorderSide(
+                                            color: Colors.black54, width: 2),
+                                        bottom: BorderSide(
+                                            color: Colors.black54, width: 2),
+                                      ),
+                                    ),
                                     child: Container(
                                       margin: const EdgeInsets.only(top: 14),
                                       child: SizedBox(
@@ -173,11 +79,11 @@ class SearchBar extends StatelessWidget {
                                                               SearchResultViewModel>(
                                                         create: (_) =>
                                                             SearchResultViewModel(
-                                                          context,
-                                                          viewModel
-                                                              .searchKeyWord!,
-                                                              isMyFeed: viewModel.isMyFeed
-                                                        ),
+                                                                context,
+                                                                viewModel
+                                                                    .searchKeyWord!,
+                                                                isMyFeed: viewModel
+                                                                    .isMyFeed),
                                                         child:
                                                             SearchResultView(),
                                                       ),
@@ -197,30 +103,32 @@ class SearchBar extends StatelessWidget {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder:
-                                                            (context) =>
-                                                                MultiProvider(
-                                                                  providers: [
-                                                                    ChangeNotifierProvider<
-                                                                        UserTimelineListViewModel>(
-                                                                      create: (_) => UserTimelineListViewModel(
-                                                                          context:
-                                                                              context,
-                                                                          myInfo: appViewModel
-                                                                              .userInfo,
-                                                                          userInfo:
-                                                                              viewModel.searchedResults[index - 1]),
-                                                                    ),
-                                                                    ChangeNotifierProvider<
-                                                                        SearchBarViewModel>(
-                                                                      create: (_) =>
-                                                                          SearchBarViewModel(
-                                                                              isMyFeed: false),
-                                                                    ),
-                                                                  ],
-                                                                  child:
-                                                                      UserTimeLineListView(),
-                                                                )),
+                                                      builder: (context) =>
+                                                          MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider<
+                                                              MyFeedViewModel>(
+                                                            create: (_) => MyFeedViewModel(
+                                                                context:
+                                                                    context,
+                                                                myInfo:
+                                                                    appViewModel
+                                                                        .userInfo,
+                                                                userInfo: viewModel
+                                                                        .searchedResults[
+                                                                    index - 1]),
+                                                          ),
+                                                          ChangeNotifierProvider<
+                                                              SearchBarViewModel>(
+                                                            create: (_) =>
+                                                                SearchBarViewModel(
+                                                                    isMyFeed:
+                                                                        false),
+                                                          ),
+                                                        ],
+                                                        child: MyFeedView(),
+                                                      ),
+                                                    ),
                                                   );
                                                 },
                                                 child: Column(
@@ -266,55 +174,58 @@ class SearchBar extends StatelessWidget {
                                 )
                               : const SizedBox.shrink()
                           : viewModel.myfocus.hasFocus &&
-                          viewModel.searchKeyWord != "" ?
-                          Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 30),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border(
-                                      top: BorderSide(
-                                          color: Colors.transparent, width: 2),
-                                      left: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                      right: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                      bottom: BorderSide(
-                                          color: Colors.black54, width: 2),
-                                    )),
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 14),
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ChangeNotifierProvider<
-                                                    SearchResultViewModel>(
+                                  viewModel.searchKeyWord != ""
+                              ? Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(top: 30),
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border(
+                                          top: BorderSide(
+                                              color: Colors.transparent,
+                                              width: 2),
+                                          left: BorderSide(
+                                              color: Colors.black54, width: 2),
+                                          right: BorderSide(
+                                              color: Colors.black54, width: 2),
+                                          bottom: BorderSide(
+                                              color: Colors.black54, width: 2),
+                                        )),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 14),
+                                      child: SizedBox(
+                                        height: 50,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChangeNotifierProvider<
+                                                        SearchResultViewModel>(
                                                   create: (_) =>
                                                       SearchResultViewModel(
-                                                        context,
-                                                        viewModel.searchKeyWord!,
-                                                        isMyFeed: viewModel.isMyFeed,
-                                                      ),
+                                                    context,
+                                                    viewModel.searchKeyWord!,
+                                                    isMyFeed:
+                                                        viewModel.isMyFeed,
+                                                  ),
                                                   child: SearchResultView(),
                                                 ),
+                                              ),
+                                            );
+                                          },
+                                          child: ListTile(
+                                            leading: const Icon(Icons.search),
+                                            title: Text(
+                                                "${viewModel.searchKeyWord}(으)로 검색..."),
                                           ),
-                                        );
-                                      },
-                                      child: ListTile(
-                                        leading: const Icon(Icons.search),
-                                        title: Text(
-                                            "${viewModel.searchKeyWord}(으)로 검색..."),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ) : const SizedBox.shrink(),
+                                )
+                              : const SizedBox.shrink(),
                     ],
                   ),
                 ),
@@ -333,16 +244,14 @@ class SearchBar extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ChangeNotifierProvider<
-                                  SearchResultViewModel>(
-                                create: (_) =>
-                                    SearchResultViewModel(
-                                      context,
-                                      keyWord,
-                                      isMyFeed: viewModel.isMyFeed,
-                                    ),
-                                child: SearchResultView(),
-                              ),
+                              ChangeNotifierProvider<SearchResultViewModel>(
+                            create: (_) => SearchResultViewModel(
+                              context,
+                              keyWord,
+                              isMyFeed: viewModel.isMyFeed,
+                            ),
+                            child: SearchResultView(),
+                          ),
                         ),
                       );
                     },
