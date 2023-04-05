@@ -86,7 +86,6 @@ public class PostServiceImpl implements PostService {
         AudioFormat format = audioInputStream.getFormat();
         long frameLength = audioInputStream.getFrameLength();
         double durationInSeconds = (frameLength / format.getFrameRate());
-        Files.delete(target);//파일을 삭제하는 코드임
         int check_time = (int) durationInSeconds;
         //System.out.println("Duration: " + durationInSeconds + " seconds");
         if (check_time > 30) {
@@ -102,6 +101,10 @@ public class PostServiceImpl implements PostService {
 //        String result = clovaSpeechClient.url(voiceUrl, requestEntity);
 
         String result = clovaSpeechClient.upload(multiFileToFile.transTo(voiceFile),requestEntity);
+        if (result.contains("\"result\":\"FAILED\"")) {
+            new BaseException(ErrorMessage.NOT_STT_SAVE);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode rootNode = objectMapper.readTree(result);
@@ -117,14 +120,13 @@ public class PostServiceImpl implements PostService {
                         .word((t.get("words").get(i).get(2).asText())).build());
             }
         }
-        log.info("fastApiReq response : {}",http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),voiceFile));
+        log.info("fastApiReq response : {}",http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),file));
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
-        if (result.contains("\"result\":\"FAILED\"")) {
-            new BaseException(ErrorMessage.NOT_STT_SAVE);
-        }
+
 
         // voiceFile -> text 변환 : 응답받은 json 파일에서 text 추출
+        Files.delete(target);//파일을 삭제하는 코드임
 
 
 

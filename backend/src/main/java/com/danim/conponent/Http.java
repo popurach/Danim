@@ -31,18 +31,15 @@ public class Http {
 
     private final OkHttpClient client = new OkHttpClient();
 
-    public ResponseBody Post(String toUrl, String method, List<WordInfo> words, MultipartFile voice) throws Exception {
-        String pa="test.wav";
+    public ResponseBody Post(String toUrl, String method, List<WordInfo> words, File voice) throws Exception {
         OkHttpClient client = new OkHttpClient();
-        log.info("data info : {}", voice.getContentType());
-        File pa1=new File(pa);
         Gson gson = new Gson();
         RequestBody formBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("words", gson.toJson(words))
 
 //                .addFormDataPart("voice",new File("test.wav")))
-                .addFormDataPart("file", "voicefile", RequestBody.create(okhttp3.MediaType.parse("audio/wav"), new File(pa)))
+                .addFormDataPart("file", "voicefile", RequestBody.create(okhttp3.MediaType.parse("audio/wav"), voice))
                 .build();
 
 
