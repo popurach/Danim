@@ -59,6 +59,11 @@ class SearchBarViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void unFocus() {
+    _myfocus.unfocus();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose

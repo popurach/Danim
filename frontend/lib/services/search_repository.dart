@@ -23,11 +23,7 @@ class SearchRepository {
       final dio = await authDio(context);
       Response response = await dio.get("api/auth/user?search=$keyword");
       return List.from(response.data.map((json) =>
-          UserInfo(
-              userUid: json['userUid'],
-              profileImageUrl: json['profileImageUrl'],
-              nickname: json['nickname']
-          )));
+          UserInfo.fromJson(json)));
     } on DioError catch (error) {
       throw Exception('Fail to get search Results: ${error.message}');
     }

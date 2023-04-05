@@ -38,7 +38,7 @@ class MyFeedView extends StatelessWidget {
                               myInfo: userTimelineListViewModel.myInfo,
                               userInfo: userTimelineListViewModel.userInfo,
                             ),
-                            child: const UserInformationView(),
+                            child: UserInformationView(userInfo: userTimelineListViewModel.userInfo),
                           ),
                           const SizedBox(
                             height: 60,

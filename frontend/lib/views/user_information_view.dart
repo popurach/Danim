@@ -3,10 +3,13 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/UserInfo.dart';
 import 'modify_profile.dart';
 
 class UserInformationView extends StatelessWidget {
-  const UserInformationView({super.key});
+  final UserInfo userInfo;
+
+  const UserInformationView({super.key, required this.userInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class UserInformationView extends StatelessWidget {
                 );
               },
               child: ExtendedImage.network(
-                appViewModel.userInfo.profileImageUrl,
+                userInfo.profileImageUrl,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
@@ -45,7 +48,7 @@ class UserInformationView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  appViewModel.userInfo.timelineNum.toString(),
+                  userInfo.timelineNum.toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text('게시물'),
@@ -55,7 +58,7 @@ class UserInformationView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  appViewModel.userInfo.timeLineId == -1 ? '휴식중' : '다님중',
+                  userInfo.timeLineId == -1 ? '휴식중' : '다님중',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text('상태'),
