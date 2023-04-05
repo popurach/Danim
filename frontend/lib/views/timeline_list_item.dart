@@ -19,6 +19,7 @@ class TimelineListItem extends StatelessWidget {
         height: cardHeight,
         child: GestureDetector(
           onTap: () {
+            FocusScope.of(context).unfocus();
             appViewModel.changeTitle(timeline.title);
             Navigator.pushNamed(
               context,

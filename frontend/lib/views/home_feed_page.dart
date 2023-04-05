@@ -22,10 +22,16 @@ class HomeFeedPage extends StatelessWidget {
               builder: (_, viewModel, __) {
                 return Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 60.0),
-                      child: TimelineListPage(
-                        pagingController: viewModel.pagingController,
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: TimelineListPage(
+                          pagingController: viewModel.pagingController,
+                        ),
                       ),
                     ),
                     Positioned(
