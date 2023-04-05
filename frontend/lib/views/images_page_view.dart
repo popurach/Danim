@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:danim/view_models/record_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -10,6 +13,8 @@ class ImagesPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RecordViewModel recordViewModel =
+        Provider.of<RecordViewModel>(context, listen: true);
     return Consumer<ImagesPageViewModel>(
       builder: (context, viewModel, child) {
         return Stack(
@@ -17,7 +22,16 @@ class ImagesPageView extends StatelessWidget {
             PageView(
               scrollBehavior: AppScrollBehavior(),
               controller: viewModel.controller,
-              children: viewModel.imageList,
+              children: viewModel.imagesUrl != null
+                  ? viewModel.imageList
+                  : recordViewModel.imageList
+                      .map(
+                        (el) => Image.file(
+                          File(el.path),
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                      .toList(),
             ),
             Align(
               alignment: const AlignmentDirectional(0, -0.9),
@@ -25,7 +39,7 @@ class ImagesPageView extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                 child: SmoothPageIndicator(
                   controller: viewModel.controller,
-                  count: viewModel.imageList.length,
+                  count: recordViewModel.imageList.length,
                   onDotClicked: (index) {
                     viewModel.controller.animateToPage(index,
                         duration: const Duration(milliseconds: 300),

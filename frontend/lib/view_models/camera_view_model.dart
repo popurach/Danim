@@ -81,14 +81,9 @@ class CameraViewModel extends ChangeNotifier {
     final cameras = await availableCameras();
     _cameras = cameras;
     if (_cameras.isNotEmpty) {
-      _controller = CameraController(_cameras.first, ResolutionPreset.high,);
+      _controller = CameraController(_cameras.first, ResolutionPreset.ultraHigh,);
       await _controller.initialize();
-      _controller.setFlashMode(FlashMode.off);
-      _previewHeight = _controller.value.previewSize?.height;
-      _previewWidth = _controller.value.previewSize?.width;
-      _aspectRatio = _previewHeight! / _previewWidth!;
-      _currentHeight = _previewHeight;
-      _currentWidth = _currentHeight! * _aspectRatio!;
+
       notifyListeners();
     }
   }
@@ -98,14 +93,9 @@ class CameraViewModel extends ChangeNotifier {
     if (allFileList.length < 9 ) {
       if (_isTaking == false) {
         _isTaking = true;
-        updateHeightAndWidth(_previewHeight!*0.95);
         notifyListeners();
         XFile file = await _controller.takePicture();
-        await _controller.pausePreview();
-        await Future.delayed(const Duration(milliseconds: 800));
         _isTaking = false;
-        updateHeightAndWidth(_previewHeight!);
-        await _controller.resumePreview();
         notifyListeners();
         allFileList.add(file);
 
@@ -131,10 +121,22 @@ class CameraViewModel extends ChangeNotifier {
     notifyListeners(); // Add this line
   }
 
-  Future<void> updateHeightAndWidth(double height) async {
-    _currentHeight = height;
-    _currentWidth = height * _aspectRatio!;
-    notifyListeners();
+  Future<void> changeCamera() async{
+    if (_controller.description == _cameras.first) {
+      CameraController newController = CameraController(_cameras.last, ResolutionPreset.ultraHigh);
+      await _controller.dispose();
+      _controller = newController;
+      await _controller.initialize();
+      notifyListeners();
+    } else {
+      _controller = CameraController(_cameras.first, ResolutionPreset.veryHigh);
+      CameraController newController = CameraController(_cameras.first, ResolutionPreset.ultraHigh);
+      await _controller.dispose();
+      _controller = newController;
+      await _controller.initialize();
+      notifyListeners();
+    }
+
   }
 
   @override
