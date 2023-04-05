@@ -49,35 +49,6 @@ class UserTimeLineListView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // 여행 시작 버튼
-                        appViewModel.userInfo.timeLineId == -1
-                        ?Positioned(
-                          top: constraints.maxHeight * 0.9,
-                          left: constraints.maxWidth * 0.75,
-                          child: GestureDetector(
-                            onTap: () {
-                              if (appViewModel.userInfo.timeLineId == -1) {
-                                // 여행 중이 아닐 때
-                                appViewModel.startTravel(context);
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 80,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Text(
-                                '다님 시작',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        )
-                        // 여행 중일 때에는 안 보임
-                        : const SizedBox.shrink(),
                         Positioned(
                           top: 0,
                           left: 0,
