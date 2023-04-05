@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.UUID;
 
 @Slf4j
@@ -35,6 +37,21 @@ public class AwsS3 {
         String keyname =uploadPath+"/"+uploadFileName;
         amazonS3Client.putObject(new PutObjectRequest(bucket,keyname,file.getInputStream(),objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
         uploadUrl = amazonS3Client.getUrl(bucket,keyname).toString();
+        return uploadUrl;
+    }
+    public String uploadFile(File file,String directoryName)throws Exception{
+
+        String originalName = file.getName();
+        String uploadPath = directoryName;
+        String uploadFileName = UUID.randomUUID().toString()+"."+originalName.substring(originalName.indexOf(".")+1);
+        String uploadUrl = "";
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(Files.size(file.toPath()));
+        objectMetadata.setContentType(Files.probeContentType(new File(file.getName()).toPath()));
+        String keyname =uploadPath+"/"+uploadFileName;
+//        amazonS3Client.putObject(new PutObjectRequest(bucket,keyname,new FileInputStream(file),objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(bucket,keyname,file);
+       uploadUrl = amazonS3Client.getUrl(bucket,keyname).toString();
         return uploadUrl;
     }
     public void delete(String url){
