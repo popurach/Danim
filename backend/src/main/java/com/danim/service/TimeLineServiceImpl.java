@@ -223,7 +223,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
     public List<MainTimelinePhotoDtoRes> searchTimelineOrderBylatestPaging(Pageable pageable) throws BaseException {
         // redis에 존재할 시 바로 리턴
-        if(repo.findById(pageable.getPageNumber()) != null){
+        if(repo.findById(pageable.getPageNumber()).isPresent()){
             return repo.findById(pageable.getPageNumber()).get().getList();
         }
         Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
