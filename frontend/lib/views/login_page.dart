@@ -34,6 +34,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                        color: Colors.transparent,
                         margin: const EdgeInsets.all(20.0),
                         child: Lottie.asset(
                             'assets/lottie/boarding_pass_ticket.json')),

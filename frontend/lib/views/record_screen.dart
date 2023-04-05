@@ -4,6 +4,7 @@ import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../module/audio_player_view.dart';
 import '../module/audio_player_view_model.dart';
 import '../module/images_page_view.dart';
@@ -14,7 +15,7 @@ class RecordView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Consumer<AppViewModel>(
-        builder: (context, appViewModel, _) {
+        builder: (_, appViewModel, __) {
           return Consumer<RecordViewModel>(
             builder: (_, recordViewModel, __) {
               return WillPopScope(
@@ -24,8 +25,11 @@ class RecordView extends StatelessWidget {
                 },
                 child: Scaffold(
                   appBar: CustomAppBar(
-                    moveToModifyProfile: () =>
-                        appViewModel.goModifyProfilePage(),
+                    moveToModifyProfile: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      appViewModel.goModifyProfilePage();
+                    },
                     logout: () {},
                   ),
                   body: Column(
