@@ -4,6 +4,7 @@ import com.danim.entity.TimeLine;
 import com.danim.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,7 +32,11 @@ public interface TimeLineRepository extends JpaRepository<TimeLine, Long> {
     Page<TimeLine> findAll(Pageable pageable);
 
     //공개되지 않은 것들 중에, 완료가 된것만 찾아내야함
-    Page<TimeLine> findAllByCompleteAndTimelinePublic(Boolean complete, Boolean public1, Pageable pageable);
+    @Query(
+            value = "select t from TimeLine t",
+            countQuery = "select count(t.timelineId) from TimeLine t"
+    )
+    Slice<TimeLine> findAllByCompleteAndTimelinePublic(Boolean complete, Boolean public1, Pageable pageable);
 
     Page<TimeLine> findAllByUserUidOrderByCreateTimeDesc(User u, Pageable pageable);
 
