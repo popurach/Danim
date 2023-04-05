@@ -29,14 +29,15 @@ class RecordView extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.575,
                       // 컨슈머로 변화 감지
-                      child: ChangeNotifierProvider(
+                      child:
+                      ChangeNotifierProvider(
                         create: (_) => ImagesPageViewModel(
-                            xFileList: recordViewModel.imageList),
-                        child: const ImagesPageView(),
+                            xFileList : recordViewModel.imageList),
+                        child: ImagesPageView(),
                       ),
                     ),
                     Container(
-                        margin: const EdgeInsets.only(top: 25),
+                      margin: const EdgeInsets.only(top:25),
                         padding: const EdgeInsets.only(left: 30, right: 30),
                         height: 30,
                         child: Row(
@@ -129,8 +130,8 @@ class RecordView extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 recordViewModel.uploadConfirm(
-                                  context,
-                                  appViewModel.userInfo,
+                                    context,
+                                    appViewModel.userInfo,
                                 );
                               },
                               icon: const Icon(Icons.upload, size: 28),

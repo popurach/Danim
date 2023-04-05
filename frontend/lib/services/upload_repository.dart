@@ -1,4 +1,3 @@
-import 'package:danim/models/Timeline.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +10,7 @@ class UploadRepository {
   factory UploadRepository() => _instance;
 
 
-  // 메인피드 타임라인 리스트 가져오기
+  // 서버에 업로드
   Future<dynamic> uploadToServer(BuildContext context, FormData formData) async {
     try {
       final dio = await authDio(context);
