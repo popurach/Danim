@@ -263,6 +263,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         RedisPage redisPage = new RedisPage();
         redisPage.setNum(pageable.getPageNumber());
         redisPage.setList(list);
+        repo.save(redisPage);
 
         return list;
     }
