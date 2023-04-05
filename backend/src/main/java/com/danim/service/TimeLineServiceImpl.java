@@ -35,7 +35,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     private final FavoriteRepository favoriteRepository;
 
     private final UtilService utilService;
-
+    private final TimeLineRedisRepository repo;
 
     @Override
     //모든 최신 타임라인 얻어옴 , 페이징 x
@@ -222,7 +222,10 @@ public class TimeLineServiceImpl implements TimeLineService {
     //타임라인 중에서 완료가 된 여행과 공개가 된 여행을 페이징 처리르 하여 보여준다 => 메인 피드 화면에서 타임라인과 썸네일 같이 넘어감
     @Override
     public List<MainTimelinePhotoDtoRes> searchTimelineOrderBylatestPaging(Pageable pageable) throws BaseException {
-
+        // redis에 존재할 시 바로 리턴
+        if(repo.findById(pageable.getPageNumber()) != null){
+            return repo.findById(pageable.getPageNumber()).get().getList();
+        }
         Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
 
 
@@ -253,6 +256,9 @@ public class TimeLineServiceImpl implements TimeLineService {
             MainTimelinePhotoDtoRes temp = MainTimelinePhotoDtoRes.builder(time, startpost, lastpost, photo, user).build();
             list.add(temp);
         }
+        RedisPage redisPage = new RedisPage();
+        redisPage.setNum(pageable.getPageNumber());
+        redisPage.setList(list);
 
         return list;
     }
