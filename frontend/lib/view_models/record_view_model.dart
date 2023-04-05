@@ -10,6 +10,7 @@ import 'package:danim/view_models/app_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
@@ -199,12 +200,13 @@ class RecordViewModel extends ChangeNotifier {
       if (imageList.isNotEmpty) {
         if (isFirstPhotoFromGallery == false) {
           _haveLocation = true;
+          await dotenv.load(fileName: ".env");
           final currentPosition = await Geolocator.getCurrentPosition();
           final curLong = currentPosition.longitude;
           final curLat = currentPosition.latitude;
           final plainDio = Dio();
           final url =
-              'https://api.geoapify.com/v1/geocode/reverse?lat=$curLat&lon=$curLong&apiKey=$apikey&lang=ko&type=street&format=json';
+              'https://api.geoapify.com/v1/geocode/reverse?lat=$curLat&lon=$curLong&apiKey=${dotenv.env["geolocatorApiKey"]}&lang=ko&type=street&format=json';
           Response response = await plainDio.get(url);
           if (response.statusCode == 200) {
             if (response.data["results"] != null) {
