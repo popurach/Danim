@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
@@ -55,7 +57,6 @@ class MyHomePage extends StatelessWidget {
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
-          bool ret = false;
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
             viewModel.changeTitle('홈');
@@ -77,7 +78,7 @@ class MyHomePage extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(ctx);
-                      ret = true;
+                      exit(0);
                     },
                     child: const Text(
                       '종료',
@@ -94,7 +95,7 @@ class MyHomePage extends StatelessWidget {
               ),
             );
           }
-          return ret;
+          return false;
         },
         child: Scaffold(
           appBar: CustomAppBar(

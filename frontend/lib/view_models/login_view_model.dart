@@ -31,14 +31,12 @@ class LoginViewModel extends ChangeNotifier {
     storage.write(key: 'userUid', value: userInfo.userUid.toString());
     appViewModel.updateUserInfo(userInfo);
 
-    logger = Logger();
-    logger.d(ourToken.accessToken);
-
     Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (_) => MyHomePage(),
-        ),
-        (route) => false);
+      context,
+      MaterialPageRoute(
+        builder: (_) => MyHomePage(),
+      ),
+      (route) => false,
+    );
   }
 }
