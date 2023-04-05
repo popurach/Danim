@@ -1,9 +1,6 @@
-import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:danim/module/CupertinoAlertDialog.dart';
+import 'package:danim/module/custom_app_bar.dart';
 import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/views/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
