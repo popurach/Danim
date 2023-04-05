@@ -57,14 +57,13 @@ class MyHomePage extends StatelessWidget {
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
+          viewModel.changeTitleToFormer();
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-            viewModel.changeTitle('홈');
             viewModel.homeFeedNavigatorKey.currentState!.pop();
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-            viewModel.changeTitle(viewModel.userInfo.nickname);
             Navigator.pushNamedAndRemoveUntil(
               viewModel.myFeedNavigatorKey.currentContext!,
               '/',
