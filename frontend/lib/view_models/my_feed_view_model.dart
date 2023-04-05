@@ -8,12 +8,13 @@ import '../services/timeline_repository.dart';
 
 var logger = Logger();
 
-class UserTimelineListViewModel extends ChangeNotifier {
+class MyFeedViewModel extends ChangeNotifier {
   BuildContext context;
   UserInfo userInfo;
   UserInfo myInfo;
 
-  UserTimelineListViewModel({required this.context, required this.myInfo, required this.userInfo}) {
+  MyFeedViewModel(
+      {required this.context, required this.myInfo, required this.userInfo}) {
     if (userInfo.userUid == -1) {
       pagingController.addPageRequestListener((pageKey) {
         getMainTimelineList(context, pageKey);
@@ -32,13 +33,12 @@ class UserTimelineListViewModel extends ChangeNotifier {
   }
 
   final PagingController<int, Timeline> pagingController =
-  PagingController(firstPageKey: 0);
-
+      PagingController(firstPageKey: 0);
 
   Future<void> getMainTimelineList(BuildContext context, int pageKey) async {
     try {
       final newItems =
-      await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
+          await TimelineRepository().getMainTimelineByPageNum(context, pageKey);
       final isLastPage = newItems.length < 15;
       if (isLastPage) {
         pagingController.appendLastPage(newItems);
@@ -66,8 +66,8 @@ class UserTimelineListViewModel extends ChangeNotifier {
   }
 
   Future<void> getMyTimelineList(BuildContext context, int pageKey) async {
-    final newItems = await TimelineRepository()
-        .getMyTimelineByPageNum(context, pageKey);
+    final newItems =
+        await TimelineRepository().getMyTimelineByPageNum(context, pageKey);
     final isLastPage = newItems.length < 15;
     if (isLastPage) {
       pagingController.appendLastPage(newItems);
