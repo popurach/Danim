@@ -230,6 +230,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             log.info("redis 값 접근");
             return repo.findById(pageable.getPageNumber()).get().getList();
         }
+        log.info("레디스 데이터 존재하지 않을 때 timeLineRepository 실행");
         Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
 
 

@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@RedisHash(value = "page", timeToLive = 600)
+@RedisHash(value = "page", timeToLive = 20)
 public class RedisPage {
     @Id
     private Integer num;
