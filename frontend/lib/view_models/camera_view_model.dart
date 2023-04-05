@@ -9,14 +9,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:logger/logger.dart';
 
-var apikey = "fcc989ff906649ea961871b106cfc061";
-var logger = Logger();
+
 final deviceInfoPlugin = DeviceInfoPlugin();
 
 class CameraViewModel extends ChangeNotifier {
