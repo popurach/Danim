@@ -4,8 +4,6 @@ import 'package:logger/logger.dart';
 
 import '../models/UserInfo.dart';
 
-var logger = Logger();
-
 class SearchBarViewModel extends ChangeNotifier {
   int? userUid;
 
@@ -59,3 +57,10 @@ class SearchBarViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
+
+
+  bool isMyFeed;
+  SearchBarViewModel({required this.isMyFeed});
+      if (!isMyFeed) {
+        _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+      }
