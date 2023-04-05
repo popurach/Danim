@@ -9,17 +9,19 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+
     file = request.files["file"]
 
     filename = secure_filename("bigboot1.wav")
     file.save(filename)
 
-    words = request.form['words']
-    words1 = json.loads(words)
-    words = words1
+    words=request.form['words']
+    words1=json.loads(words)
+    words=words1
     original_file = AudioSegment.from_wav("bigboot1.wav")
 
-    te = words[0]
+
+    te=words[0]
     # 추출할 구간 설정
     # start_time = 1000 # 1초
     start_time = (int)(words[0]['startTime'])

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.ResponseBody;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +62,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public Post insertPost(Post savedPost, List<Photo> photoList, MultipartFile flagFile, MultipartFile voiceFile, AddPostReq addPostReq) throws Exception {
-
+        log.info("voiceFile : {}",voiceFile);
         //파일 형식과 길이를 파악을 하여 post를 등록 시킬지 안시킬지 정하는 부분이다
         String fileName = voiceFile.getOriginalFilename();
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -86,15 +87,13 @@ public class PostServiceImpl implements PostService {
         AudioFormat format = audioInputStream.getFormat();
         long frameLength = audioInputStream.getFrameLength();
         double durationInSeconds = (frameLength / format.getFrameRate());
-        Files.delete(target);//파일을 삭제하는 코드임
         int check_time = (int) durationInSeconds;
         //System.out.println("Duration: " + durationInSeconds + " seconds");
         if (check_time > 30) {
             throw new BaseException(ErrorMessage.OVER_VOICE_TIME);
         }
 
-        // voiceFile S3에 올리고 voiceURL 가져오기
-        String voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
+
 
         // voiceFile -> text 변환 : clova speech api 요청 보내기
         final ClovaSpeechClient clovaSpeechClient = new ClovaSpeechClient();
@@ -102,6 +101,10 @@ public class PostServiceImpl implements PostService {
 //        String result = clovaSpeechClient.url(voiceUrl, requestEntity);
 
         String result = clovaSpeechClient.upload(multiFileToFile.transTo(voiceFile),requestEntity);
+        if (result.contains("\"result\":\"FAILED\"")) {
+            new BaseException(ErrorMessage.NOT_STT_SAVE);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode rootNode = objectMapper.readTree(result);
@@ -117,15 +120,35 @@ public class PostServiceImpl implements PostService {
                         .word((t.get("words").get(i).get(2).asText())).build());
             }
         }
-        log.info("fastApiReq response : {}",http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),voiceFile));
+//        log.info("fastApiReq response : {}",http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),file));
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
-        if (result.contains("\"result\":\"FAILED\"")) {
-            new BaseException(ErrorMessage.NOT_STT_SAVE);
+        String voiceUrl="";
+        if(!fastApiReq.isEmpty()){
+
+            File filter = http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),file);
+            log.info("filter info :{}",filter);
+//            Files.delete(target);//파일을 삭제하는 코드임
+
+//            Path filterTarget = (Path) Paths.get("temp", filter.getOriginalFilename());//파일이름으로 파일을 저장을 하고자 하며 , 경로를 의미
+//            try (InputStream inputStream = filter.getInputStream()) {
+//                Files.copy(inputStream, filterTarget, StandardCopyOption.REPLACE_EXISTING);//파일 저장
+//            } catch (Exception e) {
+//                System.out.println("파일 임시파일에 저장 안 됨");
+//                throw new BaseException(ErrorMessage.NOT_PERMIT_VOICE_SAVE);
+//            }
+
+            voiceUrl = awsS3.uploadFile(filter, "Danim/Voice");
+            Files.delete(filter.toPath());//파일을 삭제하는 코드임
+
+        }else{
+            voiceUrl = awsS3.upload(voiceFile, "Danim/Voice");
+            Files.delete(target);//파일을 삭제하는 코드임
+
         }
-
+        log.info("voiceUrl info :{}",voiceUrl);
         // voiceFile -> text 변환 : 응답받은 json 파일에서 text 추출
-
+        // voiceFile S3에 올리고 voiceURL 가져오기
 
 
         // timeline 객체 가져오기
