@@ -50,9 +50,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  var logger = Logger();
   @override
   Widget build(BuildContext context) {
-    final logger = Logger();
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<AppViewModel>(builder: (_, viewModel, __) {
       return WillPopScope(
@@ -64,8 +64,12 @@ class MyHomePage extends StatelessWidget {
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-            viewModel.changeTitle('내 다님');
-            viewModel.myFeedNavigatorKey.currentState!.pop();
+            viewModel.changeTitle(viewModel.userInfo.nickname);
+            Navigator.pushNamedAndRemoveUntil(
+              viewModel.myFeedNavigatorKey.currentContext!,
+              '/',
+              (routes) => false,
+            );
             return false;
           } else if (!Navigator.canPop(context)) {
             showDialog(
@@ -73,7 +77,7 @@ class MyHomePage extends StatelessWidget {
               context: context,
               builder: (ctx) => AlertDialog(
                 title: const Text('다님 종료'),
-                content: const Text('다님을  종료하시겠습니까?'),
+                content: const Text('다님을  종료 하시겠습니까?'),
                 actions: [
                   TextButton(
                     onPressed: () {

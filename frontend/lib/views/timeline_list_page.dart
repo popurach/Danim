@@ -12,23 +12,24 @@ class TimelineListPage extends StatelessWidget {
   const TimelineListPage({super.key, required this.pagingController});
 
   @override
-  Widget build(BuildContext context) =>
-      Consumer<AppViewModel>(builder: (_, appViewModel, __) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            pagingController.refresh();
-          },
-          child: PagedListView<int, Timeline>(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            pagingController: pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Timeline>(
-              itemBuilder: (context, item, index) => TimelineListItem(
-                key: Key(item.timelineId.toString()),
-                timeline: item,
+  Widget build(BuildContext context) => Consumer<AppViewModel>(
+        builder: (_, appViewModel, __) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              pagingController.refresh();
+            },
+            child: PagedListView<int, Timeline>(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              pagingController: pagingController,
+              builderDelegate: PagedChildBuilderDelegate<Timeline>(
+                itemBuilder: (context, item, index) => TimelineListItem(
+                  key: Key(item.timelineId.toString()),
+                  timeline: item,
+                ),
               ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
 }
