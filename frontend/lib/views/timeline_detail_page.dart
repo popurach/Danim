@@ -138,54 +138,57 @@ class TimelineDetailPage extends StatelessWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('여행 제목을 입력해 주세요'),
-                                content: TextField(
-                                  controller: viewModel.textController,
-                                  onChanged: (value) {
-                                    viewModel.title = value;
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: '제목',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      borderSide: const BorderSide(
-                                        color: Colors.grey,
-                                        width: 2.0,
+                        viewModel.timelineDetails.length > 0
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('여행 제목을 입력해 주세요'),
+                                      content: TextField(
+                                        controller: viewModel.textController,
+                                        onChanged: (value) {
+                                          viewModel.title = value;
+                                        },
+                                        decoration: InputDecoration(
+                                          labelText: '제목',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                        ),
                                       ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            viewModel.endTimeline(context);
+                                          },
+                                          child: const Text(
+                                            '여행 종료',
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            viewModel.resetTitle();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('취소'),
+                                        ),
+                                      ],
                                     ),
-                                  ),
+                                  );
+                                },
+                                child: const Text(
+                                  '여행 종료',
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      viewModel.endTimeline(context);
-                                    },
-                                    child: const Text(
-                                      '여행 종료',
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      viewModel.resetTitle();
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('취소'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            '여행 종료',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
+                              )
+                            : Container(),
                       ],
                     )
                   : Container(),

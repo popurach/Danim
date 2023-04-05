@@ -41,9 +41,11 @@ class ImagesPageView extends StatelessWidget {
                   controller: viewModel.controller,
                   count: recordViewModel.imageList.length,
                   onDotClicked: (index) {
-                    viewModel.controller.animateToPage(index,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease);
+                    viewModel.controller.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
                   },
                 ),
               ),

@@ -34,20 +34,6 @@ class PostDetail extends StatelessWidget {
             height: 500,
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    viewModel.isMine
-                        ? IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.delete_outline,
-                              color: Colors.red,
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -58,7 +44,9 @@ class PostDetail extends StatelessWidget {
                             insetPadding: const EdgeInsets.all(5),
                             child: ChangeNotifierProvider(
                               create: (_) => ImagesPageViewModel(
-                                  imagesUrl: viewModel.post.photoList),
+                                imagesUrl: viewModel.post.photoList,
+                                boxFit: BoxFit.contain,
+                              ),
                               child: const ImagesPageView(),
                             ),
                           );
@@ -67,7 +55,8 @@ class PostDetail extends StatelessWidget {
                     },
                     child: ChangeNotifierProvider(
                       create: (_) => ImagesPageViewModel(
-                          imagesUrl: viewModel.post.photoList),
+                        imagesUrl: viewModel.post.photoList,
+                      ),
                       child: const ImagesPageView(),
                     ),
                   ),

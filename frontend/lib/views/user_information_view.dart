@@ -9,7 +9,7 @@ class UserInformationView extends StatelessWidget {
     return Consumer<UserTimelineListViewModel>(
         builder: (context, userTimelineListViewModel, _) {
       return Container(
-        height: 100,
+        height: 80,
         margin: const EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -18,29 +18,68 @@ class UserInformationView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              flex: 4,
-              child: ExtendedImage.network(
-                userTimelineListViewModel.userInfo.profileImageUrl,
-                cache: true,
+              flex: 5,
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.horizontal(left: Radius.circular(9.0)),
+                child: ExtendedImage.network(
+                  userTimelineListViewModel.userInfo.profileImageUrl,
+                  fit: BoxFit.cover,
+                  cache: true,
+                ),
               ),
             ),
-            const Expanded(
-                flex: 1, child: VerticalDivider(color: Colors.black54)),
+            const VerticalDivider(
+              color: Colors.black54,
+              width: 1,
+            ),
             Expanded(
-              flex: 7,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              flex: 11,
+              child: Row(
                 children: [
-                  Text(userTimelineListViewModel.userInfo!.nickname),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("총 여행 수 들어갈 예정"),
-                      userTimelineListViewModel.userInfo?.timeLineId == -1
-                          ? Text("휴식중")
-                          : Text("여행중")
+                    children: const [
+                      Text(
+                        '이름',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 39,
+                        ),
+                      ),
+                      Text(
+                        '다님수',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 13,
+                        ),
+                      ),
+                      Text(
+                        '상태',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 39,
+                        ),
+                      ),
                     ],
                   ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(userTimelineListViewModel.userInfo.nickname),
+                      Text(userTimelineListViewModel.userInfo.timelineNum
+                          .toString()),
+                      Text(
+                        userTimelineListViewModel.userInfo.timeLineId == -1
+                            ? '휴식중...'
+                            : '다님중!',
+                      ),
+                    ],
+                  )
                 ],
               ),
             )

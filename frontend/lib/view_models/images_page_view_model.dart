@@ -9,15 +9,26 @@ class ImagesPageViewModel extends ChangeNotifier {
   List<XFile>? xFileList;
   final imageList = <Widget>[];
   final controller = PageController(initialPage: 0);
+  final BoxFit boxFit;
 
-  ImagesPageViewModel({this.imagesUrl, this.xFileList}) {
+  ImagesPageViewModel(
+      {this.imagesUrl, this.xFileList, this.boxFit = BoxFit.cover}) {
     if (imagesUrl != null && xFileList == null) {
       for (var imageUrl in imagesUrl!) {
         imageList.add(
           ExtendedImage.network(
             imageUrl,
             cache: true,
-            fit: BoxFit.cover,
+            fit: boxFit,
+          ),
+        );
+      }
+    } else if (imagesUrl == null && xFileList != null) {
+      for (var xFile in xFileList!) {
+        imageList.add(
+          Image.file(
+            File(xFile.path),
+            fit: boxFit,
           ),
         );
       }

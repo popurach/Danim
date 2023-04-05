@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:danim/module/bottom_navigation.dart';
+import 'package:danim/module/camera_floating_action_button.dart';
+import 'package:danim/module/custom_app_bar.dart';
 import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/views/bottom_navigation.dart';
-import 'package:danim/views/camera_floating_action_button.dart';
-import 'package:danim/views/custom_app_bar.dart';
 import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

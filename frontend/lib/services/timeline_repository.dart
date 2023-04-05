@@ -1,13 +1,9 @@
 import 'package:danim/models/Timeline.dart';
-import 'package:danim/models/TimelineDetail.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 import '../models/TimelineInfo.dart';
-import '../view_models/app_view_model.dart';
 
 class TimelineRepository {
   TimelineRepository._internal();
@@ -102,6 +98,22 @@ class TimelineRepository {
       final dio = await authDio(context);
       await dio.delete('/api/auth/timeline/$timelineId');
     } catch (e) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('종료 실패'),
+          content: const Text('포스트가 없는 여행은 종료할 수 없습니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
       throw Exception('Fail to delete timeline $e');
     }
   }
