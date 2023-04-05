@@ -4,11 +4,9 @@ import 'package:logger/logger.dart';
 
 import '../models/UserInfo.dart';
 
-var logger = Logger();
-
 class SearchBarViewModel extends ChangeNotifier {
 
-  int? userUid;
+  bool isMyFeed;
 
   String? _searchKeyWord = "";
   String? get searchKeyWord => _searchKeyWord;
@@ -36,7 +34,7 @@ class SearchBarViewModel extends ChangeNotifier {
     _isSearching = newBool;
   }
 
-  SearchBarViewModel();
+  SearchBarViewModel({required this.isMyFeed});
 
 
   FocusNode _myfocus = FocusNode();
@@ -48,7 +46,9 @@ class SearchBarViewModel extends ChangeNotifier {
   Future<void> searchUser(BuildContext context, String? keyword) async {
     _searchKeyWord = keyword;
     if (keyword != "") {
-      _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+      if (!isMyFeed) {
+        _searchedResults = await SearchRepository().searchToSearchBar(context, keyword!);
+      }
     }
     notifyListeners();
   }

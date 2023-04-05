@@ -11,22 +11,21 @@ class SearchResultViewModel extends ChangeNotifier {
 
   final String _keyword;
   String get keyword => _keyword;
-
-  int? userUid;
+  bool isMyFeed;
 
   List<SearchedPost> _searchedPosts = [];
   List<SearchedPost> get searchedPosts => _searchedPosts;
 
-  SearchResultViewModel(this._context,this._keyword, {this.userUid}) {
+  SearchResultViewModel(this._context,this._keyword, {required this.isMyFeed}) {
     getPost(_context,_keyword);
     notifyListeners();
   }
 
   void getPost(BuildContext context, String searchKeyword) async {
-    if (userUid == null) {
-      _searchedPosts = await SearchRepository().searchPosts(context, searchKeyword);
-    } else {
+    if (isMyFeed) {
       _searchedPosts = await SearchRepository().searchMyPosts(context, searchKeyword);
+    } else {
+      _searchedPosts = await SearchRepository().searchPosts(context, searchKeyword);
     }
 
     notifyListeners();
