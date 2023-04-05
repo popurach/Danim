@@ -1,22 +1,16 @@
-import numpy as np
-from flask import Flask, jsonify, Response,request
 import json
-import requests
-from pydub import AudioSegment
-from requests_toolbelt.multipart.encoder  import MultipartEncoder
 
+from flask import Flask, Response, request
+from pydub import AudioSegment
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
-from flask import Flask
+
 app = Flask(__name__)
 
 
 @app.route("/", methods=["POST"])
 def index():
-    print("들어옴")
-    nin=1
-    e=request
-    print(e)
+
     file = request.files["file"]
 
     filename = secure_filename("bigboot1.wav")
@@ -26,7 +20,7 @@ def index():
     words1=json.loads(words)
     words=words1
     original_file = AudioSegment.from_wav("bigboot1.wav")
-    print("하하")
+
 
     te=words[0]
     # 추출할 구간 설정
@@ -71,9 +65,8 @@ def index():
 
         return response
 
-    # 응답 확인
-    print(response.status_code)
-    print(response.text)
+
+
 
 
 app.debug = True
