@@ -47,7 +47,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             itemBuilder: (_) => <PopupMenuEntry>[
               PopupMenuItem(
                 onTap: () {
-                  appViewModel.changeTitle('프로필 변경');
                   moveToModifyProfile();
                 },
                 child: const SizedBox(

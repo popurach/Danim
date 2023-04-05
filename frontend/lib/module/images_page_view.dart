@@ -42,31 +42,33 @@ class ImagesPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = PageController(initialPage: 0);
 
-    return Stack(
-      children: [
-        PageView(
-          scrollBehavior: AppScrollBehavior(),
-          controller: controller,
-          children: imageList,
-        ),
-        Align(
-          alignment: const AlignmentDirectional(0, -0.9),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-            child: SmoothPageIndicator(
-              controller: controller,
-              count: imageList.length,
-              onDotClicked: (index) {
-                controller.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.ease,
-                );
-              },
-            ),
-          ),
-        ),
-      ],
-    );
+    return imageList.isNotEmpty
+        ? Stack(
+            children: [
+              PageView(
+                scrollBehavior: AppScrollBehavior(),
+                controller: controller,
+                children: imageList,
+              ),
+              Align(
+                alignment: const AlignmentDirectional(0, -0.9),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                  child: SmoothPageIndicator(
+                    controller: controller,
+                    count: imageList.length,
+                    onDotClicked: (index) {
+                      controller.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Container();
   }
 }

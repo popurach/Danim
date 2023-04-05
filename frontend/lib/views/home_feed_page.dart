@@ -28,7 +28,7 @@ class HomeFeedPage extends StatelessWidget {
                         FocusScope.of(context).unfocus();
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 60.0),
+                        padding: const EdgeInsets.only(top: 65.0),
                         child: TimelineListPage(
                           pagingController: viewModel.pagingController,
                         ),
@@ -40,8 +40,8 @@ class HomeFeedPage extends StatelessWidget {
                       right: 0,
                       bottom: 0,
                       child: Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, top: 15, bottom: 15),
+                        margin:
+                            const EdgeInsets.only(left: 10, right: 10, top: 10),
                         child: ChangeNotifierProvider<SearchBarViewModel>(
                           create: (_) => SearchBarViewModel(isMyFeed: false),
                           child: SearchBar(),

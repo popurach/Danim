@@ -8,10 +8,13 @@ import 'package:danim/views/home_feed_page.dart';
 import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/my_feed_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../models/UserInfo.dart';
+import '../utils/stack.dart';
+import '../views/login_page.dart';
 import '../views/modify_profile.dart';
 
 class AppViewModel with ChangeNotifier {
@@ -21,7 +24,7 @@ class AppViewModel with ChangeNotifier {
   final GlobalKey<NavigatorState> myFeedNavigatorKey = GlobalKey();
   UserInfo _userInfo;
   String _title = '';
-  String _formerTitle = '';
+  final MyStack<String> _formerTitle = MyStack<String>();
 
   AppViewModel(this._userInfo, this._title, {this.currentIndex = 0});
 
@@ -41,6 +44,7 @@ class AppViewModel with ChangeNotifier {
       }
     }
     currentIndex = index;
+    _formerTitle.clear();
     changeTitle(index == 0 ? '홈' : _userInfo.nickname);
     notifyListeners();
   }
@@ -51,9 +55,8 @@ class AppViewModel with ChangeNotifier {
   }
 
   goModifyProfilePage() {
-    pageController.jumpToPage(1);
-    currentIndex = 1;
-    notifyListeners();
+    changePage(1);
+    changeTitle('프로필 변경');
     Timer(
       const Duration(milliseconds: 100),
       () {
@@ -84,15 +87,16 @@ class AppViewModel with ChangeNotifier {
   }
 
   logout(BuildContext context) {
-    // const storage = FlutterSecureStorage();
-    // storage.deleteAll();
-    // logger.d(context);
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (_) => LoginPage(),
-    //     ),
-    //     (routes) => false);
+    const storage = FlutterSecureStorage();
+    storage.deleteAll();
+    logger.d(context);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LoginPage(),
+      ),
+      (routes) => false,
+    );
   }
 
   onHomeFeedRoute(context, settings) {
@@ -146,13 +150,15 @@ class AppViewModel with ChangeNotifier {
   }
 
   changeTitle(String newTitle) {
-    _formerTitle = _title;
+    _formerTitle.push(_title);
+    logger.d(_formerTitle);
     _title = newTitle;
     notifyListeners();
   }
 
   changeTitleToFormer() {
-    _title = _formerTitle;
+    _title = _formerTitle.pop();
+    logger.d(_formerTitle);
     notifyListeners();
   }
 }
