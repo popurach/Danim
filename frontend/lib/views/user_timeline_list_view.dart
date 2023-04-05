@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-var logger = Logger();
-
 class UserTimeLineListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -52,6 +50,7 @@ class UserTimeLineListView extends StatelessWidget {
                       ),
                     ),
                   ),
+                  userTimelineListViewModel.userInfo == userTimelineListViewModel.myInfo ?
                   Positioned(
                     top: 0,
                     left: 0,
@@ -60,11 +59,11 @@ class UserTimeLineListView extends StatelessWidget {
                     child: Container(
                       margin: const EdgeInsets.only(right: 10, left: 10),
                       child: ChangeNotifierProvider<SearchBarViewModel>(
-                        create: (_) => SearchBarViewModel(),
+                        create: (_) => SearchBarViewModel(isMyFeed: true),
                         child: SearchBar(),
                       ),
                     ),
-                  ),
+                  ) : const SizedBox.shrink(),
                 ],
               );
             },

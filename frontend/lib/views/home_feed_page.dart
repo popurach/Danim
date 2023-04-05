@@ -43,7 +43,7 @@ class HomeFeedPage extends StatelessWidget {
                         margin: const EdgeInsets.only(
                             left: 10, right: 10, top: 15, bottom: 15),
                         child: ChangeNotifierProvider<SearchBarViewModel>(
-                          create: (_) => SearchBarViewModel(),
+                          create: (_) => SearchBarViewModel(isMyFeed: false),
                           child: SearchBar(),
                         ),
                       ),

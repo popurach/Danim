@@ -136,7 +136,7 @@ class AppViewModel with ChangeNotifier {
             ),
           ),
           ChangeNotifierProvider<SearchBarViewModel>(
-              create: (_) => SearchBarViewModel(),
+              create: (_) => SearchBarViewModel(isMyFeed: true),
           ),
         ],
         child: UserTimeLineListView(),
