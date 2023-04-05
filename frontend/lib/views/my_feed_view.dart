@@ -29,7 +29,6 @@ class MyFeedView extends StatelessWidget {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      margin: const EdgeInsets.only(top: 55.0),
                       child: Column(
                         children: [
                           // 개인 정보가 들어가는 칸
@@ -39,7 +38,10 @@ class MyFeedView extends StatelessWidget {
                               myInfo: userTimelineListViewModel.myInfo,
                               userInfo: userTimelineListViewModel.userInfo,
                             ),
-                            child: UserInformationView(),
+                            child: const UserInformationView(),
+                          ),
+                          const SizedBox(
+                            height: 60,
                           ),
                           // 타임라인 리스트가 들어가는 칸
                           Expanded(
@@ -53,12 +55,12 @@ class MyFeedView extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    top: 0,
+                    top: 87,
                     left: 0,
                     right: 0,
                     bottom: 0,
                     child: Container(
-                      margin: const EdgeInsets.only(right: 10, left: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: ChangeNotifierProvider<SearchBarViewModel>(
                         create: (_) => SearchBarViewModel(),
                         child: SearchBar(),

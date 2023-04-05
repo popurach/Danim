@@ -1,9 +1,9 @@
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/search_result_view_model.dart';
-import 'package:danim/view_models/user_timeline_list_view_model.dart';
+import 'package:danim/view_models/my_feed_view_model.dart';
 import 'package:danim/views/search_result_page.dart';
-import 'package:danim/views/user_timeline_list_view.dart';
+import 'package:danim/views/my_feed_view.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -21,17 +21,19 @@ class SearchBar extends StatelessWidget {
             return Stack(
               children: [
                 SizedBox(
-                  height: viewModel.searchedResults.isEmpty ?
-                      (viewModel.searchedResults.length + 1) * 105
-                      : viewModel.searchedResults.length == 1 ?
-                      (viewModel.searchedResults.length + 1) * 79
-                      : viewModel.searchedResults.length >=2 && viewModel.searchedResults.length <=4 ?
-                      (viewModel.searchedResults.length + 1) * 75
-                      : 450,
+                  height: viewModel.searchedResults.isEmpty
+                      ? (viewModel.searchedResults.length + 1) * 105
+                      : viewModel.searchedResults.length == 1
+                          ? (viewModel.searchedResults.length + 1) * 79
+                          : viewModel.searchedResults.length >= 2 &&
+                                  viewModel.searchedResults.length <= 4
+                              ? (viewModel.searchedResults.length + 1) * 75
+                              : 450,
                   child: Column(
                     children: [
                       // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
-                      viewModel.myfocus.hasFocus && viewModel.searchKeyWord != ""
+                      viewModel.myfocus.hasFocus &&
+                              viewModel.searchKeyWord != ""
                           ? Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(top: 30),
@@ -91,23 +93,29 @@ class SearchBar extends StatelessWidget {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MultiProvider(
-                                                        providers: [
-                                                          ChangeNotifierProvider<UserTimelineListViewModel>(
-                                                            create: (_) => UserTimelineListViewModel(
-                                                                context: context,
-                                                                myInfo: appViewModel.userInfo,
-                                                                userInfo: viewModel.searchedResults[index-1]
+                                                    builder: (context) =>
+                                                        MultiProvider(
+                                                          providers: [
+                                                            ChangeNotifierProvider<
+                                                                MyFeedViewModel>(
+                                                              create: (_) => MyFeedViewModel(
+                                                                  context:
+                                                                      context,
+                                                                  myInfo: appViewModel
+                                                                      .userInfo,
+                                                                  userInfo: viewModel
+                                                                          .searchedResults[
+                                                                      index -
+                                                                          1]),
                                                             ),
-                                                          ),
-                                                          ChangeNotifierProvider<SearchBarViewModel>(
-                                                            create: (_) => SearchBarViewModel(),
-                                                          ),
-                                                        ],
-                                                        child: UserTimeLineListView(),
-                                                      )
-                                                ),
+                                                            ChangeNotifierProvider<
+                                                                SearchBarViewModel>(
+                                                              create: (_) =>
+                                                                  SearchBarViewModel(),
+                                                            ),
+                                                          ],
+                                                          child: MyFeedView(),
+                                                        )),
                                               );
                                             },
                                             child: Column(

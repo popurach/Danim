@@ -34,6 +34,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               appViewModel.userInfo.profileImageUrl,
               width: 50,
               height: 50,
+              border: Border.all(
+                color: Colors.white,
+                width: 0.5,
+              ),
               shape: BoxShape.circle,
               fit: BoxFit.cover,
               cache: true,

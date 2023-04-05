@@ -1,87 +1,65 @@
-import 'package:danim/view_models/user_timeline_list_view_model.dart';
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'modify_profile.dart';
+
 class UserInformationView extends StatelessWidget {
+  const UserInformationView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserTimelineListViewModel>(
-        builder: (context, userTimelineListViewModel, _) {
+    return Consumer<AppViewModel>(builder: (_, appViewModel, __) {
       return Container(
         height: 80,
-        margin: const EdgeInsets.only(left: 10, right: 10),
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.black54)),
+        margin: const EdgeInsets.symmetric(horizontal: 30),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              flex: 5,
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.horizontal(left: Radius.circular(9.0)),
-                child: ExtendedImage.network(
-                  userTimelineListViewModel.userInfo.profileImageUrl,
-                  fit: BoxFit.cover,
-                  cache: true,
+            InkWell(
+              onTap: () {
+                appViewModel.changeTitle('프로필 변경');
+
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => ModifyProfile(),
+                    transitionDuration: Duration.zero,
+                  ),
+                );
+              },
+              child: ExtendedImage.network(
+                appViewModel.userInfo.profileImageUrl,
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+                border: Border.all(
+                  color: Colors.black,
                 ),
+                cache: true,
+                shape: BoxShape.circle,
               ),
             ),
-            const VerticalDivider(
-              color: Colors.black54,
-              width: 1,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  appViewModel.userInfo.timelineNum.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text('게시물'),
+              ],
             ),
-            Expanded(
-              flex: 11,
-              child: Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      Text(
-                        '이름',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 39,
-                        ),
-                      ),
-                      Text(
-                        '다님수',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 13,
-                        ),
-                      ),
-                      Text(
-                        '상태',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 39,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(userTimelineListViewModel.userInfo.nickname),
-                      Text(userTimelineListViewModel.userInfo.timelineNum
-                          .toString()),
-                      Text(
-                        userTimelineListViewModel.userInfo.timeLineId == -1
-                            ? '휴식중...'
-                            : '다님중!',
-                      ),
-                    ],
-                  )
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  appViewModel.userInfo.timeLineId == -1 ? '휴식중' : '다님중',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text('상태'),
+              ],
             )
           ],
         ),

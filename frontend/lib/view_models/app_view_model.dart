@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:danim/services/timeline_repository.dart';
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/view_models/user_timeline_list_view_model.dart';
+import 'package:danim/view_models/my_feed_view_model.dart';
 import 'package:danim/views/home_feed_page.dart';
 import 'package:danim/views/timeline_detail_page.dart';
-import 'package:danim/views/user_timeline_list_view.dart';
+import 'package:danim/views/my_feed_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +41,7 @@ class AppViewModel with ChangeNotifier {
       }
     }
     currentIndex = index;
-    changeTitle(index == 0 ? '홈' : '내 다님');
+    changeTitle(index == 0 ? '홈' : _userInfo.nickname);
     notifyListeners();
   }
 
@@ -57,7 +57,7 @@ class AppViewModel with ChangeNotifier {
     Timer(
       const Duration(milliseconds: 100),
       () {
-        Navigator.popAndPushNamed(
+        Navigator.pushNamed(
             myFeedNavigatorKey.currentContext!, '/modify/profile');
       },
     );
@@ -128,18 +128,15 @@ class AppViewModel with ChangeNotifier {
     } else {
       page = MultiProvider(
         providers: [
-          ChangeNotifierProvider<UserTimelineListViewModel>(
-            create: (_) => UserTimelineListViewModel(
-                context: context,
-                myInfo: userInfo,
-                userInfo: userInfo
-            ),
+          ChangeNotifierProvider<MyFeedViewModel>(
+            create: (_) => MyFeedViewModel(
+                context: context, myInfo: userInfo, userInfo: userInfo),
           ),
           ChangeNotifierProvider<SearchBarViewModel>(
-              create: (_) => SearchBarViewModel(),
+            create: (_) => SearchBarViewModel(),
           ),
         ],
-        child: UserTimeLineListView(),
+        child: MyFeedView(),
       );
     }
     return PageRouteBuilder(

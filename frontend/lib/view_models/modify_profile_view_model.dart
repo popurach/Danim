@@ -1,14 +1,14 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:danim/models/UserInfo.dart';
 import 'package:danim/services/user_repository.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
+import 'package:logger/logger.dart';
 
 class ModifyProfileViewModel extends ChangeNotifier {
   final textEditController = TextEditingController();
@@ -66,8 +66,6 @@ class ModifyProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  get isValid => RegExp('^[a-zA-Z가-힣0-9]{3,10}').hasMatch(nickname);
-
   get imagePath => _imagePath;
 
   get selectedImageFile =>
@@ -83,5 +81,11 @@ class ModifyProfileViewModel extends ChangeNotifier {
   set nickname(value) {
     _nickname = value;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _selectedImageFile = null;
+    super.dispose();
   }
 }
