@@ -20,21 +20,23 @@ class ModifyProfile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Stack(children: [
-                    CircleAvatar(
-                      radius: 100,
-                      backgroundImage: viewModel.selectedImageFile != null
-                          ? FileImage(viewModel.selectedImageFile)
-                          : null,
-                      child: viewModel.selectedImageFile == null
-                          ? ExtendedImage.network(
-                              viewModel.imagePath,
-                              shape: BoxShape.circle,
-                              cache: true,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(30.0)),
-                            )
-                          : null,
-                    ),
+                    viewModel.selectedImageFile == null
+                        ? ExtendedImage.network(
+                            viewModel.imagePath,
+                            width: 250,
+                            height: 250,
+                            fit: BoxFit.cover,
+                            shape: BoxShape.circle,
+                            cache: true,
+                            borderRadius: BorderRadius.circular(30.0),
+                          )
+                        : ExtendedImage.file(
+                            viewModel.selectedImageFile,
+                            width: 250,
+                            height: 250,
+                            fit: BoxFit.cover,
+                            shape: BoxShape.circle,
+                          ),
                     Positioned(
                         bottom: 0,
                         right: 0,

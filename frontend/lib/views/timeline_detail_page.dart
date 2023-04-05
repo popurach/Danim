@@ -110,6 +110,7 @@ class TimelineDetailPage extends StatelessWidget {
                             viewModel.timelineDetails[timelineIndex].flag,
                             fit: BoxFit.cover,
                             cache: true,
+                            shape: BoxShape.circle,
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),

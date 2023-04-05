@@ -95,6 +95,9 @@ dependencies:
   # animated icon
   animated_icon_button: ^1.0.2
 
+  # splash screen for under Android 12
+  flutter_native_splash: ^2.2.19
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

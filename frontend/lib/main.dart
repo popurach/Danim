@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/views/bottom_navigation.dart';
 import 'package:danim/views/camera_floating_action_button.dart';
@@ -65,8 +67,35 @@ class MyHomePage extends StatelessWidget {
             viewModel.changeTitle('내 다님');
             viewModel.myFeedNavigatorKey.currentState!.pop();
             return false;
+          } else if (!Navigator.canPop(context)) {
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('다님 종료'),
+                content: const Text('다님을  종료하시겠습니까?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      exit(0);
+                    },
+                    child: const Text(
+                      '종료',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('취소'),
+                  ),
+                ],
+              ),
+            );
           }
-          return true;
+          return false;
         },
         child: Scaffold(
           appBar: CustomAppBar(
