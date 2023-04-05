@@ -1,9 +1,8 @@
 import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:danim/module/audio_player_view.dart';
 import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/view_models/images_page_view_model.dart';
 import 'package:danim/view_models/post_view_model.dart';
-import 'package:danim/views/images_page_view.dart';
+import 'package:danim/module/images_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -42,23 +41,16 @@ class PostDetail extends StatelessWidget {
                         builder: (context) {
                           return Dialog(
                             insetPadding: const EdgeInsets.all(5),
-                            child: ChangeNotifierProvider(
-                              create: (_) => ImagesPageViewModel(
-                                imagesUrl: viewModel.post.photoList,
-                                boxFit: BoxFit.contain,
-                              ),
-                              child: const ImagesPageView(),
+                            child: ImagesPageView(
+                              listImageUrl: viewModel.post.photoList,
+                              boxFit: BoxFit.contain,
                             ),
                           );
                         },
                       );
                     },
-                    child: ChangeNotifierProvider(
-                      create: (_) => ImagesPageViewModel(
-                        imagesUrl: viewModel.post.photoList,
-                      ),
-                      child: const ImagesPageView(),
-                    ),
+                    child:
+                        ImagesPageView(listImageUrl: viewModel.post.photoList),
                   ),
                 ),
                 Consumer<AppViewModel>(builder: (_, appViewModel, __) {

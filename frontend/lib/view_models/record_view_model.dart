@@ -7,7 +7,6 @@ import 'package:camera/camera.dart';
 import 'package:danim/main.dart';
 import 'package:danim/models/LocationInformation.dart';
 import 'package:danim/view_models/app_view_model.dart';
-import 'package:danim/view_models/user_timeline_list_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,6 @@ import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
-import '../services/upload_repository.dart';
-import '../views/user_timeline_list_view.dart';
 import 'camera_view_model.dart';
 
 var logger = Logger();
@@ -134,8 +131,8 @@ class RecordViewModel extends ChangeNotifier {
     }
 
     // multi_image_picker_viewr 라이브러리 사용
-    final pickerController =
-        MultiImagePickerController(maxImages: 9 - _imageList.length, images: []);
+    final pickerController = MultiImagePickerController(
+        maxImages: 9 - _imageList.length, images: []);
     Directory externalDirectory =
         Directory('/storage/emulated/0/Documents/photos');
     await pickerController.pickImages();
@@ -180,15 +177,15 @@ class RecordViewModel extends ChangeNotifier {
     });
     // Response response =
     //     await UploadRepository().uploadToServer(context, formData);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider<AppViewModel>(
-                  create: (_) => AppViewModel(userInfo, "홈"),
-                  child: MyHomePage(),
-                ),
-              ),
-              (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider<AppViewModel>(
+            create: (_) => AppViewModel(userInfo, "홈"),
+            child: MyHomePage(),
+          ),
+        ),
+        (route) => false);
   }
 
   // 위치를 받아오는 함수
