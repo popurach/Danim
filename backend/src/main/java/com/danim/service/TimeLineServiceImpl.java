@@ -224,6 +224,8 @@ public class TimeLineServiceImpl implements TimeLineService {
     public List<MainTimelinePhotoDtoRes> searchTimelineOrderBylatestPaging(Pageable pageable) throws BaseException {
         // redis에 존재할 시 바로 리턴
         if(repo.findById(pageable.getPageNumber()).isPresent()){
+            log.info("redis 값 접근");
+            log.info("현재 검색 페이지 : {}", pageable.getPageNumber());
             return repo.findById(pageable.getPageNumber()).get().getList();
         }
         Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
