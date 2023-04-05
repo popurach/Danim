@@ -6,9 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../module/audio_player_view.dart';
 import '../module/audio_player_view_model.dart';
-import '../view_models/images_page_view_model.dart';
+import '../module/images_page_view.dart';
 import '../view_models/record_view_model.dart';
-import 'images_page_view.dart';
 
 class RecordView extends StatelessWidget {
   @override
@@ -30,14 +29,10 @@ class RecordView extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.575,
                       // 컨슈머로 변화 감지
                       child:
-                      ChangeNotifierProvider(
-                        create: (_) => ImagesPageViewModel(
-                            xFileList : recordViewModel.imageList),
-                        child: ImagesPageView(),
-                      ),
+                          ImagesPageView(listXFile: recordViewModel.imageList),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top:25),
+                        margin: const EdgeInsets.only(top: 25),
                         padding: const EdgeInsets.only(left: 30, right: 30),
                         height: 30,
                         child: Row(
@@ -130,8 +125,8 @@ class RecordView extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 recordViewModel.uploadConfirm(
-                                    context,
-                                    appViewModel.userInfo,
+                                  context,
+                                  appViewModel.userInfo,
                                 );
                               },
                               icon: const Icon(Icons.upload, size: 28),

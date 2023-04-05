@@ -13,8 +13,8 @@ class AudioPlayerView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // 재생 버튼
-              InkWell(
-                  onTap: () {
+              IconButton(
+                  onPressed: () {
                     // playSound
                     if (viewModel.isPlaying) {
                       viewModel.pauseRecordedFile();
@@ -22,7 +22,7 @@ class AudioPlayerView extends StatelessWidget {
                       viewModel.playRecordedFile();
                     }
                   },
-                  child: Icon(
+                  icon: Icon(
                     viewModel.isPlaying ? Icons.pause : Icons.play_arrow,
                     color: Colors.black,
                   )),
@@ -51,7 +51,6 @@ class AudioPlayerView extends StatelessWidget {
               Text(
                 '${viewModel.getAudioPosTimeToString()} /',
               ),
-
               Text(
                 '${viewModel.getDurationTimeToString()}',
               ),

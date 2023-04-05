@@ -32,6 +32,13 @@ class AppViewModel with ChangeNotifier {
 
   void changePage(index) {
     pageController.jumpToPage(index);
+    if (currentIndex == index) {
+      if (index == 0) {
+        Navigator.popAndPushNamed(homeFeedNavigatorKey.currentContext!, '/');
+      } else {
+        Navigator.popAndPushNamed(myFeedNavigatorKey.currentContext!, '/');
+      }
+    }
     currentIndex = index;
     changeTitle(index == 0 ? '홈' : '내 다님');
     notifyListeners();
