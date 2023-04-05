@@ -20,6 +20,7 @@ import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
+import '../services/upload_repository.dart';
 import 'camera_view_model.dart';
 
 var logger = Logger();
@@ -175,17 +176,21 @@ class RecordViewModel extends ChangeNotifier {
       'address3': locationInfo.address3,
       'address4': locationInfo.address4
     });
-    // Response response =
-    //     await UploadRepository().uploadToServer(context, formData);
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider<AppViewModel>(
-            create: (_) => AppViewModel(userInfo, "홈"),
-            child: MyHomePage(),
+    if (context.mounted) {
+      Response response = await UploadRepository().uploadToServer(context, formData);
+    }
+
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider<AppViewModel>(
+              create: (_) => AppViewModel(userInfo, "홈"),
+              child: MyHomePage(),
+            ),
           ),
-        ),
-        (route) => false);
+              (route) => false);
+    }
   }
 
   // 위치를 받아오는 함수

@@ -21,15 +21,17 @@ class SearchBar extends StatelessWidget {
             return Stack(
               children: [
                 SizedBox(
-                  height: viewModel.searchedResults.isEmpty
-                      ? (viewModel.searchedResults.length + 1) * 105
-                      : viewModel.searchedResults.length == 1
-                          ? (viewModel.searchedResults.length + 1) * 79
-                          : (viewModel.searchedResults.length + 1) * 75,
+                  height: viewModel.searchedResults.isEmpty ?
+                      (viewModel.searchedResults.length + 1) * 105
+                      : viewModel.searchedResults.length == 1 ?
+                      (viewModel.searchedResults.length + 1) * 79
+                      : viewModel.searchedResults.length >=2 && viewModel.searchedResults.length <=4 ?
+                      (viewModel.searchedResults.length + 1) * 75
+                      : 450,
                   child: Column(
                     children: [
                       // 키워드가 없을 때엔 검색 결과창이 뜨지 않는다.
-                      viewModel.searchKeyWord != ""
+                      viewModel.myfocus.hasFocus && viewModel.searchKeyWord != ""
                           ? Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(top: 30),
@@ -90,19 +92,21 @@ class SearchBar extends StatelessWidget {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ChangeNotifierProvider<
-                                                          UserTimelineListViewModel>(
-                                                    create: (_) =>
-                                                        UserTimelineListViewModel(
-                                                            context: context,
-                                                            myInfo: appViewModel
-                                                                .userInfo,
-                                                            userInfo: viewModel
-                                                                    .searchedResults[
-                                                                index - 1]),
-                                                    child:
-                                                        UserTimeLineListView(),
-                                                  ),
+                                                      MultiProvider(
+                                                        providers: [
+                                                          ChangeNotifierProvider<UserTimelineListViewModel>(
+                                                            create: (_) => UserTimelineListViewModel(
+                                                                context: context,
+                                                                myInfo: appViewModel.userInfo,
+                                                                userInfo: viewModel.searchedResults[index-1]
+                                                            ),
+                                                          ),
+                                                          ChangeNotifierProvider<SearchBarViewModel>(
+                                                            create: (_) => SearchBarViewModel(),
+                                                          ),
+                                                        ],
+                                                        child: UserTimeLineListView(),
+                                                      )
                                                 ),
                                               );
                                             },
@@ -154,15 +158,12 @@ class SearchBar extends StatelessWidget {
                 Container(
                   color: Colors.white,
                   height: 45,
-                  child: TextFormField(
-                    onTap: () {
-                      logger.d(viewModel.myfocus.hasFocus);
-                    },
+                  child: TextField(
                     focusNode: viewModel.myfocus,
                     keyboardType: TextInputType.text,
                     onChanged: (String? keyword) async {
                       viewModel.searchUser(context, keyword);
-                      viewModel.searchKeyWord = keyword;
+                      logger.d(keyword);
                     },
                     // 포커스 일 때 스타일 바꾸기
                     decoration: const InputDecoration(
