@@ -240,6 +240,7 @@ class SearchBar extends StatelessWidget {
                       viewModel.searchUser(context, keyword);
                     },
                     onSubmitted: (String keyWord) {
+                      appViewModel.changeTitle(keyWord);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
