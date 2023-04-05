@@ -1,8 +1,7 @@
 import json
 
-from flask import Flask, Response, request
+from flask import Flask, request, send_file
 from pydub import AudioSegment
-from requests_toolbelt.multipart.encoder import MultipartEncoder
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -54,18 +53,9 @@ def index():
     combined_file.export("combined.wav", format="wav")
     print(len(combined_file))
     audio = ""
-    with open('combined.wav', 'rb') as f:
-        audio = f.read()
-        # MultipartEncoder를 사용하여 데이터를 생성
-        multipart_data = MultipartEncoder(
-            fields={'audio': ("conbined.wav", audio, "audio/wav")}
-        )
-        # 응답 생성
-        response = Response(multipart_data.to_string(), content_type=multipart_data.content_type)
 
-        return response
-
-
+    filename = 'combined.wav'
+    return send_file(filename, mimetype='audio/wav')
 
 
 
