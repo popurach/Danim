@@ -28,10 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -47,12 +44,23 @@ public class PostServiceImpl implements PostService {
     private final BadWordFilter badWordFilter;
     private final MultiFileToFile multiFileToFile;
     private final Http http;
-    private final UserRepository userRepository;
 
 
     // 포스트 생성 및 저장
     @Override
-    public Post createPost() throws Exception {
+    public Post createPost(AddPostReq addPostReq) throws Exception {
+        TimeLine timeline = timelineRepository.findById(addPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+        if (timeline.getComplete() == true) {
+            new BaseException(ErrorMessage.ALREADY_DONE_TIMELINE);
+        }
+
+        Post post = new Post();
+        Post savedPost = postRepository.save(post);
+        return savedPost;
+    }
+
+    @Override
+    public Post makePost() throws Exception {
         Post post = new Post();
         Post savedPost = postRepository.save(post);
         return savedPost;
