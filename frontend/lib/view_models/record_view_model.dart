@@ -89,7 +89,10 @@ class RecordViewModel extends ChangeNotifier {
   AudioPlayer audioPlayer = AudioPlayer();
 
   bool _isUploading = false;
+
   bool get isUploading => _isUploading;
+
+  bool _isRecording = false;
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -108,12 +111,24 @@ class RecordViewModel extends ChangeNotifier {
     }
     final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
+    _isRecording = true;
     await record.start(path: filePath, encoder: AudioEncoder.wav);
     recordedFileName = fileName;
+
+    // 30초 뒤 자동으로 녹음
+    Future.delayed(
+      const Duration(seconds: 30),
+      () {
+        if (_isRecording == true) {
+          stopRecording();
+        }
+      },
+    );
   }
 
   // 녹음 끝 파일 저장
   Future<void> stopRecording() async {
+    _isRecording = false;
     await record.stop();
     final directory = Directory('/storage/emulated/0/Documents/records');
 
@@ -160,7 +175,7 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
-    if (_recordedFilePath =="") {
+    if (_recordedFilePath == "") {
       OneButtonMaterialDialog().showFeedBack(context, "음성을 녹음해주세요");
       return;
     }
@@ -170,17 +185,24 @@ class RecordViewModel extends ChangeNotifier {
       return;
     }
 
-    if (_locationInfo == LocationInformation(country: "", address2: "", address3: "", address4: "", flag: null)) {
+    if (_locationInfo ==
+        LocationInformation(
+            country: "",
+            address2: "",
+            address3: "",
+            address4: "",
+            flag: null)) {
       OneButtonMaterialDialog().showFeedBack(context, "위치 정보를 불러오지 못했습니다.");
       return;
     }
 
     if (_isUploading == false) {
       final flag = MultipartFile.fromBytes(locationInfo.flag!,
-          filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
+          filename: locationInfo.country,
+          contentType: MediaType('image', 'jpg'));
       final List<MultipartFile> imageFiles = imageList
           .map((el) => MultipartFile.fromFileSync(el.path,
-          filename: el.name, contentType: MediaType('image', 'jpg')))
+              filename: el.name, contentType: MediaType('image', 'jpg')))
           .toList();
       final audioFile = await MultipartFile.fromFile(recordedFilePath,
           filename: "$recordedFileName.wav",
@@ -212,7 +234,7 @@ class RecordViewModel extends ChangeNotifier {
                 child: MyHomePage(),
               ),
             ),
-                (route) => false);
+            (route) => false);
       }
     }
   }
