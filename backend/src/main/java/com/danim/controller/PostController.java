@@ -40,7 +40,7 @@ public class PostController {
         // 입력 테스트중
         System.out.println("flagFile:"+flagFile);
 
-        Post savedPost = postService.createPost();
+        Post savedPost = postService.createPost(addPostReq);
         List<Photo> photoList = photoService.createPhotoList(imageFiles, savedPost);
         postService.insertPost(savedPost, photoList, flagFile, voiceFile, addPostReq);
 
