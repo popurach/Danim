@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/module/my_alert_dialog.dart';
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -150,8 +152,28 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   // 파일을 서버로 업로드하기
-  Future<void> postFiles(
-      BuildContext context, UserInfo userInfo, Function move) async {
+  Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
+    if (_imageList.isEmpty) {
+      OneButtonMaterialDialog().showFeedBack(context, "사진을 등록해주세요");
+      return;
+    }
+
+    if (_recordedFilePath == "") {
+      OneButtonMaterialDialog().showFeedBack(context, "음성을 녹음해주세요");
+      return;
+    }
+
+    if (_locationInfo == LocationInformation(
+      country: "",
+      address2: "",
+      address3: "",
+      address4: "",
+      flag: null,)
+    ) {
+      OneButtonMaterialDialog().showFeedBack(context, "위치를 불러오지 못했습니다.");
+      return;
+    }
+
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
         filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
     final List<MultipartFile> imageFiles = imageList
