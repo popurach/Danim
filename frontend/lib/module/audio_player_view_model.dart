@@ -4,47 +4,24 @@ import 'package:flutter/cupertino.dart';
 class AudioPlayerViewModel extends ChangeNotifier {
   // 파일 경로
   String? _audioFilePath;
-  late bool _playStarted = false;
-  late bool _isPlaying = false;
-  late Duration _duration = const Duration(microseconds: 0);
+  bool _isPlaying = false;
+  Duration _duration = const Duration(microseconds: 0);
 
   final AudioPlayer audioPlayer = AudioPlayer();
   Duration _audioPosition = Duration.zero;
 
   String? get getAudioFilePath => _audioFilePath;
 
-  set audioFilePath(String value) {
-    _audioFilePath = value;
-  }
-
-  bool get playStarted => _playStarted;
-
-  set playStarted(bool newBool) {
-    _playStarted = newBool;
-  }
-
   bool get isPlaying => _isPlaying;
-
-  set isPlaying(bool newBool) {
-    _isPlaying = newBool;
-  }
 
   Duration get duration => _duration;
 
-  set duration(Duration newDuration) {
-    _duration = newDuration;
-  }
-
   Duration get audioPosition => _audioPosition;
-
-  set audioPosition(Duration newPosition) {
-    _audioPosition = newPosition;
-  }
 
   // optional parameter
   AudioPlayerViewModel(this._audioFilePath) {
     audioPlayer.onDurationChanged.listen((newDuration) {
-      duration = newDuration;
+      _duration = newDuration;
       notifyListeners();
     });
     if (_audioFilePath != null) initDuration();
@@ -62,18 +39,18 @@ class AudioPlayerViewModel extends ChangeNotifier {
       return;
     } else {
       await audioPlayer.play(DeviceFileSource(_audioFilePath!));
-      isPlaying = true;
+      _isPlaying = true;
 
       notifyListeners();
       // 재생이 완료 되었을 때 변수 바꿔주기
       audioPlayer.onPlayerComplete.listen((event) {
-        isPlaying = false;
+        _isPlaying = false;
         notifyListeners();
       });
 
       // 음성 파일에서의 현재 위치 갱신
       audioPlayer.onPositionChanged.listen((curPos) {
-        audioPosition = curPos;
+        _audioPosition = curPos;
         notifyListeners();
       });
     }
@@ -83,7 +60,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> pauseRecordedFile() async {
     if (isPlaying == true) {
       audioPlayer.pause();
-      isPlaying = false;
+      _isPlaying = false;
       notifyListeners();
     } else {
       return;
@@ -94,7 +71,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> resumeRecordedFile() async {
     if (isPlaying == false) {
       audioPlayer.resume();
-      isPlaying = true;
+      _isPlaying = true;
       notifyListeners();
     } else {
       return;
@@ -105,11 +82,16 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> stopRecordedFile() async {
     if (isPlaying == true) {
       audioPlayer.stop();
-      isPlaying = false;
+      _isPlaying = false;
       notifyListeners();
     } else {
       return;
     }
+  }
+
+  saveAudio(String audioFilePath) {
+    _audioFilePath = audioFilePath;
+    notifyListeners();
   }
 
   // 위치 갱신
@@ -135,5 +117,12 @@ class AudioPlayerViewModel extends ChangeNotifier {
   timeToString(int time) {
     if (time <= 9) return '00:0$time';
     return '00:$time';
+  }
+
+  @override
+  void dispose() {
+    _audioFilePath = null;
+    stopRecordedFile();
+    super.dispose();
   }
 }

@@ -41,15 +41,11 @@ class UserRepository {
 
   // 내 정보 가져오기
   Future<UserInfo> getUserInfo(context) async {
-    try {
-      final dio = await authDio(context);
-      Response response = await dio.get(
-        'api/auth/user/info',
-      );
-      return UserInfo.fromJson(response.data);
-    } catch (error) {
-      throw Exception('Fail to login: $error');
-    }
+    final dio = await authDio(context);
+    Response response = await dio.get(
+      'api/auth/user/info',
+    );
+    return UserInfo.fromJson(response.data);
   }
 
   // 회원정보 변경 요청

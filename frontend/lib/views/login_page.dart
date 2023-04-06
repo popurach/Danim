@@ -28,7 +28,8 @@ class LoginPage extends StatelessWidget {
       body: Consumer<AppViewModel>(
         builder: (context, appViewModel, _) {
           return ChangeNotifierProvider(
-            create: (_) => LoginViewModel(),
+            create: (context) =>
+                LoginViewModel(context, appViewModel.updateUserInfo),
             child: Consumer<LoginViewModel>(
               builder: (ctx, viewModel, child) {
                 return SafeArea(
@@ -75,7 +76,8 @@ class LoginPage extends StatelessWidget {
                               );
                             },
                           );
-                          viewModel.loginButtonPressed(context, appViewModel);
+                          viewModel.loginButtonPressed(
+                              context, appViewModel.updateUserInfo);
                         },
                         child: Image.asset(
                           'assets/images/kakao_login.png',

@@ -2,14 +2,35 @@ import 'package:danim/main.dart';
 import 'package:danim/models/Token.dart';
 import 'package:danim/models/UserInfo.dart';
 import 'package:danim/services/user_repository.dart';
-import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:logger/logger.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  Future<void> loginButtonPressed(context, AppViewModel appViewModel) async {
+  final storage = const FlutterSecureStorage();
+
+  LoginViewModel(BuildContext context, Function update) {
+    tryLogin(context, update);
+  }
+
+  tryLogin(context, Function update) async {
+    if ((await storage.read(key: 'accessToken') == null)) return;
+    try {
+      UserInfo userInfo = await UserRepository().getUserInfo(context);
+      update(userInfo);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const MyHomePage(),
+        ),
+        (route) => false,
+      );
+    } catch (error) {
+      throw Exception('Our login Error: $error');
+    }
+  }
+
+  Future<void> loginButtonPressed(context, Function update) async {
     bool isInstalled = await isKakaoTalkInstalled();
     OAuthToken token = isInstalled
         ? await UserApi.instance.loginWithKakaoTalk()
@@ -19,22 +40,9 @@ class LoginViewModel extends ChangeNotifier {
     Token ourToken = await UserRepository().kakaoLogin(
         Token(accessToken: accessToken, refreshToken: refreshToken));
 
-    const storage = FlutterSecureStorage();
-
     storage.write(key: 'accessToken', value: ourToken.accessToken);
     storage.write(key: 'refreshToken', value: ourToken.refreshToken);
 
-    UserInfo userInfo = await UserRepository().getUserInfo(context);
-
-    storage.write(key: 'userUid', value: userInfo.userUid.toString());
-    appViewModel.updateUserInfo(userInfo);
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const MyHomePage(),
-      ),
-      (route) => false,
-    );
+    tryLogin(context, update);
   }
 }
