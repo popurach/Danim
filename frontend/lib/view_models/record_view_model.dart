@@ -12,12 +12,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
 import '../services/upload_repository.dart';
+
+var logger = Logger();
 
 class RecordViewModel extends ChangeNotifier {
   late final List<XFile> _imageList;
@@ -70,6 +73,9 @@ class RecordViewModel extends ChangeNotifier {
   bool get isUploading => _isUploading;
 
   bool _isRecording = false;
+
+  bool _havingLocation = false;
+  bool get havingLocation => _havingLocation;
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
@@ -193,6 +199,7 @@ class RecordViewModel extends ChangeNotifier {
       if (imageList.isNotEmpty) {
         if (isFirstPhotoFromGallery == false) {
           _haveLocation = true;
+          _havingLocation = true;
           await dotenv.load(fileName: ".env");
           final currentPosition = await Geolocator.getCurrentPosition();
           final curLong = currentPosition.longitude;
@@ -238,6 +245,7 @@ class RecordViewModel extends ChangeNotifier {
                   address4: address4Name,
                   flag: flagData);
               _locationInfo = newLocation;
+              _havingLocation = false;
               notifyListeners();
             }
           }

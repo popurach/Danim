@@ -29,6 +29,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   Future<void> initDuration() async {
     await _audioPlayer?.setSourceUrl(_audioFilePath!);
+    notifyListeners();
   }
 
   // 재생 시작
@@ -91,6 +92,8 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   saveAudio(String audioFilePath) {
     _audioFilePath = audioFilePath;
+    _audioPosition = Duration.zero;
+    initDuration();
     notifyListeners();
   }
 
