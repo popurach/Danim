@@ -124,6 +124,7 @@ public class PostServiceImpl implements PostService {
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
         String voiceUrl="";
+        log.info("fasapiReq.size() info : {}",fastApiReq);
         if(!fastApiReq.isEmpty()){
 
             File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),file);
