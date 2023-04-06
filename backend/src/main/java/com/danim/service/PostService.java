@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface PostService {
     // 포스트 등록
-    Post createPost() throws Exception;
+    Post createPost(AddPostReq addPostReq) throws Exception;
+    Post makePost() throws Exception;
     Post insertPost(Post savedPost, List<Photo> photoList, MultipartFile flagFile, MultipartFile voiceFile, AddPostReq addPostReq) throws Exception;
 
     // 포스트 삭제

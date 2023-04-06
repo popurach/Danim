@@ -45,7 +45,7 @@ public class TestController {
         for(int i = 1;i<100000;i++){
             timeLineService.makenewTimelineTemp();
             for (int j = 0; j<9;j++){
-                Post savedPost = postService.createPost();
+                Post savedPost = postService.makePost();
                 log.info("");
                 List<Photo> photoList = photoService.createPhotoListTest(savedPost);
                 postService.insertPostTest(savedPost, photoList, AddPostReq.builder().timelineId((long) i).address1("test").build());
@@ -66,7 +66,7 @@ public class TestController {
     //포스트 등록 (Address 1 - 국가 -> Address 4 - 동네)
     @PostMapping(value = "/post")
     public ResponseEntity<?> addPost(@RequestBody AddPostReq addPostReq) throws Exception {
-        Post savedPost = postService.createPost();
+        Post savedPost = postService.createPost(addPostReq);
         List<Photo> photoList = photoService.createPhotoListTest(savedPost);
         postService.insertPostTest(savedPost, photoList, addPostReq);
         // addPost 요청에 대한 응답으로 timelineId 반환

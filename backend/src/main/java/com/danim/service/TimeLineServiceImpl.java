@@ -223,7 +223,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         }
 
         timeLineRepository.delete(now);
-
+        repo.deleteAll();
     }
 
     @Override
@@ -244,7 +244,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             check = true;
         }
         timeLineRepository.save(now);
-
+        repo.deleteAll();
         return check;
 
     }
@@ -405,6 +405,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         } catch (Exception e) {
             return null;
         }
+        repo.deleteAll();
         return timeLine;
     }
 

@@ -21,6 +21,7 @@ public enum ErrorMessage {
     NOT_EXIST_FAVORITE("유저가 해당 포스트에 좋아요를 누른 적이 없습니다.", HttpStatus.BAD_REQUEST),
     NOT_EXIST_USER_FAV_POST("유저가 좋아요를 누른 포스트가 없습니다.", HttpStatus.BAD_REQUEST),
     NOT_EXIST_KEYWORD("해당 지역명 키워드를 포함한 포스트가 없습니다.", HttpStatus.BAD_REQUEST),
+    ALREADY_DONE_TIMELINE("이미 완료된 타임라인입니다.", HttpStatus.BAD_REQUEST),
 
     NOT_EXIST_TIMELINE_PAGING("존재하지 않는 타임라인 페이징의 페이지 입니다", HttpStatus.BAD_REQUEST),
     OVER_VOICE_TIME("제한시간(30초)를 넘긴 오디오 파일 입니다", HttpStatus.BAD_REQUEST),
