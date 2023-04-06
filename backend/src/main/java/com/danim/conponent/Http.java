@@ -53,7 +53,7 @@ public class Http {
         if (!response.isSuccessful()) throw new ConnectException();
             // 응답이 성공적으로 받아진 경우
         ResponseBody responseBody = response.body();
-        if (responseBody == null) throw new NullPointerException();
+//        if (responseBody == null) throw new NullPointerException();
             // 응답 본문을 읽어옴
         InputStream inputStream = responseBody.byteStream();
         // 'audio' 처리 로직 구현
@@ -71,15 +71,15 @@ public class Http {
         fileOutputStream.flush();
         fileOutputStream.close();
         inputStream.close();
-
-        if (!response.isSuccessful()) throw new ConnectException();
-        ResponseBody body = response.body();
+        log.info("file info : {}",file);
+//        if (!response.isSuccessful()) throw new ConnectException();
+//        ResponseBody body = response.body();
 
 
         // 응답의 HttpEntity를 추출
 
 
-        log.info("flask api info : {}", body);
+//        log.info("flask api info : {}", body);
 //        MultipartFile multipartFile = new MultipartFile() {
 //            @Override
 //            public String getName() {
