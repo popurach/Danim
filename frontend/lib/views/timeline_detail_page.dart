@@ -1,13 +1,20 @@
+import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
 import 'package:danim/views/post_list_item.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
+var logger = Logger();
+
 class TimelineDetailPage extends StatelessWidget {
+  const TimelineDetailPage({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final appViewModel = Provider.of<AppViewModel>(context);
     return Scaffold(
       body: Consumer<TimelineDetailViewModel>(
         builder: (context, viewModel, _) => SingleChildScrollView(
@@ -39,6 +46,9 @@ class TimelineDetailPage extends StatelessWidget {
                                   TextButton(
                                     onPressed: () {
                                       viewModel.deleteTimeline(context);
+                                      appViewModel.userInfo.timeLineId = -1;
+                                      appViewModel.changeTitle(
+                                          appViewModel.userInfo.nickname);
                                       Navigator.pop(ctx);
                                       Navigator.popAndPushNamed(context, '/');
                                     },
@@ -126,8 +136,9 @@ class TimelineDetailPage extends StatelessWidget {
                         // Number of nations
                         itemBuilder: (BuildContext context, int postIndex) {
                           return PostListItem(
-                              timelineIndex: timelineIndex,
-                              postIndex: postIndex);
+                            timelineIndex: timelineIndex,
+                            postIndex: postIndex,
+                          );
                         },
                       ),
                     ],
@@ -147,26 +158,30 @@ class TimelineDetailPage extends StatelessWidget {
                                     builder: (context) => AlertDialog(
                                       title: const Text('여행 제목을 입력해 주세요'),
                                       content: TextField(
-                                        controller: viewModel.textController,
-                                        onChanged: (value) {
-                                          viewModel.title = value;
+                                        onChanged: (String value) {
+                                          viewModel.changeTitle(value);
                                         },
-                                        decoration: InputDecoration(
-                                          labelText: '제목',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            borderSide: const BorderSide(
-                                              color: Colors.grey,
-                                              width: 2.0,
-                                            ),
-                                          ),
-                                        ),
+                                        decoration: const InputDecoration(
+                                            labelText: '제목',
+                                            hintText: '필수 입니다.'),
                                       ),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            viewModel.endTimeline(context);
+                                            if (viewModel.title != null) {
+                                              appViewModel.userInfo.timeLineId =
+                                                  -1;
+                                              appViewModel
+                                                  .changeTitleToFormer();
+                                              appViewModel.changeTitle(
+                                                viewModel.title!,
+                                              );
+                                              Navigator.pop(context);
+                                              viewModel.endTimeline(
+                                                appViewModel.myFeedNavigatorKey
+                                                    .currentContext,
+                                              );
+                                            }
                                           },
                                           child: const Text(
                                             '여행 종료',

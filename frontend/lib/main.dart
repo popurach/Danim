@@ -8,6 +8,7 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'models/UserInfo.dart';
@@ -50,6 +51,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+var logger = Logger();
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
@@ -62,11 +65,14 @@ class MyHomePage extends StatelessWidget {
           viewModel.changeTitleToFormer();
           if (viewModel.homeFeedNavigatorKey.currentState != null) {
             if (viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-              Navigator.pushNamedAndRemoveUntil(
-                viewModel.homeFeedNavigatorKey.currentContext!,
-                '/',
-                (routes) => false,
-              );
+              // logger.d('여기???');
+              // Navigator.pushNamedAndRemoveUntil(
+              //   viewModel.homeFeedNavigatorKey.currentContext!,
+              //   '/',
+              //   (routes) => false,
+              // );
+              Navigator.of(viewModel.homeFeedNavigatorKey.currentContext!)
+                  .pop();
               return false;
             }
           }

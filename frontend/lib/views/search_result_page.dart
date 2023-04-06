@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../view_models/search_bar_view_model.dart';
 
 class SearchResultView extends StatelessWidget {
+  const SearchResultView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SearchResultViewModel>(
@@ -22,79 +24,79 @@ class SearchResultView extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 70),
-                    child:
-                    viewModel.searchedPosts.isEmpty
+                    child: viewModel.searchedPosts.isEmpty
                         ? Center(
-                        child: Text("${viewModel.keyword} 지역에 대한 검색 결과가 없습니다."))
+                            child: Text(
+                                "${viewModel.keyword} 지역에 대한 검색 결과가 없습니다."))
                         : GridView.builder(
-                      itemCount: viewModel.searchedPosts.length,
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                      ),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GridTile(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Stack(
-                                children: [
-                                  SizedBox(
-                                    width: constraints.maxWidth * 0.32,
-                                    height: constraints.maxWidth * 0.32,
-                                    child: GestureDetector(
-                                      child: ExtendedImage.network(
-                                        fit: BoxFit.cover,
-                                        viewModel.searchedPosts[index]
-                                            .thumbnailUrl,
-                                      ),
-                                      onTap: () {
-                                        Navigator.pushNamed(context,
-                                            '/timeline/detail/${viewModel.searchedPosts[index].timelineId}');
-                                      },
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: constraints.maxWidth * 0.25,
-                                    left: constraints.maxWidth * 0.19,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black54,
-                                        borderRadius:
-                                        BorderRadius.circular(10),
-                                      ),
-                                      width: 50,
-                                      height: 25,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          const Icon(
-                                            Icons.favorite,
-                                            color: Colors.redAccent,
-                                            size: 12,
-                                          ),
-                                          Text(
-                                            '${viewModel.searchedPosts[index].favorite}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
+                            itemCount: viewModel.searchedPosts.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                            ),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GridTile(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        SizedBox(
+                                          width: constraints.maxWidth * 0.32,
+                                          height: constraints.maxWidth * 0.32,
+                                          child: GestureDetector(
+                                            child: ExtendedImage.network(
+                                              fit: BoxFit.cover,
+                                              viewModel.searchedPosts[index]
+                                                  .thumbnailUrl,
                                             ),
-                                          )
-                                        ],
-                                      ),
+                                            onTap: () {
+                                              Navigator.pushNamed(context,
+                                                  '/timeline/detail/${viewModel.searchedPosts[index].timelineId}');
+                                            },
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: constraints.maxWidth * 0.25,
+                                          left: constraints.maxWidth * 0.19,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.black54,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            width: 50,
+                                            height: 25,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.redAccent,
+                                                  size: 12,
+                                                ),
+                                                Text(
+                                                  '${viewModel.searchedPosts[index].favorite}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
-
                   Positioned(
                     top: 0,
                     left: 0,
@@ -102,10 +104,14 @@ class SearchResultView extends StatelessWidget {
                     bottom: 0,
                     child: Container(
                       margin: const EdgeInsets.only(
-                          left: 10, right: 10, top: 15, bottom: 15),
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                      ),
                       child: ChangeNotifierProvider<SearchBarViewModel>(
-                        create: (_) => SearchBarViewModel(isMyFeed: viewModel.isMyFeed),
-                        child: SearchBar(),
+                        create: (_) =>
+                            SearchBarViewModel(isMyFeed: viewModel.isMyFeed),
+                        child: const SearchBar(),
                       ),
                     ),
                   ),

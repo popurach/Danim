@@ -62,8 +62,10 @@ class SearchBar extends StatelessWidget {
                                             if (index == 0) {
                                               return GestureDetector(
                                                 onTap: () {
-                                                  appViewModel.changeTitle(viewModel.searchKeyWord!);
-                                                  FocusScope.of(context).unfocus();
+                                                  appViewModel.changeTitle(
+                                                      viewModel.searchKeyWord!);
+                                                  FocusScope.of(context)
+                                                      .unfocus();
                                                   Navigator.push(
                                                     context,
                                                     PageRouteBuilder(
@@ -80,7 +82,7 @@ class SearchBar extends StatelessWidget {
                                                               .isMyFeed,
                                                         ),
                                                         child:
-                                                            SearchResultView(),
+                                                            const SearchResultView(),
                                                       ),
                                                       transitionDuration:
                                                           Duration.zero,
@@ -97,13 +99,13 @@ class SearchBar extends StatelessWidget {
                                             } else {
                                               return GestureDetector(
                                                 onTap: () {
-
                                                   appViewModel.changeTitle(
                                                       viewModel
                                                           .searchedResults[
                                                               index - 1]
                                                           .nickname);
-                                                  FocusScope.of(context).unfocus();
+                                                  FocusScope.of(context)
+                                                      .unfocus();
                                                   Navigator.push(
                                                     context,
                                                     PageRouteBuilder(
@@ -205,7 +207,8 @@ class SearchBar extends StatelessWidget {
                                         height: 50,
                                         child: GestureDetector(
                                           onTap: () {
-                                            appViewModel.changeTitle(viewModel.searchKeyWord!);
+                                            appViewModel.changeTitle(
+                                                viewModel.searchKeyWord!);
                                             FocusScope.of(context).unfocus();
                                             Navigator.push(
                                               context,

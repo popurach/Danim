@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../view_models/app_view_model.dart';
 
 class HomeFeedPage extends StatelessWidget {
+  const HomeFeedPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppViewModel>(
@@ -44,7 +46,7 @@ class HomeFeedPage extends StatelessWidget {
                             const EdgeInsets.only(left: 10, right: 10, top: 10),
                         child: ChangeNotifierProvider<SearchBarViewModel>(
                           create: (_) => SearchBarViewModel(isMyFeed: false),
-                          child: SearchBar(),
+                          child: const SearchBar(),
                         ),
                       ),
                     ),
