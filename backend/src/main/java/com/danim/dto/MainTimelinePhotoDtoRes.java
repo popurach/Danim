@@ -52,7 +52,7 @@ public class MainTimelinePhotoDtoRes {
 
         String start = "";
         String finish = "";
-        if (timeline.getFinishTime() != null) {
+        if (timeline.getCreateTime() != null) {
             start = make(timeline.getCreateTime());
         }
 
