@@ -37,7 +37,7 @@ class CameraFloatingActionButton extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider(
                         create: (_) => CameraViewModel(),
-                        child: CameraView(),
+                        child: const CameraView(),
                       ),
                     ),
                   );

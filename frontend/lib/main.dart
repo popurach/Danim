@@ -8,7 +8,6 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'models/UserInfo.dart';
@@ -21,13 +20,14 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => AppViewModel(
-                UserInfo(
-                  userUid: -1,
-                  profileImageUrl: '',
-                  nickname: '',
-                ),
-                '홈')),
+          create: (_) => AppViewModel(
+              UserInfo(
+                userUid: -1,
+                profileImageUrl: '',
+                nickname: '',
+              ),
+              '홈'),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -44,17 +44,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
+      routes: {
+        '/login': (_) => const LoginPage(),
+        '/home': (_) => const MyHomePage()
+      },
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  var logger = Logger();
+  const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    return Consumer<AppViewModel>(builder: (_, viewModel, __) {
+    return Consumer<AppViewModel>(builder: (context, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
           viewModel.changeTitleToFormer();
@@ -105,9 +110,6 @@ class MyHomePage extends StatelessWidget {
             moveToModifyProfile: () {
               viewModel.goModifyProfilePage();
             },
-            logout: () {
-              viewModel.logout(context);
-            },
           ),
           body: PageView(
             controller: viewModel.pageController,
@@ -124,13 +126,13 @@ class MyHomePage extends StatelessWidget {
                 onGenerateRoute: (settings) {
                   return viewModel.onMyFeedRoute(context, settings);
                 },
-              )
+              ),
             ],
           ),
           resizeToAvoidBottomInset: true,
           floatingActionButton: Visibility(
             visible: !keyboardIsOpen,
-            child: CameraFloatingActionButton(),
+            child: const CameraFloatingActionButton(),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

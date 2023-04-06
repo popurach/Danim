@@ -34,7 +34,7 @@ class LoginViewModel extends ChangeNotifier {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (_) => MyHomePage(),
+        builder: (_) => const MyHomePage(),
       ),
       (route) => false,
     );
