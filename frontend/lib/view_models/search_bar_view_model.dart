@@ -1,5 +1,6 @@
 import 'package:danim/services/search_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../models/UserInfo.dart';
 
@@ -38,7 +39,11 @@ class SearchBarViewModel extends ChangeNotifier {
   bool get isSearching => _isSearching;
 
   SearchBarViewModel({required this.isMyFeed}) {
-    unFocus();
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      if ( visible == false ) {
+        unFocus();
+      }
+    });
   }
 
   final FocusNode _myFocus = FocusNode();
@@ -46,6 +51,8 @@ class SearchBarViewModel extends ChangeNotifier {
   FocusNode get myFocus => _myFocus;
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
+
+  KeyboardVisibilityController keyboardVisibilityController = KeyboardVisibilityController();
 
   Future<void> searchUser(BuildContext context, String? keyword) async {
     _searchKeyWord = keyword;
