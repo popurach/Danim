@@ -60,22 +60,25 @@ class MyHomePage extends StatelessWidget {
       return WillPopScope(
         onWillPop: () async {
           viewModel.changeTitleToFormer();
-          if (viewModel.homeFeedNavigatorKey.currentState != null &&
-              viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-            Navigator.pushNamedAndRemoveUntil(
-              viewModel.homeFeedNavigatorKey.currentContext!,
-              '/',
-              (routes) => false,
-            );
-            return false;
-          } else if (viewModel.myFeedNavigatorKey.currentState != null &&
-              viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-            Navigator.pushNamedAndRemoveUntil(
-              viewModel.myFeedNavigatorKey.currentContext!,
-              '/',
-              (routes) => false,
-            );
-            return false;
+          if (viewModel.homeFeedNavigatorKey.currentState != null) {
+            if (viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
+              Navigator.pushNamedAndRemoveUntil(
+                viewModel.homeFeedNavigatorKey.currentContext!,
+                '/',
+                (routes) => false,
+              );
+              return false;
+            }
+          }
+          if (viewModel.myFeedNavigatorKey.currentState != null) {
+            if (viewModel.myFeedNavigatorKey.currentState!.canPop()) {
+              Navigator.pushNamedAndRemoveUntil(
+                viewModel.myFeedNavigatorKey.currentContext!,
+                '/',
+                (routes) => false,
+              );
+              return false;
+            }
           }
           if (!Navigator.canPop(context)) {
             showDialog(
