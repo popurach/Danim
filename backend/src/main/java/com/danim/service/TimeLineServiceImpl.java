@@ -34,6 +34,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     private final FavoriteRepository favoriteRepository;
 
     private final UtilService utilService;
+    private final TimeLineRedisRepository repo;
 
 
     @Override
@@ -245,39 +246,53 @@ public class TimeLineServiceImpl implements TimeLineService {
     //타임라인 중에서 완료가 된 여행과 공개가 된 여행을 페이징 처리르 하여 보여준다 => 메인 피드 화면에서 타임라인과 썸네일 같이 넘어감
     @Override
     public List<MainTimelinePhotoDtoRes> searchTimelineOrderBylatestPaging(Pageable pageable) throws BaseException {
+        log.info("test timelineservice 접근 !");
+        log.info("현재 검색 페이지 : {}", pageable.getPageNumber());
+        log.info("레지스 페이지 존재 여부 : {}", repo.findById(pageable.getPageNumber()).isPresent());
+        // redis에 존재할 시 바로 리턴
+        try{
+            RedisPage entity = repo.findById(pageable.getPageNumber()).orElseThrow();
+            log.info("redis 값 접근");
+            return entity.getList();
+        }catch(NoSuchElementException e){
+            log.info("레디스 데이터 존재하지 않을 때 timeLineRepository 실행");
+            Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
 
-        Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
 
+            if (pageable.getPageNumber() != 0 && timeline.getContent().size() == 0) {
+                //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
+                return null;
+            } else if (pageable.getPageNumber() == 0 && timeline.getContent().size() == 0) {
+                return null;
+            }
 
-        if (pageable.getPageNumber() != 0 && timeline.getContent().size() == 0) {
-            //throw new BaseException(ErrorMessage.NOT_EXIST_TIMELINE_PAGING);
-            return null;
-        } else if (pageable.getPageNumber() == 0 && timeline.getContent().size() == 0) {
-            return null;
+            //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
+            List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
+            //이때 타임라인에서 post가 있는 친구는 보여주고 없으면 보여 주지 않아야 할듯 하다
+
+            for (TimeLine time : timeline) {
+                Post startpost = postRepository.findTopByTimelineIdOrderByCreateTimeAsc(time);
+                Post lastpost = postRepository.findTopByTimelineIdOrderByCreateTimeDesc(time);
+                //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
+                if (startpost == null || lastpost == null)
+                    continue;
+                //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
+                log.info("현재 timelineid" + time.getTimelineId() + "현재 post" + startpost.getPostId().toString());
+                if (startpost.getPhotoList().isEmpty())
+                    throw new BaseException(ErrorMessage.NOT_EXIST_PHOTO);
+                Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_PHOTO));
+                //Long uid = time.getTimelineId();
+                User user = userRepository.findById(time.getUserUid().getUserUid()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
+                MainTimelinePhotoDtoRes temp = MainTimelinePhotoDtoRes.builder(time, startpost, lastpost, photo, user).build();
+                list.add(temp);
+            }
+            RedisPage redisPage = new RedisPage();
+            redisPage.setNum(pageable.getPageNumber());
+            redisPage.setList(list);
+            repo.save(redisPage);
+
+            return list;
         }
-
-        //이제 얻어낸 타임라인 리스트에 해당 되는 포스트 정보를 불러오도록 한다.
-        List<MainTimelinePhotoDtoRes> list = new ArrayList<>();//넘겨줄 timeline dto생성
-        //이때 타임라인에서 post가 있는 친구는 보여주고 없으면 보여 주지 않아야 할듯 하다
-
-        for (TimeLine time : timeline) {
-            Post startpost = postRepository.findTopByTimelineIdOrderByCreateTimeAsc(time);
-            Post lastpost = postRepository.findTopByTimelineIdOrderByCreateTimeDesc(time);
-            //지금 상태로는 타임라인에 등록이 된 post가 아닌지 확인을 해서 넘겨 주도록 해야한다
-            if (startpost == null || lastpost == null)
-                continue;
-            //현재는 우선 임시로 작업을 하여 넣어 줄것으로 생각을 하고 있다.
-            log.info("현재 timelineid" + time.getTimelineId() + "현재 post" + startpost.getPostId().toString());
-            if (startpost.getPhotoList().isEmpty())
-                throw new BaseException(ErrorMessage.NOT_EXIST_PHOTO);
-            Photo photo = photoRepository.findById(startpost.getPhotoList().get(0).getPhotoId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_PHOTO));
-            //Long uid = time.getTimelineId();
-            User user = userRepository.findById(time.getUserUid().getUserUid()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
-            MainTimelinePhotoDtoRes temp = MainTimelinePhotoDtoRes.builder(time, startpost, lastpost, photo, user).build();
-            list.add(temp);
-        }
-
-        return list;
     }
 
     //나의 타임라인 검색시 페이징 처리해서 검색을 해온다 => 나의 타임라인 조회를 할시에 비어 있는 타임라인으로 넘겨줄거임

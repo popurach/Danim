@@ -1,0 +1,6 @@
+pip install numpy
+pip install flask
+pip install pydub
+pip install requests
+pip install response
+pip install requests_toolbelt
