@@ -40,7 +40,8 @@ class LoginPage extends StatelessWidget {
                         color: Colors.transparent,
                         margin: const EdgeInsets.all(20.0),
                         child: Lottie.asset(
-                            'assets/lottie/boarding_pass_ticket.json'),
+                          'assets/lottie/boarding_pass_ticket.json',
+                        ),
                       ),
                       InkWell(
                         onTap: () {

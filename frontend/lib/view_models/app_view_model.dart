@@ -86,19 +86,6 @@ class AppViewModel with ChangeNotifier {
     );
   }
 
-  logout(BuildContext context) {
-    const storage = FlutterSecureStorage();
-    storage.deleteAll();
-    logger.d(context);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (_) => LoginPage(),
-      ),
-      (routes) => false,
-    );
-  }
-
   onHomeFeedRoute(context, settings) {
     if (settings.name!.startsWith('/timeline/detail')) {
       final timelineId = int.parse(settings.name.split('/')[3]);

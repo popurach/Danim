@@ -4,13 +4,14 @@ import 'package:danim/view_models/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../main.dart';
 import '../module/audio_player_view.dart';
 import '../module/audio_player_view_model.dart';
 import '../module/images_page_view.dart';
 import '../view_models/record_view_model.dart';
 
 class RecordView extends StatelessWidget {
+  const RecordView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,7 +31,6 @@ class RecordView extends StatelessWidget {
                       Navigator.pop(context);
                       appViewModel.goModifyProfilePage();
                     },
-                    logout: () {},
                   ),
                   body: Column(
                     children: [

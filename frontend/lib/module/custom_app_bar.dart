@@ -1,14 +1,16 @@
 import 'package:danim/view_models/app_view_model.dart';
+import 'package:danim/views/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../view_models/camera_view_model.dart';
+import '../views/camera_screen.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function moveToModifyProfile;
-  final Function logout;
 
-  const CustomAppBar(
-      {super.key, required this.moveToModifyProfile, required this.logout});
+  const CustomAppBar({super.key, required this.moveToModifyProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +46,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               borderRadius: BorderRadius.circular(30.0),
             ),
             iconSize: 40,
-            itemBuilder: (_) => <PopupMenuEntry>[
-              PopupMenuItem(
-                onTap: () {
+            onSelected: (value) {
+              switch (value) {
+                case 0:
                   moveToModifyProfile();
-                },
+                  break;
+                case 1:
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const LoginPage(),
+                    ),
+                    (routes) => false,
+                  );
+                  break;
+              }
+            },
+            itemBuilder: (context) => <PopupMenuEntry>[
+              PopupMenuItem(
+                value: 0,
                 child: const SizedBox(
                   width: 80,
                   child: Text('프로필변경'),
                 ),
               ),
-              PopupMenuItem(
-                onTap: () {
-                  logout();
-                },
-                child: const SizedBox(
+              const PopupMenuItem(
+                value: 1,
+                child: SizedBox(
                   width: 80,
-                  child: Text('로그아웃'),
+                  child: Text(
+                    '로그아웃',
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
               )
             ],
