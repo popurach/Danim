@@ -11,7 +11,7 @@ class SearchResultView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppViewModel>(
-      builder: (_, appViewModel, _) {
+      builder: (_, appViewModel, __) {
         return Consumer<SearchResultViewModel>(
           builder: (context, viewModel, _) {
             return LayoutBuilder(
