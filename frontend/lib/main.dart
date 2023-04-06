@@ -8,7 +8,6 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'models/UserInfo.dart';
@@ -22,12 +21,13 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => AppViewModel(
-              UserInfo(
-                userUid: -1,
-                profileImageUrl: '',
-                nickname: '',
-              ),
-              '홈'),
+            UserInfo(
+              userUid: -1,
+              profileImageUrl: '',
+              nickname: '',
+            ),
+            '홈',
+          ),
         ),
       ],
       child: const MyApp(),
@@ -46,15 +46,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
       ),
       home: const LoginPage(),
-      routes: {
-        '/login': (_) => const LoginPage(),
-        '/home': (_) => const MyHomePage()
-      },
     );
   }
 }
-
-var logger = Logger();
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -65,18 +59,17 @@ class MyHomePage extends StatelessWidget {
     return Consumer<AppViewModel>(builder: (context, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
-          logger.d('back button pressed..');
           viewModel.changeTitleToFormer();
-          logger.d('whats wrong?');
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-            viewModel.homeFeedNavigatorKey.currentState!.pop();
-            logger.d('homeFeed detected');
-
+            Navigator.pushNamedAndRemoveUntil(
+              viewModel.homeFeedNavigatorKey.currentContext!,
+              '/',
+              (routes) => false,
+            );
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-            logger.d('myfeed detected');
             Navigator.pushNamedAndRemoveUntil(
               viewModel.myFeedNavigatorKey.currentContext!,
               '/',
@@ -85,7 +78,6 @@ class MyHomePage extends StatelessWidget {
             return false;
           }
           if (!Navigator.canPop(context)) {
-            logger.d('exit called');
             showDialog(
               barrierDismissible: false,
               context: context,

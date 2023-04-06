@@ -4,49 +4,46 @@ import 'package:flutter/material.dart';
 import '../models/UserInfo.dart';
 
 class SearchBarViewModel extends ChangeNotifier {
-  bool isMyFeed;
+  final bool isMyFeed;
 
   String? _searchKeyWord = "";
 
   String? get searchKeyWord => _searchKeyWord;
 
-  set searchKeyWord(String? newString) {
-    _searchKeyWord = newString;
-    notifyListeners();
+  double getSearchBarHeight() {
+    if (!isMyFeed) {
+      if (searchedResults.isEmpty) {
+        return (searchedResults.length + 1) * 105;
+      } else if (searchedResults.length == 1) {
+        return (searchedResults.length + 1) * 82;
+      } else if (searchedResults.length >= 2 && searchedResults.length <= 4) {
+        return (searchedResults.length + 1) * 75;
+      } else {
+        return 450;
+      }
+    }
+    return 105;
   }
 
   List<UserInfo> _searchedResults = [];
 
   List<UserInfo> get searchedResults => _searchedResults;
 
-  set searchedResults(List<UserInfo> newList) {
-    _searchedResults = newList;
-    notifyListeners();
-  }
-
   List? _posts;
 
   List? get posts => _posts;
 
-  set posts(List? newPosts) {
-    _posts = newPosts;
-  }
-
-  bool _isSearching = false;
+  final bool _isSearching = false;
 
   bool get isSearching => _isSearching;
-
-  set isSearching(bool newBool) {
-    _isSearching = newBool;
-  }
 
   SearchBarViewModel({required this.isMyFeed}) {
     unFocus();
   }
 
-  FocusNode _myfocus = FocusNode();
+  final FocusNode _myFocus = FocusNode();
 
-  FocusNode get myfocus => _myfocus;
+  FocusNode get myFocus => _myFocus;
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
 
@@ -62,7 +59,7 @@ class SearchBarViewModel extends ChangeNotifier {
   }
 
   void unFocus() {
-    _myfocus.unfocus();
+    _myFocus.unfocus();
     notifyListeners();
   }
 

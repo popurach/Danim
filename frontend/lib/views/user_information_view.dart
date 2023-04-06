@@ -21,6 +21,8 @@ class UserInformationView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               onTap: () {
                 if (userInfo.userUid == appViewModel.userInfo.userUid) {
                   appViewModel.changeTitle('프로필 변경');

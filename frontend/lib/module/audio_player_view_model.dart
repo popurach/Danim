@@ -7,7 +7,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   bool _isPlaying = false;
   Duration _duration = const Duration(microseconds: 0);
 
-  final AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer? _audioPlayer = AudioPlayer();
   Duration _audioPosition = Duration.zero;
 
   String? get getAudioFilePath => _audioFilePath;
@@ -20,7 +20,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // optional parameter
   AudioPlayerViewModel(this._audioFilePath) {
-    audioPlayer.onDurationChanged.listen((newDuration) {
+    _audioPlayer?.onDurationChanged.listen((newDuration) {
       _duration = newDuration;
       notifyListeners();
     });
@@ -28,7 +28,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   }
 
   Future<void> initDuration() async {
-    await audioPlayer.setSourceUrl(_audioFilePath!);
+    await _audioPlayer?.setSourceUrl(_audioFilePath!);
   }
 
   // 재생 시작
@@ -38,18 +38,18 @@ class AudioPlayerViewModel extends ChangeNotifier {
         getAudioFilePath!.isEmpty) {
       return;
     } else {
-      await audioPlayer.play(DeviceFileSource(_audioFilePath!));
+      await _audioPlayer?.play(DeviceFileSource(_audioFilePath!));
       _isPlaying = true;
 
       notifyListeners();
       // 재생이 완료 되었을 때 변수 바꿔주기
-      audioPlayer.onPlayerComplete.listen((event) {
+      _audioPlayer?.onPlayerComplete.listen((event) {
         _isPlaying = false;
         notifyListeners();
       });
 
       // 음성 파일에서의 현재 위치 갱신
-      audioPlayer.onPositionChanged.listen((curPos) {
+      _audioPlayer?.onPositionChanged.listen((curPos) {
         _audioPosition = curPos;
         notifyListeners();
       });
@@ -59,7 +59,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   // 일시정지
   Future<void> pauseRecordedFile() async {
     if (isPlaying == true) {
-      audioPlayer.pause();
+      _audioPlayer?.pause();
       _isPlaying = false;
       notifyListeners();
     } else {
@@ -70,7 +70,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   // 계속 재생
   Future<void> resumeRecordedFile() async {
     if (isPlaying == false) {
-      audioPlayer.resume();
+      _audioPlayer?.resume();
       _isPlaying = true;
       notifyListeners();
     } else {
@@ -81,7 +81,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   // 완전 멈춤
   Future<void> stopRecordedFile() async {
     if (isPlaying == true) {
-      audioPlayer.stop();
+      _audioPlayer?.stop();
       _isPlaying = false;
       notifyListeners();
     } else {
@@ -102,7 +102,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 현재 위치 참조
   Future<void> seekTo(Duration position) async {
-    await audioPlayer.seek(position);
+    await _audioPlayer?.seek(position);
     updateAudioPosition(position);
   }
 
@@ -123,6 +123,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   void dispose() {
     _audioFilePath = null;
     stopRecordedFile();
+    _audioPlayer = null;
     super.dispose();
   }
 }

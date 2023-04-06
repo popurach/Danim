@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../view_models/app_view_model.dart';
 import './record_screen.dart';
-import '../module/CupertinoAlertDialog.dart';
+import '../module/my_alert_dialog.dart';
 import '../view_models/camera_view_model.dart';
 
 class CameraView extends StatelessWidget {

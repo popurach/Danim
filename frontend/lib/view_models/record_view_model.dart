@@ -6,10 +6,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/main.dart';
 import 'package:danim/models/LocationInformation.dart';
-import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,17 +25,19 @@ class RecordViewModel extends ChangeNotifier {
   late final List<XFile> _imageList;
 
   LocationInformation _locationInfo = LocationInformation(
-      country: "", address2: "", address3: "", address4: "", flag: null);
+    country: "",
+    address2: "",
+    address3: "",
+    address4: "",
+    flag: null,
+  );
+
+  AudioPlayer audioPlayer = AudioPlayer();
 
   LocationInformation get locationInfo => _locationInfo;
 
   int _countryIndex = 0;
   int _postCodeIndex = 0;
-
-  set locationInfo(LocationInformation newInfo) {
-    _locationInfo = newInfo;
-    notifyListeners();
-  }
 
   bool _haveLocation = false;
 
@@ -67,8 +67,6 @@ class RecordViewModel extends ChangeNotifier {
     audioPlayerViewModel = AudioPlayerViewModel(_recordedFilePath);
   }
 
-  AudioPlayer audioPlayer = AudioPlayer();
-
   bool _isUploading = false;
 
   bool get isUploading => _isUploading;
@@ -94,7 +92,7 @@ class RecordViewModel extends ChangeNotifier {
     // 레코딩 시작
     _isRecording = true;
     await record.start(path: filePath, encoder: AudioEncoder.wav);
-    recordedFileName = fileName;
+    _recordedFileName = fileName;
 
     // 30초 뒤 자동으로 녹음
     Future.delayed(
@@ -166,40 +164,39 @@ class RecordViewModel extends ChangeNotifier {
         filename: "$recordedFileName.wav",
         contentType: MediaType('audio', 'wav'));
 
-      FormData formData = FormData.fromMap({
-        'flagFile': flag,
-        'imageFiles': imageFiles,
-        'voiceFile': audioFile,
-        'timelineId': userInfo.timeLineId,
-        'address1': locationInfo.country,
-        'address2': locationInfo.address2,
-        'address3': locationInfo.address3,
-        'address4': locationInfo.address4
-      });
-      _isUploading = true;
-      notifyListeners();
-      if (context.mounted) {
-        await UploadRepository().uploadToServer(context, formData);
-      }
-      _isUploading = false;
-      notifyListeners();
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider<AppViewModel>(
-                create: (_) => AppViewModel(userInfo, "홈"),
-                child: MyHomePage(),
-              ),
+    FormData formData = FormData.fromMap({
+      'flagFile': flag,
+      'imageFiles': imageFiles,
+      'voiceFile': audioFile,
+      'timelineId': userInfo.timeLineId,
+      'address1': locationInfo.country,
+      'address2': locationInfo.address2,
+      'address3': locationInfo.address3,
+      'address4': locationInfo.address4
+    });
+    _isUploading = true;
+    notifyListeners();
+    if (context.mounted) {
+      await UploadRepository().uploadToServer(context, formData);
+    }
+    _isUploading = false;
+    notifyListeners();
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider<AppViewModel>(
+              create: (_) => AppViewModel(userInfo, "홈"),
+              child: const MyHomePage(),
             ),
-            (route) => false);
-      }
+          ),
+          (route) => false);
     }
   }
 
-  // 위치를 받아오는 함수
+// 위치를 받아 오는 함수
   void getLocation() async {
-    if (_haveLocation == false) {
+    if (!_haveLocation) {
       if (imageList.isNotEmpty) {
         if (isFirstPhotoFromGallery == false) {
           _haveLocation = true;
@@ -247,7 +244,7 @@ class RecordViewModel extends ChangeNotifier {
                   address3: address3Name,
                   address4: address4Name,
                   flag: flagData);
-              locationInfo = newLocation;
+              _locationInfo = newLocation;
               notifyListeners();
             }
           }
