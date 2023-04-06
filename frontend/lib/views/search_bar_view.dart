@@ -6,6 +6,7 @@ import 'package:danim/views/my_feed_view.dart';
 import 'package:danim/views/search_result_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +26,7 @@ class SearchBar extends StatelessWidget {
                       ? viewModel.searchedResults.isEmpty
                           ? (viewModel.searchedResults.length + 1) * 105
                           : viewModel.searchedResults.length == 1
-                              ? (viewModel.searchedResults.length + 1) * 79
+                              ? (viewModel.searchedResults.length + 1) * 82
                               : viewModel.searchedResults.length >= 2 &&
                                       viewModel.searchedResults.length <= 4
                                   ? (viewModel.searchedResults.length + 1) * 75
@@ -197,6 +198,7 @@ class SearchBar extends StatelessWidget {
                                         height: 50,
                                         child: GestureDetector(
                                           onTap: () {
+                                            FocusScope.of(context).unfocus();
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -234,13 +236,16 @@ class SearchBar extends StatelessWidget {
                   color: Colors.white,
                   height: 45,
                   child: TextField(
+                    autofocus: false,
                     focusNode: viewModel.myfocus,
                     keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
                     onChanged: (String? keyword) async {
                       viewModel.searchUser(context, keyword);
                     },
                     onSubmitted: (String keyWord) {
                       appViewModel.changeTitle(keyWord);
+                      viewModel.unFocus();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
