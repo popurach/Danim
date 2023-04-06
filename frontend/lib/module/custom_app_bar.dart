@@ -2,6 +2,7 @@ import 'package:danim/view_models/app_view_model.dart';
 import 'package:danim/views/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/camera_view_model.dart';
@@ -52,6 +53,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   moveToModifyProfile();
                   break;
                 case 1:
+                  const storage = FlutterSecureStorage();
+                  storage.deleteAll();
                   Navigator.pushAndRemoveUntil(
                     context,
                     PageRouteBuilder(
@@ -63,9 +66,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             itemBuilder: (context) => <PopupMenuEntry>[
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 0,
-                child: const SizedBox(
+                child: SizedBox(
                   width: 80,
                   child: Text('프로필변경'),
                 ),
