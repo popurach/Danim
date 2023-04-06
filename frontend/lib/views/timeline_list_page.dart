@@ -23,6 +23,26 @@ class TimelineListPage extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               pagingController: pagingController,
               builderDelegate: PagedChildBuilderDelegate<Timeline>(
+                noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                  height: 300,
+                  child: Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Icon(
+                        Icons.airplane_ticket_outlined,
+                        color: Colors.grey,
+                        size: 80,
+                      ),
+                      Text(
+                        "아직 작성하진 다님이 없네요 \n \n     다님을 시작해볼까요?",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
                 itemBuilder: (context, item, index) => TimelineListItem(
                   key: Key(item.timelineId.toString()),
                   timeline: item,
