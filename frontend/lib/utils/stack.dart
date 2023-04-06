@@ -6,7 +6,10 @@ class MyStack<T> {
 
   void clear() => _list.clear();
 
-  T pop() => _list.removeLast();
+  T? pop() {
+    if (_list.isEmpty) return null;
+    return _list.removeLast();
+  }
 
   bool get isNotEmpty => _list.isNotEmpty;
 

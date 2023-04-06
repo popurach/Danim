@@ -8,6 +8,7 @@ import 'package:danim/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'models/UserInfo.dart';
@@ -53,6 +54,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+var logger = Logger();
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
@@ -62,48 +65,59 @@ class MyHomePage extends StatelessWidget {
     return Consumer<AppViewModel>(builder: (context, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
+          logger.d('back button pressed..');
           viewModel.changeTitleToFormer();
+          logger.d('whats wrong?');
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
             viewModel.homeFeedNavigatorKey.currentState!.pop();
+            logger.d('homeFeed detected');
+
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
+            logger.d('myfeed detected');
             Navigator.pushNamedAndRemoveUntil(
               viewModel.myFeedNavigatorKey.currentContext!,
               '/',
               (routes) => false,
             );
             return false;
-          } else if (!Navigator.canPop(context)) {
+          }
+          if (!Navigator.canPop(context)) {
+            logger.d('exit called');
             showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('다님 종료'),
-                content: const Text('다님을  종료 하시겠습니까?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      exit(0);
-                    },
-                    child: const Text(
-                      '종료',
-                      style: TextStyle(color: Colors.red),
+              builder: (ctx) => WillPopScope(
+                onWillPop: () async => false,
+                child: AlertDialog(
+                  title: const Text('다님 종료'),
+                  content: const Text('다님을  종료 하시겠습니까?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        exit(0);
+                      },
+                      child: const Text(
+                        '종료',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                    },
-                    child: const Text('취소'),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('취소'),
+                    ),
+                  ],
+                ),
               ),
             );
+            return false;
           }
-          return false;
+          return true;
         },
         child: Scaffold(
           appBar: CustomAppBar(

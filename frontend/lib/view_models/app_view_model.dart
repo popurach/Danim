@@ -1,20 +1,18 @@
 import 'dart:async';
 
 import 'package:danim/services/timeline_repository.dart';
+import 'package:danim/view_models/my_feed_view_model.dart';
 import 'package:danim/view_models/search_bar_view_model.dart';
 import 'package:danim/view_models/timeline_detail_view_model.dart';
-import 'package:danim/view_models/my_feed_view_model.dart';
 import 'package:danim/views/home_feed_page.dart';
-import 'package:danim/views/timeline_detail_page.dart';
 import 'package:danim/views/my_feed_view.dart';
+import 'package:danim/views/timeline_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../models/UserInfo.dart';
 import '../utils/stack.dart';
-import '../views/login_page.dart';
 import '../views/modify_profile.dart';
 
 class AppViewModel with ChangeNotifier {
@@ -138,14 +136,13 @@ class AppViewModel with ChangeNotifier {
 
   changeTitle(String newTitle) {
     _formerTitle.push(_title);
-    logger.d(_formerTitle);
     _title = newTitle;
     notifyListeners();
   }
 
   changeTitleToFormer() {
-    _title = _formerTitle.pop();
-    logger.d(_formerTitle);
+    String? tmp = _formerTitle.pop();
+    if (tmp != null) _title = tmp;
     notifyListeners();
   }
 }
