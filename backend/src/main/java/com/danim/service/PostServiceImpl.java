@@ -120,14 +120,16 @@ public class PostServiceImpl implements PostService {
                         .word((t.get("words").get(i).get(2).asText())).build());
             }
         }
-//        log.info("fastApiReq response : {}",http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),file));
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
         String voiceUrl="";
-        log.info("fasapiReq.size() info : {}",fastApiReq);
-        if(!fastApiReq.isEmpty()){
+        List<WordInfo> badwords = badWordFilter.badWord(fastApiReq);
+        log.info("badwords info : {}",badwords);
+//        log.info("badwords.size() info : {}",badwords.isEmpty());
+//        log.info("badwords.size() info : {}",badwords.size());
+        if(!badwords.isEmpty()){
 
-            File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),file);
+            File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badwords,file);
             log.info("filter info :{}",filter);
 //            Files.delete(target);//파일을 삭제하는 코드임
 
