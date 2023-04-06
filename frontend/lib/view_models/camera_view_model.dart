@@ -1,18 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
-import 'package:danim/models/PostForUpload.dart';
 import 'package:danim/view_models/record_view_model.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
-import 'package:logger/logger.dart';
 
 
 final deviceInfoPlugin = DeviceInfoPlugin();
