@@ -137,14 +137,20 @@ public class TimeLineServiceImpl implements TimeLineService {
                 postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
 
             } else {
+                photolist = new ArrayList<>();
+                for (Photo p1 : p.getPhotoList()) {
+                    photolist.add(p1.getPhotoUrl());
+                }
 
                 //나온 국가가 그전에 있던거에 이어져서 가는 형태로 파악을 하면됨
                 postlist.add(MyPostDtoRes.builder(p, photolist, favorite_count, favorite).build());
             }
         }
 
-        if (last != null)
+        if (last != null) {
+            temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
             temptimeline.setFinishDate(utilService.invertLocalDate(last.getCreateTime()));
+        }
         else {
             temptimeline.setStartDate(utilService.invertLocalDate(now.getCreateTime()));
         }
@@ -162,6 +168,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         timelineouter.setIsMine(isMine);
         // timelineouter.setNationList(tempnow);//중복 되지 않는 타임라인의 모든 국가 리스트 를 설정해 주는 작업이다.
         return timelineouter;
+
     }
 
     @Override
@@ -182,7 +189,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     public void makenewTimelineTemp() throws BaseException {
         //여기서 넘어온 uid는 User의 uid아이디 입니다.
         TimeLine timeline = new TimeLine();
-        User now=userRepository.getByUserUid(1L);
+        User now = userRepository.getByUserUid(1L);
         //새로운 타임라인 생성이 가능한다
         timeline.setUserUid(now);
         timeLineRepository.save(timeline);
@@ -192,7 +199,7 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Override
 
     public void changeTimelineFinish() {
-            timeLineRepository.changeTimeline(true);
+        timeLineRepository.changeTimeline(true);
     }
 
 
@@ -217,8 +224,8 @@ public class TimeLineServiceImpl implements TimeLineService {
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
             throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
-        List<Post> post_list=postRepository.findAllByTimelineId(now);
-        for (Post p:post_list) {
+        List<Post> post_list = postRepository.findAllByTimelineId(now);
+        for (Post p : post_list) {
             postService.deletePostById(p.getPostId());
         }
 
@@ -256,11 +263,11 @@ public class TimeLineServiceImpl implements TimeLineService {
         log.info("현재 검색 페이지 : {}", pageable.getPageNumber());
         log.info("레지스 페이지 존재 여부 : {}", repo.findById(pageable.getPageNumber()).isPresent());
         // redis에 존재할 시 바로 리턴
-        try{
+        try {
             RedisPage entity = repo.findById(pageable.getPageNumber()).orElseThrow();
             log.info("redis 값 접근");
             return entity.getList();
-        }catch(NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             log.info("레디스 데이터 존재하지 않을 때 timeLineRepository 실행");
             Page<TimeLine> timeline = timeLineRepository.findAllByCompleteAndTimelinePublic(true, true, pageable);
 
