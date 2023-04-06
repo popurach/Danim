@@ -35,6 +35,7 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     private final UtilService utilService;
     private final TimeLineRedisRepository repo;
+    private final PostService postService;
 
 
     @Override
@@ -211,10 +212,16 @@ public class TimeLineServiceImpl implements TimeLineService {
 
 
     @Override
-    public void deleteTimeline(Long uid, User user) throws BaseException {
+    public void deleteTimeline(Long uid, User user) throws Exception {
+
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
             throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
+        List<Post> post_list=postRepository.findAllByTimelineId(now);
+        for (Post p:post_list) {
+            postService.deletePostById(p.getPostId());
+        }
+
         timeLineRepository.delete(now);
         repo.deleteAll();
     }
