@@ -14,6 +14,7 @@ public class GetPostRes {
     private String thumbNail;
     private Long postId;
     private Long totalFavorite;
+    private String timelineTitle;
 
     public static GetPostRes.GetPostResBuilder builder(Post post, Long totalFavorite) {
 
@@ -21,11 +22,13 @@ public class GetPostRes {
         String thumbNail = post.getPhotoList().get(0).getPhotoUrl();
         Long postId = post.getPostId();
         Long total = totalFavorite;
+        String timelineTitle = post.getTimelineId().getTitle();
 
         return GetPostResBuilder()
                 .timelineId(timelineId)
                 .thumbNail(thumbNail)
                 .postId(postId)
-                .totalFavorite(total);
+                .totalFavorite(total)
+                .timelineTitle(timelineTitle);
     }
 }
