@@ -155,27 +155,6 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
-    if (_imageList.isEmpty) {
-      OneButtonMaterialDialog().showFeedBack(context, "사진을 등록해주세요");
-      return;
-    }
-
-    if (_recordedFilePath == "") {
-      OneButtonMaterialDialog().showFeedBack(context, "음성을 녹음해주세요");
-      return;
-    }
-
-    if (_locationInfo == LocationInformation(
-      country: "",
-      address2: "",
-      address3: "",
-      address4: "",
-      flag: null,)
-    ) {
-      OneButtonMaterialDialog().showFeedBack(context, "위치를 불러오지 못했습니다.");
-      return;
-    }
-
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
         filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
     final List<MultipartFile> imageFiles = imageList
@@ -276,6 +255,27 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   void uploadConfirm(BuildContext context, UserInfo myInfo) {
+    if (_imageList.isEmpty) {
+      OneButtonMaterialDialog().showFeedBack(context, "사진을 등록해주세요");
+      return;
+    }
+
+    if (_recordedFilePath == "") {
+      OneButtonMaterialDialog().showFeedBack(context, "음성을 녹음해주세요");
+      return;
+    }
+
+    if (_locationInfo == LocationInformation(
+      country: "",
+      address2: "",
+      address3: "",
+      address4: "",
+      flag: null,)
+    ) {
+      OneButtonMaterialDialog().showFeedBack(context, "위치를 불러오지 못했습니다.");
+      return;
+    }
+
     final alert = AlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
