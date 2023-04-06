@@ -21,13 +21,14 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => AppViewModel(
-                UserInfo(
-                  userUid: -1,
-                  profileImageUrl: '',
-                  nickname: '',
-                ),
-                '홈')),
+          create: (_) => AppViewModel(
+              UserInfo(
+                userUid: -1,
+                profileImageUrl: '',
+                nickname: '',
+              ),
+              '홈'),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -44,69 +45,84 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
+      routes: {
+        '/login': (_) => const LoginPage(),
+        '/home': (_) => const MyHomePage()
+      },
     );
   }
 }
 
+var logger = Logger();
+
 class MyHomePage extends StatelessWidget {
-  var logger = Logger();
+  const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    return Consumer<AppViewModel>(builder: (_, viewModel, __) {
+    return Consumer<AppViewModel>(builder: (context, viewModel, __) {
       return WillPopScope(
         onWillPop: () async {
+          logger.d('back button pressed..');
           viewModel.changeTitleToFormer();
+          logger.d('whats wrong?');
           if (viewModel.homeFeedNavigatorKey.currentState != null &&
               viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
             viewModel.homeFeedNavigatorKey.currentState!.pop();
+            logger.d('homeFeed detected');
+
             return false;
           } else if (viewModel.myFeedNavigatorKey.currentState != null &&
               viewModel.myFeedNavigatorKey.currentState!.canPop()) {
+            logger.d('myfeed detected');
             Navigator.pushNamedAndRemoveUntil(
               viewModel.myFeedNavigatorKey.currentContext!,
               '/',
               (routes) => false,
             );
             return false;
-          } else if (!Navigator.canPop(context)) {
+          }
+          if (!Navigator.canPop(context)) {
+            logger.d('exit called');
             showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('다님 종료'),
-                content: const Text('다님을  종료 하시겠습니까?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      exit(0);
-                    },
-                    child: const Text(
-                      '종료',
-                      style: TextStyle(color: Colors.red),
+              builder: (ctx) => WillPopScope(
+                onWillPop: () async => false,
+                child: AlertDialog(
+                  title: const Text('다님 종료'),
+                  content: const Text('다님을  종료 하시겠습니까?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        exit(0);
+                      },
+                      child: const Text(
+                        '종료',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                    },
-                    child: const Text('취소'),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('취소'),
+                    ),
+                  ],
+                ),
               ),
             );
+            return false;
           }
-          return false;
+          return true;
         },
         child: Scaffold(
           appBar: CustomAppBar(
             moveToModifyProfile: () {
               viewModel.goModifyProfilePage();
-            },
-            logout: () {
-              viewModel.logout(context);
             },
           ),
           body: PageView(
@@ -124,13 +140,13 @@ class MyHomePage extends StatelessWidget {
                 onGenerateRoute: (settings) {
                   return viewModel.onMyFeedRoute(context, settings);
                 },
-              )
+              ),
             ],
           ),
           resizeToAvoidBottomInset: true,
           floatingActionButton: Visibility(
             visible: !keyboardIsOpen,
-            child: CameraFloatingActionButton(),
+            child: const CameraFloatingActionButton(),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

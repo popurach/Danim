@@ -15,7 +15,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
@@ -24,10 +23,8 @@ import '../models/UserInfo.dart';
 import '../module/audio_player_view_model.dart';
 import '../services/upload_repository.dart';
 
-var logger = Logger();
-
 class RecordViewModel extends ChangeNotifier {
-  late List<XFile> _imageList;
+  late final List<XFile> _imageList;
 
   LocationInformation _locationInfo = LocationInformation(
       country: "", address2: "", address3: "", address4: "", flag: null);
@@ -49,7 +46,7 @@ class RecordViewModel extends ChangeNotifier {
   late AudioPlayerViewModel audioPlayerViewModel;
 
   Duration _duration = const Duration(seconds: 0);
-  Duration _audioPosition = Duration.zero;
+  final Duration _audioPosition = Duration.zero;
 
   List<XFile> get imageList => _imageList;
 
@@ -57,27 +54,11 @@ class RecordViewModel extends ChangeNotifier {
 
   bool get isFirstPhotoFromGallery => _isFirstPhotoFromGallery;
 
-  set isFirstPhotoFromGallery(bool newBool) {
-    _isFirstPhotoFromGallery = newBool;
-  }
-
   String get recordedFileName => _recordedFileName;
-
-  set recordedFileName(String newName) {
-    _recordedFileName = newName;
-  }
 
   String get recordedFilePath => _recordedFilePath;
 
-  set recordedFilePath(String newPath) {
-    _recordedFilePath = newPath;
-  }
-
   Duration get duration => _duration;
-
-  set duration(Duration newDuration) {
-    _duration = newDuration;
-  }
 
   Duration get audioPosition => _audioPosition;
 
@@ -107,7 +88,7 @@ class RecordViewModel extends ChangeNotifier {
     }
     // 파일 저장 경로 지정
     if (recordedFilePath != "") {
-      recordedFilePath = "";
+      _recordedFilePath = "";
     }
     final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
@@ -132,10 +113,10 @@ class RecordViewModel extends ChangeNotifier {
     await record.stop();
     final directory = Directory('/storage/emulated/0/Documents/records');
 
-    recordedFilePath = '${directory.path}/$recordedFileName.wav';
+    _recordedFilePath = '${directory.path}/$recordedFileName.wav';
     await audioPlayer.setSourceUrl(recordedFilePath);
-    duration = (await audioPlayer.getDuration())!;
-    audioPlayerViewModel.audioFilePath = recordedFilePath;
+    _duration = (await audioPlayer.getDuration())!;
+    audioPlayerViewModel.saveAudio(recordedFilePath);
     notifyListeners();
   }
 
@@ -147,7 +128,7 @@ class RecordViewModel extends ChangeNotifier {
     }
 
     if (_imageList.isEmpty) {
-      isFirstPhotoFromGallery = true;
+      _isFirstPhotoFromGallery = true;
     }
 
     // multi_image_picker_viewr 라이브러리 사용
@@ -320,9 +301,10 @@ class RecordViewModel extends ChangeNotifier {
     );
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
