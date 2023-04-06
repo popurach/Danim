@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class BadWordFilter {
-    private final HashSet<String> filter = new HashSet<>(Arrays.asList("바보","멍청이","해삼","말미잘","진짜"));
+    private final HashSet<String> filter = new HashSet<>(Arrays.asList("바보","멍청이"));
 
     public List<WordInfo> badWord(List<WordInfo> wordInfoList){
         List<WordInfo> badWords = new ArrayList<>();

@@ -72,7 +72,7 @@ public class Http {
         fileOutputStream.close();
         inputStream.close();
 
-        if (!response.isSuccessful()) throw new ConnectException();
+//        if (!response.isSuccessful()) throw new ConnectException();
         ResponseBody body = response.body();
 
 
