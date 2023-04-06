@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:danim/main.dart';
 import 'package:danim/models/LocationInformation.dart';
+import 'package:danim/module/CupertinoAlertDialog.dart';
 import 'package:danim/view_models/app_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -68,6 +69,12 @@ class RecordViewModel extends ChangeNotifier {
 
   AudioPlayer audioPlayer = AudioPlayer();
 
+  bool _isUploading = false;
+
+  bool get isUploading => _isUploading;
+
+  bool _isRecording = false;
+
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
 
@@ -85,12 +92,24 @@ class RecordViewModel extends ChangeNotifier {
     }
     final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
+    _isRecording = true;
     await record.start(path: filePath, encoder: AudioEncoder.wav);
-    _recordedFileName = fileName;
+    recordedFileName = fileName;
+
+    // 30초 뒤 자동으로 녹음
+    Future.delayed(
+      const Duration(seconds: 31),
+      () {
+        if (_isRecording == true) {
+          stopRecording();
+        }
+      },
+    );
   }
 
   // 녹음 끝 파일 저장
   Future<void> stopRecording() async {
+    _isRecording = false;
     await record.stop();
     final directory = Directory('/storage/emulated/0/Documents/records');
 
@@ -137,41 +156,67 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
-    final flag = MultipartFile.fromBytes(locationInfo.flag!,
-        filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
-    final List<MultipartFile> imageFiles = imageList
-        .map((el) => MultipartFile.fromFileSync(el.path,
-            filename: el.name, contentType: MediaType('image', 'jpg')))
-        .toList();
-    final audioFile = await MultipartFile.fromFile(recordedFilePath,
-        filename: "$recordedFileName.wav",
-        contentType: MediaType('audio', 'wav'));
-
-    FormData formData = FormData.fromMap({
-      'flagFile': flag,
-      'imageFiles': imageFiles,
-      'voiceFile': audioFile,
-      'timelineId': userInfo.timeLineId,
-      'address1': locationInfo.country,
-      'address2': locationInfo.address2,
-      'address3': locationInfo.address3,
-      'address4': locationInfo.address4
-    });
-    if (context.mounted) {
-      await UploadRepository().uploadToServer(context, formData);
+    if (_recordedFilePath == "") {
+      OneButtonMaterialDialog().showFeedBack(context, "음성을 녹음해주세요");
+      return;
     }
 
-    if (context.mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider<AppViewModel>(
-            create: (_) => AppViewModel(userInfo, "홈"),
-            child: const MyHomePage(),
-          ),
-        ),
-        (route) => false,
-      );
+    if (_imageList.isEmpty) {
+      OneButtonMaterialDialog().showFeedBack(context, "사진이 없습니다.");
+      return;
+    }
+
+    if (_locationInfo ==
+        LocationInformation(
+            country: "",
+            address2: "",
+            address3: "",
+            address4: "",
+            flag: null)) {
+      OneButtonMaterialDialog().showFeedBack(context, "위치 정보를 불러오지 못했습니다.");
+      return;
+    }
+
+    if (_isUploading == false) {
+      final flag = MultipartFile.fromBytes(locationInfo.flag!,
+          filename: locationInfo.country,
+          contentType: MediaType('image', 'jpg'));
+      final List<MultipartFile> imageFiles = imageList
+          .map((el) => MultipartFile.fromFileSync(el.path,
+              filename: el.name, contentType: MediaType('image', 'jpg')))
+          .toList();
+      final audioFile = await MultipartFile.fromFile(recordedFilePath,
+          filename: "$recordedFileName.wav",
+          contentType: MediaType('audio', 'wav'));
+
+      FormData formData = FormData.fromMap({
+        'flagFile': flag,
+        'imageFiles': imageFiles,
+        'voiceFile': audioFile,
+        'timelineId': userInfo.timeLineId,
+        'address1': locationInfo.country,
+        'address2': locationInfo.address2,
+        'address3': locationInfo.address3,
+        'address4': locationInfo.address4
+      });
+      _isUploading = true;
+      notifyListeners();
+      if (context.mounted) {
+        await UploadRepository().uploadToServer(context, formData);
+      }
+      _isUploading = false;
+      notifyListeners();
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider<AppViewModel>(
+                create: (_) => AppViewModel(userInfo, "홈"),
+                child: MyHomePage(),
+              ),
+            ),
+            (route) => false);
+      }
     }
   }
 
@@ -235,25 +280,23 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   void uploadConfirm(BuildContext context, UserInfo myInfo) {
-    final alert = CupertinoAlertDialog(
+    final alert = AlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
-        style: TextStyle(fontSize: 30),
+        style: TextStyle(fontSize: 25),
       ),
       actions: [
-        CupertinoDialogAction(
-          child: const Text("참"),
-          onPressed: () {
-            postFiles(context, myInfo);
-            Navigator.of(context).pop();
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text("거짓"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
+        TextButton(
+            child: const Text("등록"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              postFiles(context, myInfo);
+            }),
+        TextButton(
+            child: const Text("아니요"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            })
       ],
     );
 
