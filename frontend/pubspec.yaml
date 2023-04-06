@@ -81,6 +81,7 @@ dependencies:
 
   # device 정보 가져오기
   device_info_plus: ^8.1.0
+  flutter_keyboard_visibility: ^5.4.0
 
   #lottie
   lottie: ^2.3.1
