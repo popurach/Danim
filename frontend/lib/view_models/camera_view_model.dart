@@ -81,7 +81,7 @@ class CameraViewModel extends ChangeNotifier {
     if (_cameras.isNotEmpty) {
       _controller = CameraController(_cameras.first, ResolutionPreset.ultraHigh,);
       await _controller.initialize();
-
+      await _controller.setFlashMode(FlashMode.off);
       notifyListeners();
     }
   }

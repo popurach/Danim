@@ -22,15 +22,16 @@ class UserInformationView extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                appViewModel.changeTitle('프로필 변경');
-
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => ModifyProfile(),
-                    transitionDuration: Duration.zero,
-                  ),
-                );
+                if (userInfo.userUid == appViewModel.userInfo.userUid) {
+                  appViewModel.changeTitle('프로필 변경');
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => ModifyProfile(),
+                      transitionDuration: Duration.zero,
+                    ),
+                  );
+                }
               },
               child: ExtendedImage.network(
                 userInfo.profileImageUrl,

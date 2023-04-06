@@ -101,6 +101,7 @@ class SearchBar extends StatelessWidget {
                                             } else {
                                               return GestureDetector(
                                                 onTap: () {
+                                                  appViewModel.changeTitle(viewModel.searchedResults[index - 1].nickname);
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
