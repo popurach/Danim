@@ -47,6 +47,7 @@ class TimelineDetailPage extends StatelessWidget {
                                     onPressed: () {
                                       viewModel.deleteTimeline(context);
                                       appViewModel.userInfo.timeLineId = -1;
+                                      appViewModel.userInfo.timelineNum--;
                                       appViewModel.changeTitle(
                                           appViewModel.userInfo.nickname);
                                       Navigator.pop(ctx);

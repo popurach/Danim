@@ -5,12 +5,11 @@ import 'package:danim/views/search_bar_view.dart';
 import 'package:danim/views/timeline_list_page.dart';
 import 'package:danim/views/user_information_view.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-var logger = Logger();
-
 class MyFeedView extends StatelessWidget {
+  const MyFeedView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,17 +37,16 @@ class MyFeedView extends StatelessWidget {
                               myInfo: userTimelineListViewModel.myInfo,
                               userInfo: userTimelineListViewModel.userInfo,
                             ),
-                            child: UserInformationView(userInfo: userTimelineListViewModel.userInfo),
+                            child: UserInformationView(
+                                userInfo: userTimelineListViewModel.userInfo),
                           ),
                           const SizedBox(
                             height: 60,
                           ),
                           // 타임라인 리스트가 들어가는 칸
-                          Expanded(
-                            child: TimelineListPage(
-                              pagingController:
-                                  userTimelineListViewModel.pagingController,
-                            ),
+                          TimelineListPage(
+                            pagingController:
+                                userTimelineListViewModel.pagingController,
                           ),
                         ],
                       ),
@@ -63,13 +61,12 @@ class MyFeedView extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: ChangeNotifierProvider<SearchBarViewModel>(
                         create: (_) => SearchBarViewModel(isMyFeed: true),
-                        child: SearchBar(),
+                        child: const SearchBar(),
                       ),
                     ),
                   ),
                 ],
               );
-              ;
             },
           );
         },

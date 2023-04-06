@@ -20,7 +20,7 @@ class TimelineListPage extends StatelessWidget {
             },
             child: PagedListView<int, Timeline>(
               shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               pagingController: pagingController,
               builderDelegate: PagedChildBuilderDelegate<Timeline>(
                 itemBuilder: (context, item, index) => TimelineListItem(
