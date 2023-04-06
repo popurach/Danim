@@ -8,12 +8,12 @@ class TimelineDetailViewModel extends ChangeNotifier {
   bool _isMine = false;
   bool _isPublic = false;
   bool _isComplete = false;
-  String _title = '';
+  String? _title;
   final int expansionTileAnimationTile = 200;
   final textController = TextEditingController();
   List<TimelineDetail> _timelineDetails = [];
 
-  String get title => _title;
+  String? get title => _title;
 
   get isMine => _isMine;
 
@@ -23,14 +23,13 @@ class TimelineDetailViewModel extends ChangeNotifier {
 
   get timelineDetails => _timelineDetails;
 
-  set title(String value) {
-    _title = value;
+  changeTitle(String newTitle) {
+    _title = newTitle;
     notifyListeners();
   }
 
   TimelineDetailViewModel(BuildContext context, this.timelineId) {
     loadTimelineDetails(context);
-    textController.text = _title;
     notifyListeners();
   }
 
@@ -94,13 +93,13 @@ class TimelineDetailViewModel extends ChangeNotifier {
   }
 
   resetTitle() {
-    _title = '';
+    changeTitle('');
     notifyListeners();
   }
 
   endTimeline(context) async {
-    await TimelineRepository().endTravel(context, timelineId, _title);
-    Navigator.popAndPushNamed(context, '/');
+    await TimelineRepository().endTravel(context, timelineId, _title!);
+    Navigator.popAndPushNamed(context, '/timeline/detail/$timelineId');
   }
 
   deleteTimeline(context) async {

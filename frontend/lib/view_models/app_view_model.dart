@@ -59,7 +59,9 @@ class AppViewModel with ChangeNotifier {
       const Duration(milliseconds: 100),
       () {
         Navigator.pushNamed(
-            myFeedNavigatorKey.currentContext!, '/modify/profile');
+          myFeedNavigatorKey.currentContext!,
+          '/modify/profile',
+        );
       },
     );
   }
@@ -72,12 +74,13 @@ class AppViewModel with ChangeNotifier {
   }
 
   goToTravelingTimelinePage(int timelineId) {
-    pageController.jumpToPage(1);
-    currentIndex = 1;
+    changePage(1);
+    changeTitle(userInfo.nickname);
     notifyListeners();
     Timer(
       const Duration(milliseconds: 100),
       () {
+        changeTitle('여행중');
         Navigator.pushNamed(
             myFeedNavigatorKey.currentContext!, '/timeline/detail/$timelineId');
       },
@@ -91,14 +94,14 @@ class AppViewModel with ChangeNotifier {
         pageBuilder: (context, __, ___) {
           return ChangeNotifierProvider<TimelineDetailViewModel>(
             create: (_) => TimelineDetailViewModel(context, timelineId),
-            child: TimelineDetailPage(),
+            child: const TimelineDetailPage(),
           );
         },
         transitionDuration: Duration.zero,
       );
     } else {
       return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => HomeFeedPage(),
+        pageBuilder: (_, __, ___) => const HomeFeedPage(),
         transitionDuration: Duration.zero,
       );
     }
@@ -110,7 +113,7 @@ class AppViewModel with ChangeNotifier {
       final timelineId = int.parse(settings.name.split('/')[3]);
       page = ChangeNotifierProvider(
         create: (_) => TimelineDetailViewModel(context, timelineId),
-        child: TimelineDetailPage(),
+        child: const TimelineDetailPage(),
       );
     } else if (settings.name == '/modify/profile') {
       page = ModifyProfile();

@@ -157,7 +157,8 @@ class RecordViewModel extends ChangeNotifier {
   }
 
   // 파일을 서버로 업로드하기
-  Future<void> postFiles(BuildContext context, UserInfo userInfo, Function move) async {
+  Future<void> postFiles(
+      BuildContext context, UserInfo userInfo, Function move) async {
     final flag = MultipartFile.fromBytes(locationInfo.flag!,
         filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
     final List<MultipartFile> imageFiles = imageList
@@ -264,13 +265,14 @@ class RecordViewModel extends ChangeNotifier {
       return;
     }
 
-    if (_locationInfo == LocationInformation(
-      country: "",
-      address2: "",
-      address3: "",
-      address4: "",
-      flag: null,)
-    ) {
+    if (_locationInfo ==
+        LocationInformation(
+          country: "",
+          address2: "",
+          address3: "",
+          address4: "",
+          flag: null,
+        )) {
       OneButtonMaterialDialog().showFeedBack(context, "위치를 불러오지 못했습니다.");
       return;
     }

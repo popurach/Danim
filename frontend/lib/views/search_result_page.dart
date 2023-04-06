@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../view_models/search_bar_view_model.dart';
 
 class SearchResultView extends StatelessWidget {
+  const SearchResultView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppViewModel>(
