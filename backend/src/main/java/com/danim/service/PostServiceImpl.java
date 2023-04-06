@@ -131,6 +131,7 @@ public class PostServiceImpl implements PostService {
         if(!badword.isEmpty()){
 
             File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badword,file);
+
             log.info("filter info :{}",filter);
 //            Files.delete(target);//파일을 삭제하는 코드임
 
