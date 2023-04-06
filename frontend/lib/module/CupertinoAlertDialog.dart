@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class OneButtonCupertinoAlertDiallog {
+class OneButtonMaterialDialog {
   void showFeedBack(BuildContext context, String message) {
-    final alert = CupertinoAlertDialog(
+    final alert = AlertDialog(
       content: Text(
         message,
-        style: TextStyle(fontSize: 30),
+        style: const TextStyle(fontSize: 20),
       ),
       actions: [
-        CupertinoDialogAction(
+        TextButton(
             child: const Text("OK"),
             onPressed: () {
               Navigator.of(context).pop();
