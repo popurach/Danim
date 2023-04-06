@@ -198,6 +198,7 @@ class SearchBar extends StatelessWidget {
                                         height: 50,
                                         child: GestureDetector(
                                           onTap: () {
+                                            FocusScope.of(context).unfocus();
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -235,6 +236,7 @@ class SearchBar extends StatelessWidget {
                   color: Colors.white,
                   height: 45,
                   child: TextField(
+                    autofocus: false,
                     focusNode: viewModel.myfocus,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.done,
@@ -243,6 +245,7 @@ class SearchBar extends StatelessWidget {
                     },
                     onSubmitted: (String keyWord) {
                       appViewModel.changeTitle(keyWord);
+                      viewModel.unFocus();
                       Navigator.push(
                         context,
                         MaterialPageRoute(

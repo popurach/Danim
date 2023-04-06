@@ -40,7 +40,9 @@ class SearchBarViewModel extends ChangeNotifier {
     _isSearching = newBool;
   }
 
-  SearchBarViewModel({required this.isMyFeed});
+  SearchBarViewModel({required this.isMyFeed}) {
+    unFocus();
+  }
 
   FocusNode _myfocus = FocusNode();
 
