@@ -68,17 +68,17 @@ class AppViewModel with ChangeNotifier {
     int timelineId = await TimelineRepository().startTravel(context);
     userInfo.timeLineId = timelineId;
     notifyListeners();
-    _goToTravelingTimelinePage(timelineId);
+    goToTravelingTimelinePage(timelineId);
   }
 
-  _goToTravelingTimelinePage(int timelineId) {
+  goToTravelingTimelinePage(int timelineId) {
     pageController.jumpToPage(1);
     currentIndex = 1;
     notifyListeners();
     Timer(
       const Duration(milliseconds: 100),
       () {
-        Navigator.popAndPushNamed(
+        Navigator.pushNamed(
             myFeedNavigatorKey.currentContext!, '/timeline/detail/$timelineId');
       },
     );

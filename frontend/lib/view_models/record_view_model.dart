@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:danim/main.dart';
 import 'package:danim/models/LocationInformation.dart';
 import 'package:danim/module/my_alert_dialog.dart';
 import 'package:danim/view_models/app_view_model.dart';
@@ -15,7 +14,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
-import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 import '../models/UserInfo.dart';
@@ -204,15 +202,9 @@ class RecordViewModel extends ChangeNotifier {
     _isUploading = false;
     notifyListeners();
     if (context.mounted) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider<AppViewModel>(
-              create: (_) => AppViewModel(userInfo, "홈"),
-              child: const MyHomePage(),
-            ),
-          ),
-          (route) => false);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      move(userInfo.timeLineId);
     }
   }
 
@@ -275,7 +267,7 @@ class RecordViewModel extends ChangeNotifier {
     }
   }
 
-  void uploadConfirm(BuildContext context, UserInfo myInfo) {
+  void uploadConfirm(BuildContext context, UserInfo myInfo, Function move) {
     final alert = AlertDialog(
       content: const Text(
         "포스트를 \n등록할까요?",
@@ -286,7 +278,7 @@ class RecordViewModel extends ChangeNotifier {
             child: const Text("등록"),
             onPressed: () {
               Navigator.of(context).pop();
-              postFiles(context, myInfo);
+              postFiles(context, myInfo, move);
             }),
         TextButton(
             child: const Text("아니요"),
