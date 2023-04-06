@@ -50,7 +50,7 @@ public class Http {
                 .build();
         Response response = client.newCall(request).execute();
         log.info("response info :{}",response);
-//        if (!response.isSuccessful()) throw new ConnectException();
+        if (!response.isSuccessful()) throw new ConnectException();
             // 응답이 성공적으로 받아진 경우
         ResponseBody responseBody = response.body();
         if (responseBody == null) throw new NullPointerException();
@@ -72,7 +72,7 @@ public class Http {
         fileOutputStream.close();
         inputStream.close();
 
-//        if (!response.isSuccessful()) throw new ConnectException();
+        if (!response.isSuccessful()) throw new ConnectException();
         ResponseBody body = response.body();
 
 
