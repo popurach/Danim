@@ -126,7 +126,7 @@ public class PostServiceImpl implements PostService {
         String voiceUrl="";
         if(!fastApiReq.isEmpty()){
 
-            File filter = http.Post("http://localhost:4000/","POST",badWordFilter.badWord(fastApiReq),file);
+            File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badWordFilter.badWord(fastApiReq),file);
             log.info("filter info :{}",filter);
 //            Files.delete(target);//파일을 삭제하는 코드임
 
