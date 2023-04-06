@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:danim/module/bottom_navigation.dart';
 import 'package:danim/module/camera_floating_action_button.dart';
