@@ -27,42 +27,6 @@ public class TimelineController {
 
     private final TimeLineService timeLineService;
 
-//    //메인피드 최신순 타임라인 조회
-//    @GetMapping("/main")
-//    public ResponseEntity<?> getTimelineLatest() throws Exception {
-//
-//        log.info("메인피드 최신수 타임라인 조회 시작");
-//        List<TimeLine> timelinelist = timeLineService.searchTimelineOrderBylatest();
-//        log.info("메인피드 최신수 타임라인 조회 종료");
-//        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-//
-//    }
-//
-//    //내 피드에서 내 타임라인 리스트 조회
-//    @GetMapping("/mine/{uid}")
-//    public ResponseEntity<?> getMyTimelineList(@PathVariable Long uid) throws Exception {
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user = null;
-//        if (auth != null && auth.getPrincipal() != null)
-//            user = (User) auth.getPrincipal();
-//
-//        log.info("내 피드에서 내 타임라인 리스트 조회");
-//        List<TimeLine> timelinelist = timeLineService.searchMyTimeline(uid, user);
-//        log.info("내 피드에서 내 타임라인 리스트 조회 종료");
-//        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-//    }
-//
-//    //다른 유저의 피드에서 타임라인 조회
-//    @GetMapping("/user/{uid}")
-//    public ResponseEntity<?> getAnotherTimelineList(@PathVariable Long uid) throws Exception {
-//        log.info("다른 유저의 피드에서 타임라인 조회 시작");
-//        List<TimeLine> timelinelist = timeLineService.searchTimelineNotPublic(uid);
-//        log.info("다른 유저의 피드에서 타임라인 조회 종료");
-//        return new ResponseEntity<>(timelinelist, HttpStatus.OK);
-//    }
-
-
     //타임라인 한개 조회 => 이제 이걸 해야함 , 넘겨줄때 여행한 국가 리스트 순서대로 해서 만들어 넘겨주면 될듯
     @GetMapping("/{uid}")
     public ResponseEntity<?> seleteOneTimeLine(@PathVariable Long uid) throws Exception {

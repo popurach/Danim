@@ -7,6 +7,7 @@ import com.danim.dto.TokenRes;
 import com.danim.dto.UserInfoRes;
 import com.danim.entity.TimeLine;
 import com.danim.entity.User;
+import com.danim.repository.TimeLineRedisRepository;
 import com.danim.repository.TimeLineRepository;
 import com.danim.repository.UserRepository;
 import com.danim.utils.HttpUtil;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
     public final JwtTokenProvider jwtTokenProvider;
     public final PasswordEncoder passwordEncoder;
     private final AwsS3 awsS3;
+    private final TimeLineRedisRepository repo;
 
     @Override
     public List<UserInfoRes> searchUserByNickname(String search) {
@@ -120,7 +122,7 @@ public class UserServiceImpl implements UserService {
             user.setProfileImageUrl(ProfileImageUrl);
             user.setNickname(nickname);
         }
-
+        repo.deleteAll();
         return entityToResponseDTO(user);
     }
 

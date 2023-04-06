@@ -212,12 +212,11 @@ public class TimeLineServiceImpl implements TimeLineService {
 
     @Override
     public void deleteTimeline(Long uid, User user) throws BaseException {
-
         TimeLine now = timeLineRepository.findById(uid).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_USER));
         if (!now.getUserUid().getUserUid().equals(user.getUserUid()))
             throw new BaseException(ErrorMessage.NOT_PERMIT_USER);
         timeLineRepository.delete(now);
-
+        repo.deleteAll();
     }
 
     @Override
@@ -238,7 +237,7 @@ public class TimeLineServiceImpl implements TimeLineService {
             check = true;
         }
         timeLineRepository.save(now);
-
+        repo.deleteAll();
         return check;
 
     }
@@ -399,6 +398,7 @@ public class TimeLineServiceImpl implements TimeLineService {
         } catch (Exception e) {
             return null;
         }
+        repo.deleteAll();
         return timeLine;
     }
 
