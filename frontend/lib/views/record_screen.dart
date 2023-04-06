@@ -51,17 +51,17 @@ class RecordView extends StatelessWidget {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child:
-                                      recordViewModel.locationInfo.flag != null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: Image.memory(
-                                                  recordViewModel
-                                                      .locationInfo.flag!,
-                                                  fit: BoxFit.fitHeight),
-                                            )
-                                          : Container(),
+                                  child: recordViewModel.locationInfo.flag !=
+                                          null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.memory(
+                                            recordViewModel.locationInfo.flag!,
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        )
+                                      : Container(),
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -142,6 +142,7 @@ class RecordView extends StatelessWidget {
                                     recordViewModel.uploadConfirm(
                                       context,
                                       appViewModel.userInfo,
+                                      appViewModel.goToTravelingTimelinePage,
                                     );
                                   },
                                   icon: const Icon(Icons.upload, size: 28),
