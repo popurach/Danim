@@ -89,8 +89,8 @@ class CameraViewModel extends ChangeNotifier {
         notifyListeners();
         XFile file = await _controller.takePicture();
         _isTaking = false;
-        notifyListeners();
         allFileList.add(file);
+        notifyListeners();
 
         // 파일 저장할 위치 지정
         Directory externalDirectory =

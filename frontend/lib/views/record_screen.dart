@@ -158,9 +158,13 @@ class RecordView extends StatelessWidget {
                         ? const SizedBox.shrink()
                         : Center(
                             child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
                               width: 100,
                               height: 100,
-                              color: Colors.black54,
+                              
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
