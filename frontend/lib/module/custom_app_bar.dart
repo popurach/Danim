@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
-import '../view_models/camera_view_model.dart';
-import '../views/camera_screen.dart';
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function moveToModifyProfile;
 

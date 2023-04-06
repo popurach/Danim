@@ -39,7 +39,6 @@ dependencies:
   animated_bottom_navigation_bar: ^1.2.0
   timeline_tile: ^2.0.0
   dio: ^4.0.6
-  palette_generator: ^0.3.3+2
   logger: ^1.3.0
 
   # camera
@@ -50,23 +49,20 @@ dependencies:
   file: ^6.1.4
   path: ^1.8.2
   geolocator: ^9.0.2
-  intl:
-  image_gallery_saver: ^1.7.1
+  intl: ^0.18.0
+
   # caching and lazy loading network image
   extended_image: ^7.0.2
+
   # smooth page indicator in pageView images
   smooth_page_indicator: ^1.0.1
-  native_exif:  ^0.4.0
+
   multi_image_picker_view: ^0.0.15
   image_picker: ^0.8.7
 
   # audio
   record: ^4.4.4
   audioplayers: ^3.0.1
-
-  # Carousel&Staggered
-  carousel_slider:  ^4.2.1
-  flutter_staggered_grid_view: ^0.6.2
 
   # Kakao login
   kakao_flutter_sdk: ^1.4.1 # 전체 추가

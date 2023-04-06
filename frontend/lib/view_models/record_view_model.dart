@@ -137,11 +137,19 @@ class RecordViewModel extends ChangeNotifier {
 
   // 파일을 서버로 업로드하기
   Future<void> postFiles(BuildContext context, UserInfo userInfo) async {
-    final flag = MultipartFile.fromBytes(locationInfo.flag!,
-        filename: locationInfo.country, contentType: MediaType('image', 'jpg'));
+    final flag = MultipartFile.fromBytes(
+      locationInfo.flag!,
+      filename: locationInfo.country,
+      contentType: MediaType('image', 'jpg'),
+    );
     final List<MultipartFile> imageFiles = imageList
-        .map((el) => MultipartFile.fromFileSync(el.path,
-            filename: el.name, contentType: MediaType('image', 'jpg')))
+        .map(
+          (el) => MultipartFile.fromFileSync(
+            el.path,
+            filename: el.name,
+            contentType: MediaType('image', 'jpg'),
+          ),
+        )
         .toList();
     final audioFile = await MultipartFile.fromFile(recordedFilePath,
         filename: "$recordedFileName.wav",
