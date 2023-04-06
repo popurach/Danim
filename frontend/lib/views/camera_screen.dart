@@ -142,23 +142,25 @@ class CameraView extends StatelessWidget {
                                                   icon: const Icon(Icons.folder,
                                                       color: Colors.white),
                                                   onPressed: () {
-                                                    appViewModel
-                                                        .changeTitle('포스트 등록');
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ChangeNotifierProvider<
-                                                                RecordViewModel>(
-                                                          create: (_) =>
-                                                              RecordViewModel(
-                                                            cameraViewModel
-                                                                .allFileList,
-                                                          ),
-                                                          child: RecordView(),
+                                                    if (viewModel.isTaking == false) {
+                                                      appViewModel
+                                                          .changeTitle('포스트 등록');
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChangeNotifierProvider<
+                                                                  RecordViewModel>(
+                                                                create: (_) =>
+                                                                    RecordViewModel(
+                                                                      cameraViewModel
+                                                                          .allFileList,
+                                                                    ),
+                                                                child: RecordView(),
+                                                              ),
                                                         ),
-                                                      ),
-                                                    );
+                                                      );
+                                                    }
                                                   },
                                                 ),
                                               );
