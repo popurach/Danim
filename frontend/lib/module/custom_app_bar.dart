@@ -14,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final appViewModel = Provider.of<AppViewModel>(context, listen: true);
     return AppBar(
+      automaticallyImplyLeading: false,
       leading: const Padding(
         padding: EdgeInsets.only(left: 10),
         child: CircleAvatar(

@@ -26,30 +26,29 @@ class MyFeedView extends StatelessWidget {
                     onTap: () {
                       FocusScope.of(context).unfocus();
                     },
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          // 개인 정보가 들어가는 칸
-                          ChangeNotifierProvider(
-                            create: (_) => MyFeedViewModel(
-                              context: context,
-                              myInfo: userTimelineListViewModel.myInfo,
-                              userInfo: userTimelineListViewModel.userInfo,
-                            ),
-                            child: UserInformationView(
-                                userInfo: userTimelineListViewModel.userInfo),
+                    child: Column(
+                      children: [
+                        // 개인 정보가 들어가는 칸
+                        ChangeNotifierProvider(
+                          create: (_) => MyFeedViewModel(
+                            context: context,
+                            myInfo: userTimelineListViewModel.myInfo,
+                            userInfo: userTimelineListViewModel.userInfo,
                           ),
-                          const SizedBox(
-                            height: 60,
-                          ),
-                          // 타임라인 리스트가 들어가는 칸
-                          TimelineListPage(
+                          child: UserInformationView(
+                              userInfo: userTimelineListViewModel.userInfo),
+                        ),
+                        const SizedBox(
+                          height: 60,
+                        ),
+                        // 타임라인 리스트가 들어가는 칸
+                        Expanded(
+                          child: TimelineListPage(
                             pagingController:
                                 userTimelineListViewModel.pagingController,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Positioned(

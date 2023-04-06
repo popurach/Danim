@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:danim/models/UserInfo.dart';
 import 'package:danim/services/user_repository.dart';
@@ -8,13 +7,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 
 class ModifyProfileViewModel extends ChangeNotifier {
   final textEditController = TextEditingController();
+  bool _isLive = true;
   String _imagePath = '';
   XFile? _selectedImageFile;
   String _nickname = '';
+
+  bool get isLive => _isLive;
 
   ModifyProfileViewModel(profileImageUrl, nickname) {
     _nickname = nickname;
@@ -85,6 +86,7 @@ class ModifyProfileViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isLive = false;
     _selectedImageFile = null;
     super.dispose();
   }

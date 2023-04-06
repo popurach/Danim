@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ModifyProfile extends StatelessWidget {
+  const ModifyProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     final appViewModel = Provider.of<AppViewModel>(context, listen: false);
@@ -18,24 +20,25 @@ class ModifyProfile extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Stack(children: [
-                viewModel.selectedImageFile == null
-                    ? ExtendedImage.network(
-                        viewModel.imagePath,
-                        width: 250,
-                        height: 250,
-                        fit: BoxFit.cover,
-                        shape: BoxShape.circle,
-                        borderRadius: BorderRadius.circular(30.0),
-                      )
-                    : ExtendedImage.file(
-                        viewModel.selectedImageFile,
-                        width: 250,
-                        height: 250,
-                        fit: BoxFit.cover,
-                        shape: BoxShape.circle,
-                      ),
-                Positioned(
+              Stack(
+                children: [
+                  viewModel.selectedImageFile == null
+                      ? ExtendedImage.network(
+                          viewModel.imagePath,
+                          width: 250,
+                          height: 250,
+                          fit: BoxFit.cover,
+                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(30.0),
+                        )
+                      : ExtendedImage.file(
+                          viewModel.selectedImageFile,
+                          width: 250,
+                          height: 250,
+                          fit: BoxFit.cover,
+                          shape: BoxShape.circle,
+                        ),
+                  Positioned(
                     bottom: 0,
                     right: 0,
                     child: InkWell(
@@ -47,8 +50,10 @@ class ModifyProfile extends StatelessWidget {
                         color: Colors.grey,
                         size: 30,
                       ),
-                    ))
-              ]),
+                    ),
+                  )
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: SizedBox(

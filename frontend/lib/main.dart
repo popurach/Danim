@@ -65,12 +65,7 @@ class MyHomePage extends StatelessWidget {
           viewModel.changeTitleToFormer();
           if (viewModel.homeFeedNavigatorKey.currentState != null) {
             if (viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-              // logger.d('여기???');
-              // Navigator.pushNamedAndRemoveUntil(
-              //   viewModel.homeFeedNavigatorKey.currentContext!,
-              //   '/',
-              //   (routes) => false,
-              // );
+              viewModel.changeTitleToFormer();
               Navigator.of(viewModel.homeFeedNavigatorKey.currentContext!)
                   .pop();
               return false;
@@ -78,12 +73,15 @@ class MyHomePage extends StatelessWidget {
           }
           if (viewModel.myFeedNavigatorKey.currentState != null) {
             if (viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-              Navigator.pushNamedAndRemoveUntil(
-                viewModel.myFeedNavigatorKey.currentContext!,
-                '/',
-                (routes) => false,
-              );
+              viewModel.changeTitleToFormer();
+              Navigator.of(viewModel.myFeedNavigatorKey.currentContext!).pop();
               return false;
+              // Navigator.pushNamedAndRemoveUntil(
+              //   viewModel.myFeedNavigatorKey.currentContext!,
+              //   '/',
+              //   (routes) => false,
+              // );
+              // return false;
             }
           }
           if (!Navigator.canPop(context)) {
