@@ -138,14 +138,13 @@ class AppViewModel with ChangeNotifier {
 
   changeTitle(String newTitle) {
     _formerTitle.push(_title);
-    logger.d(_formerTitle);
     _title = newTitle;
     notifyListeners();
   }
 
   changeTitleToFormer() {
-    _title = _formerTitle.pop();
-    logger.d(_formerTitle);
+    String? tmp = _formerTitle.pop();
+    if (tmp != null) _title = tmp;
     notifyListeners();
   }
 }
