@@ -13,7 +13,7 @@ class MyFeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 15, bottom: 15),
+      margin: const EdgeInsets.only(top: 15),
       child: Consumer<AppViewModel>(
         builder: (_, appViewModel, child) {
           return Consumer<MyFeedViewModel>(

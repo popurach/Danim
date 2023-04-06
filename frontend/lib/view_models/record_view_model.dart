@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -72,15 +73,14 @@ class RecordViewModel extends ChangeNotifier {
 
   bool get isUploading => _isUploading;
 
-  bool _isRecording = false;
-
   bool _havingLocation = false;
+
   bool get havingLocation => _havingLocation;
 
   final record = Record();
   String fileName = DateFormat('yyyyMMdd.Hmm.ss').format(DateTime.now());
 
-  // 사진 위치 정보 받아오는 메서드
+  Timer? _recordingTimer;
 
   // 녹음 메서드
   Future<void> startRecording() async {
@@ -94,25 +94,27 @@ class RecordViewModel extends ChangeNotifier {
     }
     final filePath = '${directory.path}/$fileName.wav';
     // 레코딩 시작
-    _isRecording = true;
     await record.start(path: filePath, encoder: AudioEncoder.wav);
     _recordedFileName = fileName;
 
-    // 30초 뒤 자동으로 녹음
-    Future.delayed(
-      const Duration(seconds: 31),
+    // 30초 뒤 자동으로 녹음 중단
+    const maxDuration = Duration(milliseconds: 30000);
+
+    _recordingTimer = Timer(
+      maxDuration,
       () {
-        if (_isRecording == true) {
-          stopRecording();
-        }
+        stopRecording();
       },
     );
   }
 
   // 녹음 끝 파일 저장
   Future<void> stopRecording() async {
-    _isRecording = false;
     await record.stop();
+    if (_recordingTimer?.isActive == true) {
+      _recordingTimer?.cancel();
+    }
+
     final directory = Directory('/storage/emulated/0/Documents/records');
 
     _recordedFilePath = '${directory.path}/$recordedFileName.wav';
