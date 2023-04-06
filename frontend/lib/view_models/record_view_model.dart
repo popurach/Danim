@@ -117,7 +117,7 @@ class RecordViewModel extends ChangeNotifier {
 
     // 30초 뒤 자동으로 녹음
     Future.delayed(
-      const Duration(seconds: 30),
+      const Duration(seconds: 31),
       () {
         if (_isRecording == true) {
           stopRecording();
