@@ -116,7 +116,7 @@ class AppViewModel with ChangeNotifier {
         child: const TimelineDetailPage(),
       );
     } else if (settings.name == '/modify/profile') {
-      page = ModifyProfile();
+      page = const ModifyProfile();
     } else {
       page = MultiProvider(
         providers: [
@@ -128,7 +128,7 @@ class AppViewModel with ChangeNotifier {
             create: (_) => SearchBarViewModel(isMyFeed: true),
           ),
         ],
-        child: MyFeedView(),
+        child: const MyFeedView(),
       );
     }
     return PageRouteBuilder(
