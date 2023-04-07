@@ -65,7 +65,6 @@ class MyHomePage extends StatelessWidget {
           viewModel.changeTitleToFormer();
           if (viewModel.homeFeedNavigatorKey.currentState != null) {
             if (viewModel.homeFeedNavigatorKey.currentState!.canPop()) {
-              viewModel.changeTitleToFormer();
               Navigator.of(viewModel.homeFeedNavigatorKey.currentContext!)
                   .pop();
               return false;
@@ -73,7 +72,6 @@ class MyHomePage extends StatelessWidget {
           }
           if (viewModel.myFeedNavigatorKey.currentState != null) {
             if (viewModel.myFeedNavigatorKey.currentState!.canPop()) {
-              viewModel.changeTitleToFormer();
               Navigator.of(viewModel.myFeedNavigatorKey.currentContext!).pop();
               return false;
               // Navigator.pushNamedAndRemoveUntil(
