@@ -42,8 +42,8 @@ class AppViewModel with ChangeNotifier {
       }
     }
     currentIndex = index;
-    _formerTitle.clear();
     changeTitle(index == 0 ? '홈' : _userInfo.nickname);
+    _formerTitle.clear();
     notifyListeners();
   }
 
