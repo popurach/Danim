@@ -31,6 +31,7 @@ public class PostController {
     private final PostService postService;
     private final PhotoService photoService;
 
+    
     //포스트 등록 (Address 1 - 국가 -> Address 4 - 동네)
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addPost(@RequestPart MultipartFile flagFile,
