@@ -70,7 +70,7 @@
 
 ## 시스템 구성도
 
-![image]()
+![image](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/uploads/dc1d48aa0088d981c17a066677aeb94a/Web_App_Reference_Architecture_V2.png)
 
 ---
 
