@@ -53,7 +53,68 @@
 #### 프론트엔드
 
 ```
-
+frontend
+└─ lib
+   │  ├─ main.dart
+   │  ├─ models
+   │  │  ├─ LocationInformation.dart
+   │  │  ├─ Post.dart
+   │  │  ├─ PostForUpload.dart
+   │  │  ├─ SearchedPost.dart
+   │  │  ├─ Timeline.dart
+   │  │  ├─ TimelineDetail.dart
+   │  │  ├─ TimelineInfo.dart
+   │  │  ├─ Token.dart
+   │  │  └─ UserInfo.dart
+   │  ├─ module
+   │  │  ├─ audio_player_view.dart
+   │  │  ├─ audio_player_view_model.dart
+   │  │  ├─ bottom_navigation.dart
+   │  │  ├─ camera_floating_action_button.dart
+   │  │  ├─ custom_app_bar.dart
+   │  │  ├─ images_page_view.dart
+   │  │  └─ my_alert_dialog.dart
+   │  ├─ services
+   │  │  ├─ post_repository.dart
+   │  │  ├─ search_repository.dart
+   │  │  ├─ timeline_repository.dart
+   │  │  ├─ upload_repository.dart
+   │  │  └─ user_repository.dart
+   │  ├─ utils
+   │  │  ├─ app_scroll_behavior.dart
+   │  │  ├─ auth_dio.dart
+   │  │  └─ stack.dart
+   │  ├─ view_models
+   │  │  ├─ app_view_model.dart
+   │  │  ├─ camera_view_model.dart
+   │  │  ├─ home_feed_view_model.dart
+   │  │  ├─ login_view_model.dart
+   │  │  ├─ modify_profile_view_model.dart
+   │  │  ├─ my_feed_view_model.dart
+   │  │  ├─ post_view_model.dart
+   │  │  ├─ record_view_model.dart
+   │  │  ├─ search_bar_view_model.dart
+   │  │  ├─ search_result_view_model.dart
+   │  │  └─ timeline_detail_view_model.dart
+   │  └─ views
+   │     ├─ camera_screen.dart
+   │     ├─ home_feed_page.dart
+   │     ├─ login_page.dart
+   │     ├─ main_page_view.dart
+   │     ├─ modify_profile.dart
+   │     ├─ my_feed_view.dart
+   │     ├─ post_detail.dart
+   │     ├─ post_list_item.dart
+   │     ├─ record_screen.dart
+   │     ├─ search_bar_view.dart
+   │     ├─ search_result_page.dart
+   │     ├─ timeline_detail_page.dart
+   │     ├─ timeline_list_item.dart
+   │     ├─ timeline_list_page.dart
+   │     └─ user_information_view.dart
+   ├─ pubspec.yaml
+   └─ test
+      └─ widget_test.
 ```
 
 #### 백엔드
