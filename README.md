@@ -172,7 +172,9 @@ frontend
 ![image](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/uploads/dc1d48aa0088d981c17a066677aeb94a/Web_App_Reference_Architecture_V2.png)
 
 ---
-
+## ERD
+![Image_Pasted_at_2023-4-10_21-10](/uploads/b4c8f47701ba50ffd54094b1a8215802/Image_Pasted_at_2023-4-10_21-10.png)
+---
 ## 🛢기술스택
 
 |프론트엔드|백엔드|인프라|툴|
