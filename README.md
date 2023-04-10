@@ -120,14 +120,119 @@ frontend
 #### 백엔드
 
 ```
-
+├─.gradle
+│  ├─7.6.1
+│  │  ├─checksums
+│  │  ├─dependencies-accessors
+│  │  ├─executionHistory
+│  │  ├─fileChanges
+│  │  ├─fileHashes
+│  │  └─vcsMetadata
+│  ├─buildOutputCleanup
+│  └─vcs-1
+├─.idea
+│  └─modules
+├─build
+│  ├─classes
+│  │  └─java
+│  │      ├─main
+│  │      │  └─com
+│  │      │      └─danim
+│  │      │          ├─config
+│  │      │          │  └─security
+│  │      │          │      └─common
+│  │      │          ├─conponent
+│  │      │          ├─controller
+│  │      │          ├─dto
+│  │      │          ├─entity
+│  │      │          ├─exception
+│  │      │          │  └─controller
+│  │      │          ├─repository
+│  │      │          ├─service
+│  │      │          └─utils
+│  │      └─test
+│  │          └─com
+│  │              └─danim
+│  ├─docs
+│  │  └─asciidoc
+│  ├─generated
+│  │  └─sources
+│  │      ├─annotationProcessor
+│  │      │  └─java
+│  │      │      ├─main
+│  │      │      └─test
+│  │      └─headers
+│  │          └─java
+│  │              ├─main
+│  │              └─test
+│  ├─generated-snippets
+│  ├─libs
+│  ├─reports
+│  │  └─tests
+│  │      └─test
+│  │          ├─css
+│  │          └─js
+│  ├─resources
+│  │  └─main
+│  │      └─static
+│  ├─test-results
+│  │  └─test
+│  │      └─binary
+│  └─tmp
+│      ├─bootJar
+│      ├─compileJava
+│      │  └─compileTransaction
+│      │      ├─annotation-output
+│      │      ├─compile-output
+│      │      │  └─com
+│      │      │      └─danim
+│      │      │          ├─config
+│      │      │          │  └─security
+│      │      │          │      └─common
+│      │      │          ├─conponent
+│      │      │          ├─controller
+│      │      │          ├─dto
+│      │      │          ├─entity
+│      │      │          ├─exception
+│      │      │          │  └─controller
+│      │      │          ├─repository
+│      │      │          └─service
+│      │      ├─header-output
+│      │      └─stash-dir
+│      ├─compileTestJava
+│      ├─jar
+│      └─test
+├─gradle
+│  └─wrapper
+├─src
+│  ├─docs
+│  │  └─asciidoc
+│  ├─main
+│  │  ├─java
+│  │  │  └─com
+│  │  │      └─danim
+│  │  │          ├─config
+│  │  │          │  └─security
+│  │  │          │      └─common
+│  │  │          ├─conponent
+│  │  │          ├─controller
+│  │  │          ├─dto
+│  │  │          ├─entity
+│  │  │          ├─exception
+│  │  │          │  └─controller
+│  │  │          ├─repository
+│  │  │          ├─service
+│  │  │          └─utils
+│  │  └─resources
+│  │      └─static
+│  └─test
+│      └─java
+│          └─com
+│              └─danim
+│                  └─controller
+└─temp
 ```
 
-#### 임베디드
-
-```
-
-```
 
 ---
 
