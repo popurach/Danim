@@ -1,10 +1,12 @@
 import 'package:danim/views/login_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<Dio> authDio(BuildContext context) async {
-  final dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+  final baseUrl = dotenv.env['baseUrl'];
+  final dio = Dio(BaseOptions(baseUrl: baseUrl!));
 
   const storage = FlutterSecureStorage();
 
@@ -34,8 +36,7 @@ Future<Dio> authDio(BuildContext context) async {
           final String? refreshToken = await storage.read(key: 'refreshToken');
           final String? userUid = await storage.read(key: 'userUid');
 
-          final refreshDio =
-              Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+          final refreshDio = Dio(BaseOptions(baseUrl: baseUrl));
           Response response = await refreshDio.post(
             'api/login/reissuance',
             options: Options(headers: {'refreshToken': 'Bearer $refreshToken'}),

@@ -2,6 +2,7 @@ import 'package:danim/models/Timeline.dart';
 import 'package:danim/models/UserInfo.dart';
 import 'package:danim/utils/auth_dio.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/Token.dart';
@@ -16,7 +17,11 @@ class UserRepository {
 
   factory UserRepository() => _instance;
 
-  final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+  final _dio = Dio(
+    BaseOptions(
+      baseUrl: dotenv.env['baseUrl']!,
+    ),
+  );
 
   // 타임라인 한개 가져오기
   Future<Timeline> getTimelineById(int id) async {
