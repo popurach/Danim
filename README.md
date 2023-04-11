@@ -190,11 +190,6 @@ frontend
 ## 개발 환경
 
 ### BE
-   **툴**
-   - IntelliJ IDE
-   - Pycharm
-
-   **언어 및 라이브러리**
    - Java Open-JDk 11
    - SpringBoot 2.7.8
       - Gradle
@@ -215,10 +210,6 @@ frontend
       - ffmpeg
 
 ### FE
-   **툴**
-   - android studio
-
-   **언어 및 라이브러리**
    - Dart 2.19.3
    - Flutter 3.7.6
       - cupertino_icons: ^1.0.2
