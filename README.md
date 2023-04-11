@@ -190,74 +190,76 @@ frontend
 ## 개발 환경
 
 ### BE
-**툴**
-- IntelliJ IDE
-- Pycharm
-**언어 및 라이브러리**
-- Java Open-JDk 11
-- SpringBoot 2.7.8
-   - Gradle
-   - Spring Data Jpa
-   - jwt 0.9.1
-   - Spring Security
-   - OAuth (kakao)
-   - gson 2.8.7
-   - httpclient 4.5.12
-   - jackson-databind 2.12.5
-   - httpmime 4.3.1
-   - okhttp3 4.10.0
-   - Lombok 1.18.22
-   - Swagger 3.0.0
-- Flask
-   - python 3.8
-   - pydub
-   - ffmpeg
+   **툴**
+   - IntelliJ IDE
+   - Pycharm
+
+   **언어 및 라이브러리**
+   - Java Open-JDk 11
+   - SpringBoot 2.7.8
+      - Gradle
+      - Spring Data Jpa
+      - jwt 0.9.1
+      - Spring Security
+      - OAuth (kakao)
+      - gson 2.8.7
+      - httpclient 4.5.12
+      - jackson-databind 2.12.5
+      - httpmime 4.3.1
+      - okhttp3 4.10.0
+      - Lombok 1.18.22
+      - Swagger 3.0.0
+   - Flask
+      - python 3.8
+      - pydub
+      - ffmpeg
 
 ### FE
-**툴**
-- android studio
-**언어 및 라이브러리**
-- Dart 2.19.3
-- Flutter 3.7.6
-   - cupertino_icons: ^1.0.2
-   - provider: ^6.0.1
-   - animated_bottom_navigation_bar: ^1.2.0
-   - timeline_tile: ^2.0.0
-   - dio: ^4.0.6
-   - camera:  ^0.10.3+2
-   - path_provider:  ^2.0.13
-   - video_player: ^2.2.5
-   - permission_handler: ^10.2.0
-   - file: ^6.1.4
-   - path: ^1.8.2
-   - geolocator: ^9.0.2
-   - intl: ^0.18.0
-   - smooth_page_indicator: ^1.0.1
-   - multi_image_picker_view: ^0.0.15
-   - image_picker: ^0.8.7
-   - extended_image: ^7.0.2
-   - record: ^4.4.4
-   - audioplayers: ^3.0.1
-   - flutter_secure_storage: ^8.0.0
-   - flutter_dotenv: ^5.0.2
-   - infinite_scroll_pagination: ^3.2.0
-   - http_parser: ^4.0.2
-   - device_info_plus: ^8.1.0
-   - lottie: ^2.3.1
-   - flutter_launcher_icons: ^0.12.0
-   - animated_icon_button: ^1.0.2
-   - flutter_native_splash: ^2.2.19
+   **툴**
+   - android studio
+
+   **언어 및 라이브러리**
+   - Dart 2.19.3
+   - Flutter 3.7.6
+      - cupertino_icons: ^1.0.2
+      - provider: ^6.0.1
+      - animated_bottom_navigation_bar: ^1.2.0
+      - timeline_tile: ^2.0.0
+      - dio: ^4.0.6
+      - camera:  ^0.10.3+2
+      - path_provider:  ^2.0.13
+      - video_player: ^2.2.5
+      - permission_handler: ^10.2.0
+      - file: ^6.1.4
+      - path: ^1.8.2
+      - geolocator: ^9.0.2
+      - intl: ^0.18.0
+      - smooth_page_indicator: ^1.0.1
+      - multi_image_picker_view: ^0.0.15
+      - image_picker: ^0.8.7
+      - extended_image: ^7.0.2
+      - record: ^4.4.4
+      - audioplayers: ^3.0.1
+      - flutter_secure_storage: ^8.0.0
+      - flutter_dotenv: ^5.0.2
+      - infinite_scroll_pagination: ^3.2.0
+      - http_parser: ^4.0.2
+      - device_info_plus: ^8.1.0
+      - lottie: ^2.3.1
+      - flutter_launcher_icons: ^0.12.0
+      - animated_icon_button: ^1.0.2
+      - flutter_native_splash: ^2.2.19
 
 ### DB
-- MariaDB
-- Redis
+   - MariaDB
+   - Redis
 
 ### Operation
-- Jenkins
-- AWS EC2
-   - Ubuntu 20.04 LTS
-   - Docker 23.0.2
-- AWS S3
+   - Jenkins
+   - AWS EC2
+      - Ubuntu 20.04 LTS
+      - Docker 23.0.2
+   - AWS S3
 
 ---
 
