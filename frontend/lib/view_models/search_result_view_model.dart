@@ -2,7 +2,6 @@ import 'package:danim/models/SearchedPost.dart';
 import 'package:danim/services/search_repository.dart';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 
 

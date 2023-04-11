@@ -13,12 +13,12 @@ class SearchBarViewModel extends ChangeNotifier {
 
   double getSearchBarHeight() {
     if (!isMyFeed) {
-      if (searchedResults.isEmpty) {
-        return (searchedResults.length + 1) * 105;
-      } else if (searchedResults.length == 1) {
-        return (searchedResults.length + 1) * 82;
-      } else if (searchedResults.length >= 2 && searchedResults.length <= 4) {
-        return (searchedResults.length + 1) * 75;
+      if (_searchedResults.isEmpty) {
+        return (_searchedResults.length + 1) * 105;
+      } else if (_searchedResults.length == 1) {
+        return (_searchedResults.length + 1) * 82;
+      } else if (_searchedResults.length >= 2 && _searchedResults.length <= 4) {
+        return (_searchedResults.length + 1) * 75;
       } else {
         return 450;
       }

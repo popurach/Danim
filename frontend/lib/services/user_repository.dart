@@ -16,7 +16,7 @@ class UserRepository {
 
   factory UserRepository() => _instance;
 
-  final _dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+  final _dio = Dio(BaseOptions(baseUrl: 'base back server url'));
 
   // 타임라인 한개 가져오기
   Future<Timeline> getTimelineById(int id) async {

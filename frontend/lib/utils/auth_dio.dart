@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<Dio> authDio(BuildContext context) async {
-  final dio = Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+  final dio = Dio(BaseOptions(baseUrl: 'base back server url'));
 
   const storage = FlutterSecureStorage();
 
@@ -35,7 +35,7 @@ Future<Dio> authDio(BuildContext context) async {
           final String? userUid = await storage.read(key: 'userUid');
 
           final refreshDio =
-              Dio(BaseOptions(baseUrl: 'http://j8a701.p.ssafy.io:5000/'));
+              Dio(BaseOptions(baseUrl: 'base back server url'));
           Response response = await refreshDio.post(
             'api/login/reissuance',
             options: Options(headers: {'refreshToken': 'Bearer $refreshToken'}),
