@@ -190,16 +190,11 @@ frontend
 ## 개발 환경
 
 ### BE
-
 **툴**
-
 - IntelliJ IDE
 - Pycharm
-
 **언어 및 라이브러리**
-
 - Java Open-JDk 11
-
 - SpringBoot 2.7.8
    - Gradle
    - Spring Data Jpa
@@ -213,22 +208,16 @@ frontend
    - okhttp3 4.10.0
    - Lombok 1.18.22
    - Swagger 3.0.0
-
 - Flask
    - python 3.8
    - pydub
    - ffmpeg
 
 ### FE
-
 **툴**
-
 - android studio
-
 **언어 및 라이브러리**
-
 - Dart 2.19.3
-
 - Flutter 3.7.6
    - cupertino_icons: ^1.0.2
    - provider: ^6.0.1
@@ -260,19 +249,14 @@ frontend
    - flutter_native_splash: ^2.2.19
 
 ### DB
-
 - MariaDB
-
 - Redis
 
 ### Operation
-
 - Jenkins
-
 - AWS EC2
    - Ubuntu 20.04 LTS
    - Docker 23.0.2
-
 - AWS S3
 
 ---
