@@ -34,7 +34,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 재생 시작
   Future<void> playRecordedFile() async {
-    if (isPlaying == true ||
+    if (_isPlaying == true ||
         getAudioFilePath == null ||
         getAudioFilePath!.isEmpty) {
       return;
@@ -59,7 +59,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 일시정지
   Future<void> pauseRecordedFile() async {
-    if (isPlaying == true) {
+    if (_isPlaying == true) {
       _audioPlayer?.pause();
       _isPlaying = false;
       notifyListeners();
@@ -70,7 +70,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 계속 재생
   Future<void> resumeRecordedFile() async {
-    if (isPlaying == false) {
+    if (_isPlaying == false) {
       _audioPlayer?.resume();
       _isPlaying = true;
       notifyListeners();
@@ -81,7 +81,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   // 완전 멈춤
   Future<void> stopRecordedFile() async {
-    if (isPlaying == true) {
+    if (_isPlaying == true) {
       _audioPlayer?.stop();
       _isPlaying = false;
       notifyListeners();

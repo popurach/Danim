@@ -21,22 +21,6 @@ class CameraViewModel extends ChangeNotifier {
   bool _isTaking = false;
   bool get isTaking => _isTaking;
 
-  double? _previewWidth;
-  double? get previewWidth => _previewWidth;
-
-  double? _currentWidth;
-  double? get currentWidth => _currentWidth;
-
-  double? _previewHeight;
-  double? get previewHeight => _previewHeight;
-
-  double? _currentHeight;
-  double? get currentHeight => _currentHeight;
-
-  double? _aspectRatio;
-  double? get aspectRatio => _aspectRatio;
-
-
   List<XFile> _allFileList = [];
 
   List<XFile> get allFileList => _allFileList;
