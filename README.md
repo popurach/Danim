@@ -1,9 +1,13 @@
+# DANIM : Travel Diary App
 <img src="https://capsule-render.vercel.app/api?type=wave&color=007FFF&height=300&section=header&text=DANIM&fontSize=90&animation=fadeIn" />
 
 ## 📜 프로젝트 설명
 
 ### 개요
-여행을 하면서 순간순간 기록을 남기고 싶지만 이를 힘들어하는 사람들을 위해, 텍스트를 입력할 필요없이 음성으로 편리하게 기록할 수 있는 프로그램.
+- 주제 선정 배경
+   - 
+- 프로젝트 목표
+   - 여행을 하면서 순간순간 기록을 남기고 싶지만 이를 힘들어하는 사람들을 위해, 텍스트를 입력할 필요없이 음성으로 편리하게 기록할 수 있는 프로그램.
 
 ### 구성
 - STT를 사용하여 말한 내용을 텍스트로 변환하여 저장해줍니다.
