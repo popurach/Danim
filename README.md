@@ -49,21 +49,6 @@
 | 타임라인 상세                                                                                                                  | 내피드                                                                                                            |
 | ![타임라인 상세](./image/%ED%83%80%EC%9E%84%EB%9D%BC%EC%9D%B8_%EC%83%81%EC%84%B8.gif)<p align="center"> **타임라인 상세** </p> | ![내피드](./image/%EB%82%B4%ED%94%BC%EB%93%9C.gif)<p align="center"> **내피드** </p>                              |
 
-## 🛠사용법
-
-### 설치
-
-#### 프론트 빌드
-
-```
-
-```
-
-#### 서버 빌드
-
-```
-
-```
 
 ### 호환 브라우저
 
@@ -180,7 +165,7 @@ frontend
 
 ## 🗺시스템 구성도
 
-![image](https://lab.ssafy.com/s08-ai-speech-sub2/S08P22A701/uploads/dc1d48aa0088d981c17a066677aeb94a/Web_App_Reference_Architecture_V2.png)
+![image](./image/Web%20App%20Reference%20Architecture%20V2.png)
 
 ---
 
