@@ -1,6 +1,20 @@
-pip install numpy
-pip install flask
-pip install pydub
-pip install requests
-pip install response
-pip install requests_toolbelt
+FROM python:3.8-slim
+
+COPY . /app
+WORKDIR /app
+
+RUN echo server will be running on 4000
+
+RUN pip3 install flask
+RUN pip3 install numpy
+RUN pip3 install pydub
+RUN pip3 install requests
+RUN pip3 install response
+RUN pip3 install requests_toolbelt
+
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD ["python3", "main.py"]
