@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +37,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
+    @Value("${FlaskServer}")
+    private String flaskServer;
     private final AwsS3 awsS3;
     private final PostRepository postRepository;
     private final PhotoRepository photoRepository;
@@ -137,8 +141,7 @@ public class PostServiceImpl implements PostService {
         log.info("badword info : {}",badword);
         log.info("badword.isempty() info : {}",badword.isEmpty());
         if(!badword.isEmpty()){
-
-            File filter = http.Post("${FlaskServer}","POST",badword,file);
+            File filter = http.Post(flaskServer,"POST",badword,file);
 
             log.info("filter info :{}",filter);
 //            Files.delete(target);//파일을 삭제하는 코드임
