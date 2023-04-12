@@ -28,10 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -47,12 +44,23 @@ public class PostServiceImpl implements PostService {
     private final BadWordFilter badWordFilter;
     private final MultiFileToFile multiFileToFile;
     private final Http http;
-    private final UserRepository userRepository;
 
 
     // 포스트 생성 및 저장
     @Override
-    public Post createPost() throws Exception {
+    public Post createPost(AddPostReq addPostReq) throws Exception {
+        TimeLine timeline = timelineRepository.findById(addPostReq.getTimelineId()).orElseThrow(() -> new BaseException(ErrorMessage.NOT_EXIST_TIMELINE));
+        if (timeline.getComplete() == true) {
+            new BaseException(ErrorMessage.ALREADY_DONE_TIMELINE);
+        }
+
+        Post post = new Post();
+        Post savedPost = postRepository.save(post);
+        return savedPost;
+    }
+
+    @Override
+    public Post makePost() throws Exception {
         Post post = new Post();
         Post savedPost = postRepository.save(post);
         return savedPost;
@@ -87,12 +95,14 @@ public class PostServiceImpl implements PostService {
         AudioFormat format = audioInputStream.getFormat();
         long frameLength = audioInputStream.getFrameLength();
         double durationInSeconds = (frameLength / format.getFrameRate());
+
         int check_time = (int) durationInSeconds;
         //System.out.println("Duration: " + durationInSeconds + " seconds");
         if (check_time > 30) {
             throw new BaseException(ErrorMessage.OVER_VOICE_TIME);
         }
 
+        // voiceFile S3에 올리고 voiceURL 가져오기
 
 
         // voiceFile -> text 변환 : clova speech api 요청 보내기
@@ -123,13 +133,13 @@ public class PostServiceImpl implements PostService {
         // voiceFile -> text 변환 : 응답 결과 확인
         log.info("Clova info :{}",result);
         String voiceUrl="";
-        List<WordInfo> badwords = badWordFilter.badWord(fastApiReq);
-        log.info("badwords info : {}",badwords);
-//        log.info("badwords.size() info : {}",badwords.isEmpty());
-//        log.info("badwords.size() info : {}",badwords.size());
-        if(!badwords.isEmpty()){
+        List<WordInfo> badword = badWordFilter.badWord(fastApiReq);
+        log.info("badword info : {}",badword);
+        log.info("badword.isempty() info : {}",badword.isEmpty());
+        if(!badword.isEmpty()){
 
-            File filter = http.Post("http://j8a701.p.ssafy.io:4000/","POST",badwords,file);
+            File filter = http.Post("Flask Server","POST",badword,file);
+
             log.info("filter info :{}",filter);
 //            Files.delete(target);//파일을 삭제하는 코드임
 

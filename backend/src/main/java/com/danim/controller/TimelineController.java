@@ -38,6 +38,7 @@ public class TimelineController {
         TimelinePostOuter timeline = timeLineService.searchOneTimeline(uid, user);
         if (timeline==null)
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        log.info("timeLine info :{}",timeline.getTimeline());
         log.info("타임라인 한개 조회 종료");
         return new ResponseEntity<>(timeline, HttpStatus.OK);
     }
