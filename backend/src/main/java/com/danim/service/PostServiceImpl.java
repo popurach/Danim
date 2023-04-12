@@ -37,7 +37,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
-    @Value("${FlaskServer}")
+    @Value("${spring.flask.url}")
     private String flaskServer;
     private final AwsS3 awsS3;
     private final PostRepository postRepository;
@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
     private final NationRepository nationRepository;
     private final BadWordFilter badWordFilter;
     private final MultiFileToFile multiFileToFile;
-    private final Http http;
+    private final Http http;i
 
 
     // 포스트 생성 및 저장
