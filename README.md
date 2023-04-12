@@ -171,7 +171,7 @@ frontend
 
 ## ERD
 
-![Image_Pasted_at_2023-4-10_21-10](/uploads/b4c8f47701ba50ffd54094b1a8215802/Image_Pasted_at_2023-4-10_21-10.png)
+![Image_Pasted_at_2023-4-10_21-10](./image/erd.png)
 
 ## 🛢기술스택
 
