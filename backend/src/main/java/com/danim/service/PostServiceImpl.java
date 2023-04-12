@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
     private final NationRepository nationRepository;
     private final BadWordFilter badWordFilter;
     private final MultiFileToFile multiFileToFile;
-    private final Http http;i
+    private final Http http;
 
 
     // 포스트 생성 및 저장
