@@ -37,7 +37,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
-    @Value("${FlaskServer}")
+    @Value("${spring.flask.url}")
     private String flaskServer;
     private final AwsS3 awsS3;
     private final PostRepository postRepository;
